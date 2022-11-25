@@ -1,15 +1,15 @@
-import { NavbarWrapper, Link, SidebarWrapper, SideBox } from "./style";
+import { NavbarWrapper, SidebarWrapper, SideBox } from "./style";
 import { ReactComponent as ClockLogo } from "../Assets/svg/clock-logo.svg";
 import React, { useState } from "react";
-// import { DownOutlined } from "@ant-design/icons";
-import { VscColorMode } from "react-icons/vsc";
-import { FiSettings } from "react-icons/fi";
+// // import { DownOutlined } from "@ant-design/icons";
+// import { VscColorMode } from "react-icons/vsc";
+// import { FiSettings } from "react-icons/fi";
 import { ReactComponent as Clock } from "../Assets/svg/clock.svg";
 import { ReactComponent as Alarm } from "../Assets/svg/alarm.svg";
 import { ReactComponent as Stopwatch } from "../Assets/svg/stopwatch.svg";
 import { ReactComponent as Timer } from "../Assets/svg/timer.svg";
 import { useNavigate } from "react-router-dom";
-import { BsChevronDown, BsChevronUp } from "react-icons/bs";
+// import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 
 const items = [
     {
@@ -41,22 +41,22 @@ const items = [
 const Layout = ({ Component }) => {
 
     const navigate = useNavigate();
-    const [toolsClicked, setToolsClicked] = useState(false);
-    const [currentTool, setCurrentTool] = useState('');
+    // const [toolsClicked, setToolsClicked] = useState(false);
+    // const [currentTool, setCurrentTool] = useState('');
     const [currentSide, setCurrentSide] = useState('');
 
-    const handleToolsClick = (event) => {
-        event.preventDefault();
-        setToolsClicked(!toolsClicked);
-    };
+    // const handleToolsClick = (event) => {
+    //     event.preventDefault();
+    //     setToolsClicked(!toolsClicked);
+    // };
 
-    const handleToolsMouseOver = (event, name) => {
-        setCurrentTool(name);
-    };
+    // const handleToolsMouseOver = (event, name) => {
+    //     setCurrentTool(name);
+    // };
 
-    const handleToolsMouseOut = () => {
-        setCurrentTool(null);
-    };
+    // const handleToolsMouseOut = () => {
+    //     setCurrentTool(null);
+    // };
 
     const handleSideMouseOver = (event, name) => {
         setCurrentSide(name);
@@ -85,7 +85,7 @@ const Layout = ({ Component }) => {
                     <ClockLogo height={80} width={80} />
                     <span>Clockify</span>
                 </a>
-                <div className="menu">
+                {/* <div className="menu">
                     <a href="" className="menu-links">Holidays</a>
                     <div className="tools-menu">
                         <a href="" className="menu-links" onClick={handleToolsClick}>
@@ -109,7 +109,7 @@ const Layout = ({ Component }) => {
                     </div>
                     <a href="" className="menu-links"><VscColorMode /></a>
                     <a href="" className="menu-links"><FiSettings /></a>
-                </div>
+                </div> */}
             </NavbarWrapper>
             <div style={{ display: "flex" }}>
                 <SidebarWrapper>
@@ -127,7 +127,7 @@ const Layout = ({ Component }) => {
                         </SideBox>
                     ))}
                 </SidebarWrapper>
-                <div style={{ marginLeft: 100, marginTop: 80, marginLeft: 100, width: '100%', display: 'flex', justifyContent: "center", alignItems: 'center' }}>
+                <div style={{ marginLeft: 100, marginTop: 80, width: '100%', display: 'flex', justifyContent: "center", alignItems: 'center' }}>
                     <Component />
                 </div>
             </div>
