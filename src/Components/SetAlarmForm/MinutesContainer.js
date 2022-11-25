@@ -16,11 +16,11 @@ const MinutesContainer = ({
         getMin();
         const newDate = new Date();
         setTime(newDate.getMinutes().toString(), 'minute');
-    }, [setTime]);
+    }, []);
 
-    setInterval(() => {
-        getMin();
-    }, 60 * 1000);
+    // setInterval(() => {
+    //     getMin();
+    // }, 60 * 1000);
 
     const handleChange = (event) => {
         setTime(event.target.value, 'minute');

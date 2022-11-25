@@ -21,11 +21,11 @@ const HourContainer = ({
         getHour();
         const newDate = new Date();
         setTime(newDate.getHours().toString(), 'hour');
-    }, [setTime]);
+    }, []);
 
-    setInterval(() => {
-        getHour();
-    }, 3600 * 1000);
+    // setInterval(() => {
+    //     getHour();
+    // }, 3600 * 1000);
 
     return (
         <div>

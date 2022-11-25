@@ -16,11 +16,11 @@ const SecondsContainer = ({
         getSec();
         const newDate = new Date();
         setTime(newDate.getSeconds().toString(), 'second');
-    }, [setTime]);
+    }, []);
 
-    setInterval(() => {
-        getSec();
-    }, 1000);
+    // setInterval(() => {
+    //     getSec();
+    // }, 1000);
 
     const handleChange = (event) => {
         setTime(event.target.value, 'second')
