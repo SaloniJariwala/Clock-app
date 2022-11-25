@@ -16,7 +16,7 @@ const SecondsContainer = ({
         getSec();
         const newDate = new Date();
         setTime(newDate.getSeconds().toString(), 'second');
-    }, []);
+    }, [setTime]);
 
     setInterval(() => {
         getSec();

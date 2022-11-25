@@ -1,7 +1,7 @@
 import { NavbarWrapper, Link, SidebarWrapper, SideBox } from "./style";
 import { ReactComponent as ClockLogo } from "../Assets/svg/clock-logo.svg";
 import React, { useState } from "react";
-import { DownOutlined } from "@ant-design/icons";
+// import { DownOutlined } from "@ant-design/icons";
 import { VscColorMode } from "react-icons/vsc";
 import { FiSettings } from "react-icons/fi";
 import { ReactComponent as Clock } from "../Assets/svg/clock.svg";

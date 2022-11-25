@@ -16,7 +16,7 @@ const MinutesContainer = ({
         getMin();
         const newDate = new Date();
         setTime(newDate.getMinutes().toString(), 'minute');
-    }, []);
+    }, [setTime]);
 
     setInterval(() => {
         getMin();

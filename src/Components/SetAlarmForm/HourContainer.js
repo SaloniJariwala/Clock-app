@@ -21,7 +21,7 @@ const HourContainer = ({
         getHour();
         const newDate = new Date();
         setTime(newDate.getHours().toString(), 'hour');
-    }, []);
+    }, [setTime]);
 
     setInterval(() => {
         getHour();

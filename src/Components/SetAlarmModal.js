@@ -24,8 +24,8 @@ const SetAlarmModal = ({
     const [hour, setHour] = useState();
     const [minute, setMinute] = useState();
     const [second, setSecond] = useState();
-    const [started, setStarted] = useState(false);
-    const [overTime, setOverTime] = useState();
+    // const [started, setStarted] = useState(false);
+    // const [overTime, setOverTime] = useState();
 
     const setTime = (value, name) => {
         if (name === 'hour') {
@@ -70,7 +70,7 @@ const SetAlarmModal = ({
 
         if (diff >= 0) {
             setTimeout(() => {
-                setStarted(true);
+                // setStarted(true);
                 addNotification({
                     title: 'wake up',
                     message: 'Go to gym',
