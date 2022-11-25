@@ -3,14 +3,13 @@ import "../App.css";
 import { AlarmTitleWrapper } from "./style";
 import HourContainer from "./SetAlarmForm/HourContainer";
 import MinutesContainer from "./SetAlarmForm/MinutesContainer";
-import { Notifications } from 'react-push-notification';
-import addNotification from 'react-push-notification';
 
 
 
 import { useState } from "react";
 
 import SecondsContainer from "./SetAlarmForm/SecondsContainer";
+import { notifyUser } from "../Utils/Notification";
 
 const SetAlarmModal = ({
     showModal,
@@ -71,13 +70,7 @@ const SetAlarmModal = ({
         if (diff >= 0) {
             setTimeout(() => {
                 // setStarted(true);
-                addNotification({
-                    title: 'wake up',
-                    message: 'Go to gym',
-                    theme: "darkblue",
-                    duration: 4000,
-                    native: true
-                });
+                notifyUser('Its Time Now...');
                 play();
             }, diff);
         }
@@ -101,7 +94,6 @@ const SetAlarmModal = ({
                 </AlarmTitleWrapper>
             }
         >
-            <Notifications />
             <div style={{ display: 'flex', width: '100%' }}>
                 <div style={{ width: '33%', padding: '0 10px' }}>
                     <HourContainer options={hourOptions} setTime={setTime} />
