@@ -1,29 +1,31 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const SecondsContainer = ({
     options,
     setTime
 }) => {
 
-    const [currSec, setCurrSec] = useState();
+    const newDate = new Date();
 
-    const getSec = () => {
-        const newDate = new Date();
-        setCurrSec(newDate.getSeconds().toString());
-    }
+    const [currSec, setCurrSec] = useState(newDate.getSeconds());
 
-    useEffect(() => {
-        getSec();
-        const newDate = new Date();
-        setTime(newDate.getSeconds().toString(), 'second');
-    }, []);
+    // const getSec = () => {
+    //     setCurrSec(newDate.getSeconds().toString());
+    // }
+
+    // useEffect(() => {
+    //     getSec();
+    //     const newDate = new Date();
+    //     setTime(newDate.getSeconds().toString(), 'second');
+    // }, []);
 
     // setInterval(() => {
     //     getSec();
     // }, 1000);
 
     const handleChange = (event) => {
-        setTime(event.target.value, 'second')
+        setTime(event.target.value, 'second');
+        setCurrSec(event.target.value);
     }
 
     return (

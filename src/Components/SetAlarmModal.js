@@ -1,11 +1,8 @@
-import { Button, Modal } from "antd";
+import { Button, Modal } from "react-bootstrap";
 import "../App.css";
 import { AlarmTitleWrapper } from "./style";
 import HourContainer from "./SetAlarmForm/HourContainer";
 import MinutesContainer from "./SetAlarmForm/MinutesContainer";
-
-
-
 import { useState } from "react";
 
 import SecondsContainer from "./SetAlarmForm/SecondsContainer";
@@ -20,9 +17,11 @@ const SetAlarmModal = ({
     handleStop
 }) => {
 
-    const [hour, setHour] = useState();
-    const [minute, setMinute] = useState();
-    const [second, setSecond] = useState();
+    const date = new Date();
+
+    const [hour, setHour] = useState(date.getHours());
+    const [minute, setMinute] = useState(date.getMinutes());
+    const [second, setSecond] = useState(date.getSeconds());
     // const [started, setStarted] = useState(false);
     // const [overTime, setOverTime] = useState();
 
@@ -79,10 +78,26 @@ const SetAlarmModal = ({
     return (
         <Modal
             centered
-            open={showModal}
-            onCancel={closeModal}
-            title={<span className="alarm-modal-title">Set Alarm</span>}
-            footer={
+            show={showModal}
+            onHide={closeModal}
+        >
+            <Modal.Header closeButton>
+                <span className="alarm-modal-title">Set Alarm</span>
+            </Modal.Header>
+            <Modal.Body>
+                <div style={{ display: 'flex', width: '100%' }}>
+                    <div style={{ width: '33%', padding: '0 10px' }}>
+                        <HourContainer options={hourOptions} setTime={setTime} />
+                    </div>
+                    <div style={{ width: '33%', padding: '0 10px' }}>
+                        <MinutesContainer options={minuteOptions} setTime={setTime} />
+                    </div>
+                    <div style={{ width: '33%', padding: '0 10px' }}>
+                        <SecondsContainer options={minuteOptions} setTime={setTime} />
+                    </div>
+                </div>
+            </Modal.Body>
+            <Modal.Footer>
                 <AlarmTitleWrapper>
                     <div className="footer-row">
                         <Button onClick={play}>Test</Button>
@@ -92,19 +107,7 @@ const SetAlarmModal = ({
                         </div>
                     </div>
                 </AlarmTitleWrapper>
-            }
-        >
-            <div style={{ display: 'flex', width: '100%' }}>
-                <div style={{ width: '33%', padding: '0 10px' }}>
-                    <HourContainer options={hourOptions} setTime={setTime} />
-                </div>
-                <div style={{ width: '33%', padding: '0 10px' }}>
-                    <MinutesContainer options={minuteOptions} setTime={setTime} />
-                </div>
-                <div style={{ width: '33%', padding: '0 10px' }}>
-                    <SecondsContainer options={minuteOptions} setTime={setTime} />
-                </div>
-            </div>
+            </Modal.Footer>
         </Modal >
     );
 };

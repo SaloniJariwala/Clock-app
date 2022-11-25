@@ -1,22 +1,23 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const MinutesContainer = ({
     options,
     setTime
 }) => {
 
-    const [currMin, setCurrMin] = useState();
+    const newDate = new Date();
 
-    const getMin = () => {
-        const newDate = new Date();
-        setCurrMin(newDate.getMinutes().toString());
-    }
+    const [currMin, setCurrMin] = useState(newDate.getMinutes());
 
-    useEffect(() => {
-        getMin();
-        const newDate = new Date();
-        setTime(newDate.getMinutes().toString(), 'minute');
-    }, []);
+    // const getMin = () => {
+    //     setCurrMin(newDate.getMinutes().toString());
+    // }
+
+    // useEffect(() => {
+    //     getMin();
+    //     const newDate = new Date();
+    //     setTime(newDate.getMinutes().toString(), 'minute');
+    // }, []);
 
     // setInterval(() => {
     //     getMin();
