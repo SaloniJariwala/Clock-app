@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "react-bootstrap";
 import { AlarmWrapper } from "./style";
 import { days, monthNames } from "../Constant";
@@ -13,6 +13,9 @@ const Alarm = () => {
     const [hourOptions, setHourOptions] = useState();
     const [minuteOtions, setMinuteOptions] = useState();
     const [alarm, setAlarm] = useState([]);
+    const [upcomingAlarms, setUpcomingAlarms] = useState([]);
+    const [pastAlarms, setPastAlarms] = useState([]);
+    const [flag, setFlag] = useState(false);
     const audioRef = useRef();
 
     // const audio = new Audio(alarmAudio);
@@ -20,6 +23,10 @@ const Alarm = () => {
     const play = () => {
         audioRef.current.play();
         audioRef.current.loop = true;
+    }
+
+    const callAlarm = () => {
+        setFlag(!flag);
     }
 
     const pause = () => {
@@ -87,6 +94,27 @@ const Alarm = () => {
         pause();
     }
 
+    // const getAlarms = () => {
+    //     const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
+    //     const upcomingAlarm = allAlarms.filter((item) => item.alarmTimestamp > Date.now());
+    //     setUpcomingAlarms(upcomingAlarm);
+    //     const pastAlarm = allAlarms.filter((item) => item.alarmTimestamp < Date.now());
+    //     setPastAlarms(pastAlarm);
+    // }
+
+    useEffect(() => {
+        const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
+        const upcomingAlarm = allAlarms.filter((item) => item.alarmTimestamp > Date.now());
+        setUpcomingAlarms(upcomingAlarm);
+        const pastAlarm = allAlarms.filter((item) => item.alarmTimestamp < Date.now());
+        setPastAlarms(pastAlarm);
+    }, [flag]);
+
+    const getTime = (timestamp) => {
+        const date = new Date(timestamp);
+        return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+    }
+
     return (
         <AlarmWrapper>
             <h1 className="display">{currentTime}</h1>
@@ -95,14 +123,27 @@ const Alarm = () => {
                 <Button variant="success" onClick={handleClick} style={{ marginRight: 10 }}>Set Alarm</Button>
                 <Button variant="danger" onClick={handleStop}>Stop Alarm</Button>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '70px' }}>
-                {alarm.map((item) => (
-                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', marginRight: '20px' }}>
-                        <span>{item.country}</span>
-                        <h3 style={{ marginBottom: 'unset' }}>{item.hour}:{item.minute}:{item.second}</h3>
-                        <span>{item.GMT}</span>
-                    </div>
-                ))}
+            <div className="container-fluid d-flex justify-content-evenly">
+                <div className="w-50 m-5 text-center">
+                    <h3>Past Alarm</h3>
+                    {pastAlarms.map((item, index) => (
+                        <div className="d-flex" key={index}>
+                            <span style={{ marginRight: 15 }}>{item.title}</span>
+                            <span style={{ marginRight: 15 }}>{getTime(item.alarmTimestamp)}</span>
+                            <span>{new Date(item.alarmTimestamp).toLocaleDateString()}</span>
+                        </div>
+                    ))}
+                </div>
+                <div className="w-50 m-5 text-center">
+                    <h3>Upcoming Alarm</h3>
+                    {upcomingAlarms.map((item, index) => (
+                        <div className="d-flex" key={index}>
+                            <span style={{ marginRight: 15 }}>{item.title}</span>
+                            <span style={{ marginRight: 15 }}>{getTime(item.alarmTimestamp)}</span>
+                            <span>{new Date(item.alarmTimestamp).toLocaleDateString()}</span>
+                        </div>
+                    ))}
+                </div>
             </div>
             <audio src={alarmAudio} ref={audioRef} />
             <SetAlarmModal
@@ -114,9 +155,10 @@ const Alarm = () => {
                 play={play}
                 handleStop={handleStop}
                 displayAlarm={displayAlarm}
+                callAlarms={callAlarm}
             />
         </AlarmWrapper>
     );
 };
 
-export default Alarm;
+export default Alarm;   

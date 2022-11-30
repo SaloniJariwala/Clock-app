@@ -1,8 +1,8 @@
-export const notifyUser = (notificationText = "Notification Enabled") => {
+export const notifyUser = (notificationText = "Notification Enabled", notificationNote) => {
     if (!("Notification" in window)) {
         alert("Browser Not support notification");
     } else if (Notification.permission === "granted") {
-        const notification = new Notification(notificationText);
+        const notification = new Notification(notificationText, { body: notificationNote });
         notification.onclick = (event) => {
             event.preventDefault(); // prevent the browser from focusing the Notification's tab
             window.open('http://www.mozilla.org', '_blank');

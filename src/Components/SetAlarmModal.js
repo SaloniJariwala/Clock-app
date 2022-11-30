@@ -1,4 +1,4 @@
-import { useDebugValue, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import "../App.css";
 import { AlarmTitleWrapper } from "./style";
@@ -16,7 +16,8 @@ const SetAlarmModal = ({
     hourOptions,
     minuteOptions,
     play,
-    displayAlarm
+    displayAlarm,
+    callAlarms
 }) => {
 
     const date = new Date();
@@ -25,7 +26,33 @@ const SetAlarmModal = ({
     const [minute, setMinute] = useState(date.getMinutes());
     const [second, setSecond] = useState(date.getSeconds());
     const [country, setCountry] = useState('India');
-    const [gmt, setGmt] = useState();
+    const [alarmName, setAlarmName] = useState('');
+    const [alarmNote, setAlarmNote] = useState('');
+
+
+    // useEffect(() => {
+    //     const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
+    //     const currentTimestamp = Date.now();
+    //     let newList = allAlarms.filter((item) => item.alarmTimestamp > currentTimestamp);
+    //     let nearestAlarm;
+    //     if (newList.length > 1) {
+    //         for (let i = 0; i < newList.length; i++) {
+    //             for (let j = 0; j <= i; j++) {
+    //                 debugger
+    //                 if (newList[j].alarmTimestamp < newList[i].alarmTimestamp) {
+    //                     debugger
+    //                     nearestAlarm = newList[j];
+    //                     debugger
+    //                 }
+    //             }
+    //         }
+    //     } else {
+    //         debugger
+    //         nearestAlarm = newList[0];
+    //         debugger
+    //     }
+    //     callToAlarm(nearestAlarm?.alarmTimestamp);
+    // }, [])
 
     const setTime = (value, name) => {
         if (name === 'hour') {
@@ -41,61 +68,142 @@ const SetAlarmModal = ({
         setCountry(name);
     }
 
-    const setGmtTime = (GMT) => {
-        setGmt(GMT);
-    }
+    const callToAlarm = () => {
+        const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
+        const currentTimestamp = Date.now();
+        let newList = allAlarms.filter((item) => item.alarmTimestamp > currentTimestamp);
+        let nearestAlarm;
+        if (newList.length > 1) {
+            for (let i = 0; i < newList.length; i++) {
+                for (let j = 0; j <= i; j++) {
+                    debugger
+                    if (newList[j].alarmTimestamp < newList[i].alarmTimestamp) {
+                        debugger
+                        nearestAlarm = newList[j];
+                        debugger
+                    }
+                }
+            }
+        } else {
+            debugger
+            nearestAlarm = newList[0];
+            debugger
+        }
+        const currTimestamp = Date.now();
+        let diff;
+        diff = nearestAlarm?.alarmTimestamp - currTimestamp;
+        debugger
 
-    const callToAlarm = (difference) => {
-        if (difference >= 0) {
-            setTimeout(() => {
-                notifyUser("It's time now...!!!");
+        if (diff >= 0) {
+            debugger
+            var id = setTimeout(() => {
+                notifyUser(alarmName, alarmNote);
                 play();
-            }, difference);
+            }, diff);
         }
     }
 
-    const setAlarm = () => {
-        displayAlarm(hour, minute, second, 'India', 'GMT+5.30');
-        const curr = new Date();
-        curr.setHours(Number(hour));
-        curr.setMinutes(Number(minute));
-        curr.setSeconds(Number(second));
-        const newD = new Date();
-        const diff = curr - newD;
+
+    // const ringAlarm = () => {
+    //     const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
+    //     debugger
+    //     const currentTimestamp = Date.now();
+    //     let newList = allAlarms.filter((item) => item.alarmTimestamp > currentTimestamp);
+    //     let nearestAlarm;
+    //     debugger
+    //     if (newList.length > 1) {
+    //         for (let i = 0; i < newList.length; i++) {
+    //             debugger
+    //             for (let j = 0; j <= i; j++) {
+    //                 debugger
+    //                 if (newList[j].alarmTimestamp < newList[i].alarmTimestamp) {
+    //                     debugger
+    //                     nearestAlarm = newList[j];
+    //                     debugger
+    //                 }
+    //             }
+    //         }
+    //     } else {
+    //         debugger
+    //         nearestAlarm = newList[0];
+    //         debugger
+    //     }
+    //     debugger
+    //     const difference = nearestAlarm.alarmTimestamp - Date.now();
+    //     debugger
+    //     callToAlarm(difference, nearestAlarm.title, nearestAlarm.note);
+    // }
+
+    const storeAlarm = (alarm) => {
+        const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
+        debugger
+        const date = alarm.toDate();
+        const alarmTimestamp = date.getTime();
+        let newAlarms = allAlarms;
+        debugger
+        const newAlarm = {
+            // timeoutId: id,
+            alarmTimestamp: alarmTimestamp,
+            title: alarmName,
+            note: alarmNote,
+            country: country
+        };
+        debugger
+        newAlarms.push(newAlarm);
+        debugger
+        localStorage.setItem('Alarms', JSON.stringify(newAlarms));
         closeModal();
-        callToAlarm(diff);
+        debugger
+        callAlarms();
     }
+
+
+    // const setAlarm = () => {
+    //     debugger
+    //     displayAlarm(hour, minute, second, 'India', 'GMT+5.30');
+    //     const alarm = new Date();
+    //     alarm.setHours(Number(hour));
+    //     alarm.setMinutes(Number(minute));
+    //     alarm.setSeconds(Number(second));
+    //     debugger
+    //     storeAlarm(alarm);
+    //     debugger
+    //     ringAlarm();
+    // }
 
     const countryWiseSetAlarm = (action, diffHours = 0, diffMins = 0, country, gmt) => {
         displayAlarm(hour, minute, second, country, gmt);
+        debugger
         let fDate;
         const newDate = new Date();
+        newDate.setHours(Number(hour));
+        newDate.setMinutes(Number(minute));
+        newDate.setSeconds(Number(second));
+        debugger
         if (action === 'back') {
-            newDate.setHours(Number(hour));
-            newDate.setMinutes(Number(minute));
-            newDate.setSeconds(Number(second));
+            debugger
             fDate = moment(newDate).add({ hours: diffHours, minutes: diffMins });
-        } else {
-            newDate.setHours(Number(hour));
-            newDate.setMinutes(Number(minute));
-            newDate.setSeconds(Number(second));
+        } else if (action === 'ahead') {
+            debugger
             fDate = moment(newDate).subtract({ hours: diffHours, minutes: diffMins });
-        }
-        const date = new Date();
-        let diff;
-        if (action === 'back') {
-            diff = fDate - date;
         } else {
-            diff = fDate - date;
+            fDate = moment(newDate);
         }
-        closeModal();
-        callToAlarm(diff);
+        debugger
+        storeAlarm(fDate);
+        debugger
+        callToAlarm();
+        // const forDate = fDate.toDate();
+        // debugger
+        // const timestamp = forDate.getTime();
+        // callToAlarm(timestamp);
     }
 
     const checkCountry = () => {
         switch (country) {
             case 'India':
-                setAlarm();
+                // setAlarm();
+                countryWiseSetAlarm('india', 0, 0, 'GMT+5.30')
                 break;
 
             case 'USA':
@@ -134,9 +242,9 @@ const SetAlarmModal = ({
             </Modal.Header>
             <Modal.Body>
                 <div style={{ padding: '0 10px', marginBottom: '1em' }}>
-                    <CountryContainer options={countryData} setCountryName={setCountryName} setGmtTime={setGmtTime} />
+                    <CountryContainer options={countryData} setCountryName={setCountryName} />
                 </div>
-                <div style={{ display: 'flex', width: '100%' }}>
+                <div style={{ display: 'flex', width: '100%', marginBottom: '1em' }}>
                     <div style={{ width: '33%', padding: '0 10px' }}>
                         <HourContainer options={hourOptions} setTime={setTime} />
                     </div>
@@ -146,6 +254,24 @@ const SetAlarmModal = ({
                     <div style={{ width: '33%', padding: '0 10px' }}>
                         <SecondsContainer options={minuteOptions} setTime={setTime} />
                     </div>
+                </div>
+                <div style={{ padding: '0 10px', marginBottom: '1em' }}>
+                    <label htmlFor="alarm-title">Alarm Title</label>
+                    <input
+                        id="alarm-title"
+                        className="form-control"
+                        placeholder="Enter Alarm Title"
+                        onChange={(event) => setAlarmName(event.target.value)}
+                    />
+                </div>
+                <div style={{ padding: '0 10px', marginBottom: '1em' }}>
+                    <label htmlFor="alarm-note">Alarm Note</label>
+                    <textarea
+                        id="alarm-note"
+                        className="form-control"
+                        placeholder="Enter Alarm Note"
+                        onChange={(event) => setAlarmNote(event.target.value)}
+                    ></textarea>
                 </div>
             </Modal.Body>
             <Modal.Footer>
