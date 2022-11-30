@@ -12,6 +12,7 @@ const Alarm = () => {
     const [showModal, setShowModal] = useState(false);
     const [hourOptions, setHourOptions] = useState();
     const [minuteOtions, setMinuteOptions] = useState();
+    const [alarm, setAlarm] = useState([]);
     const audioRef = useRef();
 
     // const audio = new Audio(alarmAudio);
@@ -28,6 +29,19 @@ const Alarm = () => {
     const closeModal = () => {
         setShowModal(false);
     }
+
+    const displayAlarm = (hour, minute, second, country, GMT) => {
+        const newAlarm = {
+            hour,
+            minute,
+            second,
+            country,
+            GMT
+        };
+        const newArr = alarm;
+        newArr.push(newAlarm);
+        setAlarm(newArr);
+    };
 
     const updateTime = () => {
         const date = new Date();
@@ -81,6 +95,15 @@ const Alarm = () => {
                 <Button variant="success" onClick={handleClick} style={{ marginRight: 10 }}>Set Alarm</Button>
                 <Button variant="danger" onClick={handleStop}>Stop Alarm</Button>
             </div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '70px' }}>
+                {alarm.map((item) => (
+                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', marginRight: '20px' }}>
+                        <span>{item.country}</span>
+                        <h3 style={{ marginBottom: 'unset' }}>{item.hour}:{item.minute}:{item.second}</h3>
+                        <span>{item.GMT}</span>
+                    </div>
+                ))}
+            </div>
             <audio src={alarmAudio} ref={audioRef} />
             <SetAlarmModal
                 showModal={showModal}
@@ -90,6 +113,7 @@ const Alarm = () => {
                 currentTime={currentTime}
                 play={play}
                 handleStop={handleStop}
+                displayAlarm={displayAlarm}
             />
         </AlarmWrapper>
     );
