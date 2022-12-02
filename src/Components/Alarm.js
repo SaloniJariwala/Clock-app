@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { Button } from "react-bootstrap";
+import { Button, OverlayTrigger, Table, Tooltip } from "react-bootstrap";
 import { AlarmWrapper } from "./style";
 import { days, monthNames } from "../Constant";
 import SetAlarmModal from "./SetAlarmModal";
 import alarmAudio from "../Assets/audios/alarm.mp3";
+import { MdOutlineDeleteOutline, MdPauseCircleOutline, MdPlayCircleOutline } from "react-icons/md";
 
 const Alarm = () => {
 
@@ -15,9 +16,9 @@ const Alarm = () => {
     const [alarm, setAlarm] = useState([]);
     const [upcomingAlarms, setUpcomingAlarms] = useState([]);
     const [pastAlarms, setPastAlarms] = useState([]);
-    const [deleteAlarm,setDeleteAlarm]=useState([]);
+    const [deleteAlarm, setDeleteAlarm] = useState([]);
     const [flag, setFlag] = useState(false);
-    let alarmoasuse=0;
+    const [alarmPause, setAlarmPause] = useState(false);
     const audioRef = useRef();
 
     // const audio = new Audio(alarmAudio);
@@ -64,7 +65,7 @@ const Alarm = () => {
 
     const getHours = () => {
         let arr = [];
-        for (let i = 1; i <= 24; i++) {
+        for (let i = 0; i <= 23; i++) {
             if (i < 10) {
                 arr = [...arr, `0${i.toString()}`];
             } else {
@@ -94,6 +95,7 @@ const Alarm = () => {
 
     const handleStop = () => {
         pause();
+        callAlarm();
     }
 
     // const getAlarms = () => {
@@ -109,11 +111,11 @@ const Alarm = () => {
 
     const DeleteAlarm = (value) => {
         let newList = JSON.parse(localStorage.getItem("Alarms")) || [];
-        let  delAlarm = newList.filter((time) =>time.alarmTimestamp !== value.alarmTimestamp)
+        let delAlarm = newList.filter((time) => time.alarmTimestamp !== value.alarmTimestamp)
         setDeleteAlarm(delAlarm)
-        localStorage.setItem('Alarms',JSON.stringify(delAlarm))
+        localStorage.setItem('Alarms', JSON.stringify(delAlarm))
         clearTimeout(delAlarm)
-      };
+    };
 
 
 
@@ -123,25 +125,18 @@ const Alarm = () => {
         setUpcomingAlarms(upcomingAlarm);
         const pastAlarm = allAlarms.filter((item) => item.alarmTimestamp < Date.now());
         setPastAlarms(pastAlarm);
-    }, [flag,deleteAlarm]);
+    }, [flag, deleteAlarm]);
 
     const getTime = (timestamp) => {
         const date = new Date(timestamp);
         return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
     }
 
-    const pauseAlarm=()=>{
-        debugger
-        if(alarmoasuse===0){
-            debugger
-            alarmoasuse=1
-            debugger
-            play();
-        }else{
-            debugger
-            alarmoasuse=0;
-            debugger
-           pause()
+    const setPauseAlarm = () => {
+        if (!alarmPause) {
+            setAlarmPause(true);
+        } else {
+            setAlarmPause(false);
         }
     }
 
@@ -155,27 +150,106 @@ const Alarm = () => {
             </div>
             <div className="container-fluid d-flex justify-content-evenly">
                 <div className="w-50 m-5 text-center">
-                    <h3>Past Alarm</h3>
-                    {pastAlarms.map((item, index) => (
-                        <div className="d-flex" key={index}>
-                            <span style={{ marginRight: 15 }}>{item.title}</span>
-                            <span style={{ marginRight: 15 }}>{getTime(item.alarmTimestamp)}</span>
-                            <span>{new Date(item.alarmTimestamp).toLocaleDateString()}</span>
-                            <Button style={{textAlign:"center",marginLeft:"28px",marginTop:"5px"}} onClick={()=>DeleteAlarm(item)}>Delete</Button>
-                        </div>
-                    ))}
+                    <h3 className="text-decoration-underline">Past Alarm</h3>
+                    <Table striped bordered hover className="mt-4">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Time</th>
+                                <th>Date</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {pastAlarms.map((item, index) => (
+                                <tr>
+                                    <td>{item.title}</td>
+                                    <td>{getTime(item.alarmTimestamp)}</td>
+                                    <td>{new Date(item.alarmTimestamp).toLocaleDateString()}</td>
+                                    <td>
+                                        <OverlayTrigger
+                                            key={index}
+                                            placement={'top'}
+                                            overlay={
+                                                <Tooltip id={`tooltip-${index}`}>
+                                                    Delete
+                                                </Tooltip>
+                                            }
+                                        >
+                                            <Button
+                                                className="btn-sm"
+                                                variant="outline-danger"
+                                                style={{ marginLeft: 10 }}
+                                                onClick={() => DeleteAlarm(item)}
+                                            >
+                                                <MdOutlineDeleteOutline />
+                                            </Button>
+                                        </OverlayTrigger>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
                 </div>
                 <div className="w-50 m-5 text-center">
-                    <h3>Upcoming Alarm</h3>
-                    {upcomingAlarms.map((item, index) => (
-                        <div className="d-flex" key={index}>
-                            <span style={{ marginRight: 15 }}>{item.title}</span>
-                            <span style={{ marginRight: 15 }}>{getTime(item.alarmTimestamp)}</span>
-                            <span>{new Date(item.alarmTimestamp).toLocaleDateString()}</span>
-                            <Button style={{textAlign:"center",marginLeft:"28px",marginTop:"5px"}} onClick={()=>DeleteAlarm(item)}>Delete</Button>
-                            <Button style={{textAlign:"center",marginLeft:"28px",marginTop:"5px"}} onClick={pauseAlarm}>{alarmoasuse===1?"play":"pause"}</Button>
-                        </div>
-                    ))}
+                    <h3 className="text-decoration-underline">Upcoming Alarm</h3>
+                    <Table striped bordered hover className="mt-4">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Time</th>
+                                <th>Date</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {upcomingAlarms.map((item, index) => (
+                                <tr>
+                                    <td>{item.title}</td>
+                                    <td>{getTime(item.alarmTimestamp)}</td>
+                                    <td>{new Date(item.alarmTimestamp).toLocaleDateString()}</td>
+                                    <td>
+                                        <OverlayTrigger
+                                            key={index}
+                                            placement={'top'}
+                                            overlay={
+                                                <Tooltip id={`tooltip-${index}`}>
+                                                    {!alarmPause ? 'Pause' : 'Play'}
+                                                </Tooltip>
+                                            }
+                                        >
+                                            <Button
+                                                className="btn-sm"
+                                                variant="outline-primary"
+                                                style={{ marginLeft: 10 }}
+                                                onClick={setPauseAlarm}
+                                            >
+                                                {!alarmPause ? <MdPauseCircleOutline /> : <MdPlayCircleOutline />}
+                                            </Button>
+                                        </OverlayTrigger>
+                                        <OverlayTrigger
+                                            key={index}
+                                            placement={'top'}
+                                            overlay={
+                                                <Tooltip id={`tooltip-${index}`}>
+                                                    Delete
+                                                </Tooltip>
+                                            }
+                                        >
+                                            <Button
+                                                className="btn-sm"
+                                                variant="outline-danger"
+                                                style={{ marginLeft: 10 }}
+                                                onClick={() => DeleteAlarm(item)}
+                                            >
+                                                <MdOutlineDeleteOutline />
+                                            </Button>
+                                        </OverlayTrigger>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
                 </div>
             </div>
             <audio src={alarmAudio} ref={audioRef} />
@@ -190,7 +264,7 @@ const Alarm = () => {
                 displayAlarm={displayAlarm}
                 callAlarms={callAlarm}
             />
-        </AlarmWrapper>
+        </AlarmWrapper >
     );
 };
 

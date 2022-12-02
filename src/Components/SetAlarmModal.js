@@ -18,11 +18,11 @@ const SetAlarmModal = ({
     play,
     displayAlarm,
     callAlarms,
-    
+
 }) => {
 
     const date = new Date();
-    let id=undefined;
+    let id = undefined;
     const [hour, setHour] = useState(date.getHours());
     const [minute, setMinute] = useState(date.getMinutes());
     const [second, setSecond] = useState(date.getSeconds());
@@ -103,6 +103,7 @@ const SetAlarmModal = ({
                 debugger
                 notifyUser(alarmName, alarmNote);
                 play();
+                callAlarms();
             }, diff);
 
         }
@@ -148,7 +149,7 @@ const SetAlarmModal = ({
         debugger
         let newAlarms = allAlarms;
         debugger
-   
+
         const newAlarm = {
             timeoutId: id,
             alarmTimestamp: alarmTimestamp,

@@ -114,7 +114,7 @@ export const AlarmWrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 50%;
+    width: 80%;
     .title {
       color: #555;
       font-size: 32px;
@@ -127,6 +127,9 @@ export const AlarmWrapper = styled.div`
       color: #555;
       margin-bottom: 0;
       line-height: 1.5;
+      width: 80%;
+      display: flex;
+      justify-content: center;
     }
     .day {
       font-family: 'Orbitron', sans-serif;
