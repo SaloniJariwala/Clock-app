@@ -89,6 +89,7 @@ const SetAlarmModal = ({
         const newAlarm = {
             timeoutId: '',
             alarmTimestamp: alarmTimestamp,
+            isAlarmPause:false,
             title: alarmName,
             note: alarmNote,
             country: country

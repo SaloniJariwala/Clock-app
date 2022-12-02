@@ -125,31 +125,55 @@ const Alarm = () => {
 
     const setPauseAlarm = (value) => {
         debugger
-        console.log(value);
-        debugger
-        if (value.alarmTimestamp) {
             if (!alarmPause) {
+                debugger
                 setAlarmPause(true);
+                debugger
                 clearTimeout(value.timeoutId);
+                const allAlarms = JSON.parse(localStorage.getItem('Alarms'));
+                debugger
+                allAlarms.forEach((item) => {
+                    debugger
+                    if (item.alarmTimestamp === value.alarmTimestamp) {
+                        debugger
+                        item.isAlarmPause=true;
+                    }
+                });
+                debugger
+                localStorage.setItem('Alarms', JSON.stringify(allAlarms));
+                debugger
             } else {
+                debugger
+                setAlarmPause(false);
+                debugger
                 const diff = value.alarmTimestamp - Date.now()
                 if (diff >= 0) {
+                    debugger
                     const id = setTimeout(() => {
+                        debugger
                         notifyUser(value.title, value.note);
+                        debugger
                         play();
+                        debugger
                         callAlarm();
                     }, diff);
+                    debugger
                     const allAlarms = JSON.parse(localStorage.getItem('Alarms'));
+                    debugger
                     allAlarms.forEach((item) => {
+                        debugger
                         if (item.alarmTimestamp === value.alarmTimestamp) {
+                            debugger
                             item.timeoutId = id;
                         }
                     });
+                    debugger
                     localStorage.setItem('Alarms', JSON.stringify(allAlarms));
+                    debugger
                 }
-                setAlarmPause(false)
+               
             }
-        }
+     
 
     }
 
@@ -225,7 +249,7 @@ const Alarm = () => {
                                             placement={'top'}
                                             overlay={
                                                 <Tooltip id={`tooltip-${index}`}>
-                                                    {!alarmPause ? 'Pause' : 'Play'}
+                                                    {!item.isAlarmPause  ? 'Pause' : 'Play'}
                                                 </Tooltip>
                                             }
                                         >
@@ -235,7 +259,7 @@ const Alarm = () => {
                                                 style={{ marginLeft: 10 }}
                                                 onClick={() => setPauseAlarm(item)}
                                             >
-                                                {alarmPause ? <MdPlayCircleOutline /> : <MdPauseCircleOutline />}
+                                                {item.isAlarmPause ? <MdPlayCircleOutline /> : <MdPauseCircleOutline />}
                                             </Button>
                                         </OverlayTrigger>
                                         <OverlayTrigger
