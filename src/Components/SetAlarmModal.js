@@ -62,32 +62,21 @@ const SetAlarmModal = ({
         const currTimestamp = Date.now();
         let diff;
         diff = nearestAlarm?.alarmTimestamp - currTimestamp;
-        debugger
 
         if (diff >= 0) {
-            debugger
             const id = setTimeout(() => {
-                debugger
                 console.log(id, "id");
-                debugger
                 notifyUser(alarmName, alarmNote);
                 play();
                 callAlarms();
             }, diff);
-            debugger
             const allAlarms = JSON.parse(localStorage.getItem('Alarms'));
-            debugger
             allAlarms.forEach((item) => {
-                debugger
                 if (item.alarmTimestamp === nearestAlarm.alarmTimestamp) {
-                    debugger
                     item.timeoutId = id;
-                    debugger
                 }
             });
-            debugger
             localStorage.setItem('Alarms', JSON.stringify(allAlarms));
-            debugger
         }
     }
 

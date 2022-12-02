@@ -5,6 +5,7 @@ import { days, monthNames } from "../Constant";
 import SetAlarmModal from "./SetAlarmModal";
 import alarmAudio from "../Assets/audios/alarm.mp3";
 import { MdOutlineDeleteOutline, MdPauseCircleOutline, MdPlayCircleOutline } from "react-icons/md";
+import { notifyUser } from "../Utils/Notification";
 
 const Alarm = () => {
 
@@ -16,12 +17,9 @@ const Alarm = () => {
     const [alarm, setAlarm] = useState([]);
     const [upcomingAlarms, setUpcomingAlarms] = useState([]);
     const [pastAlarms, setPastAlarms] = useState([]);
-    const [deleteAlarm, setDeleteAlarm] = useState([]);
     const [flag, setFlag] = useState(false);
     const [alarmPause, setAlarmPause] = useState(false);
     const audioRef = useRef();
-
-    // const audio = new Audio(alarmAudio);
 
     const play = () => {
         audioRef.current.play();
@@ -98,23 +96,16 @@ const Alarm = () => {
         callAlarm();
     }
 
-    // const getAlarms = () => {
-    //     const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
-    //     const upcomingAlarm = allAlarms.filter((item) => item.alarmTimestamp > Date.now());
-    //     setUpcomingAlarms(upcomingAlarm);
-    //     const pastAlarm = allAlarms.filter((item) => item.alarmTimestamp < Date.now());
-    //     setPastAlarms(pastAlarm);
-    // }
-
-
-
-
     const DeleteAlarm = (value) => {
         let newList = JSON.parse(localStorage.getItem("Alarms")) || [];
         let delAlarm = newList.filter((time) => time.alarmTimestamp !== value.alarmTimestamp)
-        setDeleteAlarm(delAlarm)
+        debugger
+        console.log(delAlarm, "::::");
+        clearTimeout(value.timeoutId)
+        debugger
+        callAlarm();
+        debugger
         localStorage.setItem('Alarms', JSON.stringify(delAlarm))
-        clearTimeout(delAlarm)
     };
 
 
@@ -125,19 +116,41 @@ const Alarm = () => {
         setUpcomingAlarms(upcomingAlarm);
         const pastAlarm = allAlarms.filter((item) => item.alarmTimestamp < Date.now());
         setPastAlarms(pastAlarm);
-    }, [flag, deleteAlarm]);
+    }, [flag]);
 
     const getTime = (timestamp) => {
         const date = new Date(timestamp);
         return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
     }
 
-    const setPauseAlarm = () => {
-        if (!alarmPause) {
-            setAlarmPause(true);
-        } else {
-            setAlarmPause(false);
+    const setPauseAlarm = (value) => {
+        debugger
+        console.log(value);
+        debugger
+        if (value.alarmTimestamp) {
+            if (!alarmPause) {
+                setAlarmPause(true);
+                clearTimeout(value.timeoutId);
+            } else {
+                const diff = value.alarmTimestamp - Date.now()
+                if (diff >= 0) {
+                    const id = setTimeout(() => {
+                        notifyUser(value.title, value.note);
+                        play();
+                        callAlarm();
+                    }, diff);
+                    const allAlarms = JSON.parse(localStorage.getItem('Alarms'));
+                    allAlarms.forEach((item) => {
+                        if (item.alarmTimestamp === value.alarmTimestamp) {
+                            item.timeoutId = id;
+                        }
+                    });
+                    localStorage.setItem('Alarms', JSON.stringify(allAlarms));
+                }
+                setAlarmPause(false)
+            }
         }
+
     }
 
     return (
@@ -154,7 +167,7 @@ const Alarm = () => {
                     <Table striped bordered hover className="mt-4">
                         <thead>
                             <tr>
-                                <th>Name</th>
+                                <th>Title</th>
                                 <th>Time</th>
                                 <th>Date</th>
                                 <th>Actions</th>
@@ -162,13 +175,12 @@ const Alarm = () => {
                         </thead>
                         <tbody>
                             {pastAlarms.map((item, index) => (
-                                <tr>
+                                <tr key={index}>
                                     <td>{item.title}</td>
                                     <td>{getTime(item.alarmTimestamp)}</td>
                                     <td>{new Date(item.alarmTimestamp).toLocaleDateString()}</td>
                                     <td>
                                         <OverlayTrigger
-                                            key={index}
                                             placement={'top'}
                                             overlay={
                                                 <Tooltip id={`tooltip-${index}`}>
@@ -196,7 +208,7 @@ const Alarm = () => {
                     <Table striped bordered hover className="mt-4">
                         <thead>
                             <tr>
-                                <th>Name</th>
+                                <th>Title</th>
                                 <th>Time</th>
                                 <th>Date</th>
                                 <th>Actions</th>
@@ -204,13 +216,12 @@ const Alarm = () => {
                         </thead>
                         <tbody>
                             {upcomingAlarms.map((item, index) => (
-                                <tr>
+                                <tr key={index}>
                                     <td>{item.title}</td>
                                     <td>{getTime(item.alarmTimestamp)}</td>
                                     <td>{new Date(item.alarmTimestamp).toLocaleDateString()}</td>
                                     <td>
                                         <OverlayTrigger
-                                            key={index}
                                             placement={'top'}
                                             overlay={
                                                 <Tooltip id={`tooltip-${index}`}>
@@ -222,13 +233,12 @@ const Alarm = () => {
                                                 className="btn-sm"
                                                 variant="outline-primary"
                                                 style={{ marginLeft: 10 }}
-                                                onClick={setPauseAlarm}
+                                                onClick={() => setPauseAlarm(item)}
                                             >
-                                                {!alarmPause ? <MdPauseCircleOutline /> : <MdPlayCircleOutline />}
+                                                {alarmPause ? <MdPlayCircleOutline /> : <MdPauseCircleOutline />}
                                             </Button>
                                         </OverlayTrigger>
                                         <OverlayTrigger
-                                            key={index}
                                             placement={'top'}
                                             overlay={
                                                 <Tooltip id={`tooltip-${index}`}>
