@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import "../App.css";
 import { AlarmTitleWrapper } from "./style";
@@ -17,11 +17,12 @@ const SetAlarmModal = ({
     minuteOptions,
     play,
     displayAlarm,
-    callAlarms
+    callAlarms,
+
 }) => {
 
     const date = new Date();
-
+    let id = undefined;
     const [hour, setHour] = useState(date.getHours());
     const [minute, setMinute] = useState(date.getMinutes());
     const [second, setSecond] = useState(date.getSeconds());
@@ -77,7 +78,7 @@ const SetAlarmModal = ({
             for (let i = 0; i < newList.length; i++) {
                 for (let j = 0; j <= i; j++) {
                     debugger
-                    if (newList[j].alarmTimestamp < newList[i].alarmTimestamp) {
+                    if (newList[j].alarmTimestamp >= newList[i].alarmTimestamp) {
                         debugger
                         nearestAlarm = newList[j];
                         debugger
@@ -96,13 +97,17 @@ const SetAlarmModal = ({
 
         if (diff >= 0) {
             debugger
-            var id = setTimeout(() => {
+            id = setTimeout(() => {
+                debugger
+                console.log(id, "id");
+                debugger
                 notifyUser(alarmName, alarmNote);
                 play();
+                callAlarms();
             }, diff);
+
         }
     }
-
 
     // const ringAlarm = () => {
     //     const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
@@ -135,14 +140,18 @@ const SetAlarmModal = ({
     // }
 
     const storeAlarm = (alarm) => {
+        debugger
         const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
         debugger
         const date = alarm.toDate();
+        debugger
         const alarmTimestamp = date.getTime();
+        debugger
         let newAlarms = allAlarms;
         debugger
+
         const newAlarm = {
-            // timeoutId: id,
+            timeoutId: id,
             alarmTimestamp: alarmTimestamp,
             title: alarmName,
             note: alarmNote,
