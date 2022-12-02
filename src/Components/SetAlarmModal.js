@@ -22,38 +22,12 @@ const SetAlarmModal = ({
 }) => {
 
     const date = new Date();
-    let id = undefined;
     const [hour, setHour] = useState(date.getHours());
     const [minute, setMinute] = useState(date.getMinutes());
     const [second, setSecond] = useState(date.getSeconds());
     const [country, setCountry] = useState('India');
     const [alarmName, setAlarmName] = useState('');
     const [alarmNote, setAlarmNote] = useState('');
-
-
-    // useEffect(() => {
-    //     const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
-    //     const currentTimestamp = Date.now();
-    //     let newList = allAlarms.filter((item) => item.alarmTimestamp > currentTimestamp);
-    //     let nearestAlarm;
-    //     if (newList.length > 1) {
-    //         for (let i = 0; i < newList.length; i++) {
-    //             for (let j = 0; j <= i; j++) {
-    //                 debugger
-    //                 if (newList[j].alarmTimestamp < newList[i].alarmTimestamp) {
-    //                     debugger
-    //                     nearestAlarm = newList[j];
-    //                     debugger
-    //                 }
-    //             }
-    //         }
-    //     } else {
-    //         debugger
-    //         nearestAlarm = newList[0];
-    //         debugger
-    //     }
-    //     callToAlarm(nearestAlarm?.alarmTimestamp);
-    // }, [])
 
     const setTime = (value, name) => {
         if (name === 'hour') {
@@ -77,18 +51,13 @@ const SetAlarmModal = ({
         if (newList.length > 1) {
             for (let i = 0; i < newList.length; i++) {
                 for (let j = 0; j <= i; j++) {
-                    debugger
                     if (newList[j].alarmTimestamp >= newList[i].alarmTimestamp) {
-                        debugger
                         nearestAlarm = newList[j];
-                        debugger
                     }
                 }
             }
         } else {
-            debugger
             nearestAlarm = newList[0];
-            debugger
         }
         const currTimestamp = Date.now();
         let diff;
@@ -97,7 +66,7 @@ const SetAlarmModal = ({
 
         if (diff >= 0) {
             debugger
-            id = setTimeout(() => {
+            const id = setTimeout(() => {
                 debugger
                 console.log(id, "id");
                 debugger
@@ -105,113 +74,63 @@ const SetAlarmModal = ({
                 play();
                 callAlarms();
             }, diff);
-
+            debugger
+            const allAlarms = JSON.parse(localStorage.getItem('Alarms'));
+            debugger
+            allAlarms.forEach((item) => {
+                debugger
+                if (item.alarmTimestamp === nearestAlarm.alarmTimestamp) {
+                    debugger
+                    item.timeoutId = id;
+                    debugger
+                }
+            });
+            debugger
+            localStorage.setItem('Alarms', JSON.stringify(allAlarms));
+            debugger
         }
     }
 
-    // const ringAlarm = () => {
-    //     const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
-    //     debugger
-    //     const currentTimestamp = Date.now();
-    //     let newList = allAlarms.filter((item) => item.alarmTimestamp > currentTimestamp);
-    //     let nearestAlarm;
-    //     debugger
-    //     if (newList.length > 1) {
-    //         for (let i = 0; i < newList.length; i++) {
-    //             debugger
-    //             for (let j = 0; j <= i; j++) {
-    //                 debugger
-    //                 if (newList[j].alarmTimestamp < newList[i].alarmTimestamp) {
-    //                     debugger
-    //                     nearestAlarm = newList[j];
-    //                     debugger
-    //                 }
-    //             }
-    //         }
-    //     } else {
-    //         debugger
-    //         nearestAlarm = newList[0];
-    //         debugger
-    //     }
-    //     debugger
-    //     const difference = nearestAlarm.alarmTimestamp - Date.now();
-    //     debugger
-    //     callToAlarm(difference, nearestAlarm.title, nearestAlarm.note);
-    // }
-
     const storeAlarm = (alarm) => {
-        debugger
         const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
-        debugger
         const date = alarm.toDate();
-        debugger
         const alarmTimestamp = date.getTime();
-        debugger
         let newAlarms = allAlarms;
-        debugger
 
         const newAlarm = {
-            timeoutId: id,
+            timeoutId: '',
             alarmTimestamp: alarmTimestamp,
             title: alarmName,
             note: alarmNote,
             country: country
         };
-        debugger
         newAlarms.push(newAlarm);
-        debugger
         localStorage.setItem('Alarms', JSON.stringify(newAlarms));
         closeModal();
-        debugger
         callAlarms();
     }
 
-
-    // const setAlarm = () => {
-    //     debugger
-    //     displayAlarm(hour, minute, second, 'India', 'GMT+5.30');
-    //     const alarm = new Date();
-    //     alarm.setHours(Number(hour));
-    //     alarm.setMinutes(Number(minute));
-    //     alarm.setSeconds(Number(second));
-    //     debugger
-    //     storeAlarm(alarm);
-    //     debugger
-    //     ringAlarm();
-    // }
-
     const countryWiseSetAlarm = (action, diffHours = 0, diffMins = 0, country, gmt) => {
         displayAlarm(hour, minute, second, country, gmt);
-        debugger
         let fDate;
         const newDate = new Date();
         newDate.setHours(Number(hour));
         newDate.setMinutes(Number(minute));
         newDate.setSeconds(Number(second));
-        debugger
         if (action === 'back') {
-            debugger
             fDate = moment(newDate).add({ hours: diffHours, minutes: diffMins });
         } else if (action === 'ahead') {
-            debugger
             fDate = moment(newDate).subtract({ hours: diffHours, minutes: diffMins });
         } else {
             fDate = moment(newDate);
         }
-        debugger
         storeAlarm(fDate);
-        debugger
         callToAlarm();
-        // const forDate = fDate.toDate();
-        // debugger
-        // const timestamp = forDate.getTime();
-        // callToAlarm(timestamp);
     }
 
     const checkCountry = () => {
         switch (country) {
             case 'India':
-                // setAlarm();
                 countryWiseSetAlarm('india', 0, 0, 'GMT+5.30')
                 break;
 
