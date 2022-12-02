@@ -157,7 +157,7 @@ const Alarm = () => {
                                 <th>Name</th>
                                 <th>Time</th>
                                 <th>Date</th>
-                                <th></th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -199,7 +199,7 @@ const Alarm = () => {
                                 <th>Name</th>
                                 <th>Time</th>
                                 <th>Date</th>
-                                <th></th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
