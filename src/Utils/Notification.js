@@ -5,7 +5,7 @@ export const notifyUser = (notificationText = "Notification Enabled", notificati
         const notification = new Notification(notificationText, { body: notificationNote });
         notification.onclick = (event) => {
             event.preventDefault(); // prevent the browser from focusing the Notification's tab
-            window.open('http://www.mozilla.org', '_blank');
+            window.open('http://localhost:3000/alarm', '_self');
         }
     } else if (Notification.permission !== "denied") {
         Notification.requestPermission().then((permission) => {
@@ -13,7 +13,7 @@ export const notifyUser = (notificationText = "Notification Enabled", notificati
                 const notification = new Notification(notificationText);
                 notification.onclick = (event) => {
                     event.preventDefault(); // prevent the browser from focusing the Notification's tab
-                    window.open('http://www.mozilla.org', '_blank');
+                    window.open('http://localhost:3000/alarm', '_self');
                 }
             }
         });

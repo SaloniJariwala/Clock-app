@@ -15,7 +15,9 @@ const Alarm = () => {
     const [alarm, setAlarm] = useState([]);
     const [upcomingAlarms, setUpcomingAlarms] = useState([]);
     const [pastAlarms, setPastAlarms] = useState([]);
+    const [deleteAlarm,setDeleteAlarm]=useState([]);
     const [flag, setFlag] = useState(false);
+    let alarmoasuse=0;
     const audioRef = useRef();
 
     // const audio = new Audio(alarmAudio);
@@ -102,17 +104,45 @@ const Alarm = () => {
     //     setPastAlarms(pastAlarm);
     // }
 
+
+
+
+    const DeleteAlarm = (value) => {
+        let newList = JSON.parse(localStorage.getItem("Alarms")) || [];
+        let  delAlarm = newList.filter((time) =>time.alarmTimestamp !== value.alarmTimestamp)
+        setDeleteAlarm(delAlarm)
+        localStorage.setItem('Alarms',JSON.stringify(delAlarm))
+        clearTimeout(delAlarm)
+      };
+
+
+
     useEffect(() => {
         const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
         const upcomingAlarm = allAlarms.filter((item) => item.alarmTimestamp > Date.now());
         setUpcomingAlarms(upcomingAlarm);
         const pastAlarm = allAlarms.filter((item) => item.alarmTimestamp < Date.now());
         setPastAlarms(pastAlarm);
-    }, [flag]);
+    }, [flag,deleteAlarm]);
 
     const getTime = (timestamp) => {
         const date = new Date(timestamp);
         return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+    }
+
+    const pauseAlarm=()=>{
+        debugger
+        if(alarmoasuse===0){
+            debugger
+            alarmoasuse=1
+            debugger
+            play();
+        }else{
+            debugger
+            alarmoasuse=0;
+            debugger
+           pause()
+        }
     }
 
     return (
@@ -131,6 +161,7 @@ const Alarm = () => {
                             <span style={{ marginRight: 15 }}>{item.title}</span>
                             <span style={{ marginRight: 15 }}>{getTime(item.alarmTimestamp)}</span>
                             <span>{new Date(item.alarmTimestamp).toLocaleDateString()}</span>
+                            <Button style={{textAlign:"center",marginLeft:"28px",marginTop:"5px"}} onClick={()=>DeleteAlarm(item)}>Delete</Button>
                         </div>
                     ))}
                 </div>
@@ -141,6 +172,8 @@ const Alarm = () => {
                             <span style={{ marginRight: 15 }}>{item.title}</span>
                             <span style={{ marginRight: 15 }}>{getTime(item.alarmTimestamp)}</span>
                             <span>{new Date(item.alarmTimestamp).toLocaleDateString()}</span>
+                            <Button style={{textAlign:"center",marginLeft:"28px",marginTop:"5px"}} onClick={()=>DeleteAlarm(item)}>Delete</Button>
+                            <Button style={{textAlign:"center",marginLeft:"28px",marginTop:"5px"}} onClick={pauseAlarm}>{alarmoasuse===1?"play":"pause"}</Button>
                         </div>
                     ))}
                 </div>
