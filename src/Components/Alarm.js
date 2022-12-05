@@ -65,7 +65,7 @@ const audioData = [
 ];
 
 const Alarm = () => {
-    const date=new Date()
+
     const [currentTime, setCurrrentTime] = useState('');
     const [day, setDay] = useState('');
     const [showModal, setShowModal] = useState(false);
@@ -80,6 +80,7 @@ const Alarm = () => {
     const [alarmNote, setAlarmNote] = useState('');
     const [flag, setFlag] = useState(false);
     const [alarmPause, setAlarmPause] = useState(false);
+    const [alarmAudio, setAlarmAudio] = useState(alarm);
     const audioRef = useRef();
 
     const play = () => {
@@ -165,13 +166,13 @@ const Alarm = () => {
         localStorage.setItem('Alarms', JSON.stringify(delAlarm))
     };
 
-const setAlarmDetails=(value,name)=>{
-    if(name==='title'){
-        setAlarmTitle(value);
-    }else{
-        setAlarmNote(value);
+    const setAlarmDetails = (value, name) => {
+        if (name === 'title') {
+            setAlarmTitle(value);
+        } else {
+            setAlarmNote(value);
+        }
     }
-}
 
     const storeAlarm = (alarm) => {
         const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
@@ -183,7 +184,7 @@ const setAlarmDetails=(value,name)=>{
             timeoutId: '',
             alarmTimestamp: alarmTimestamp,
             isAlarmPause: false,
-            isAlarmSnooze:false,
+            isAlarmSnooze: false,
             title: alarmTitle,
             note: alarmNote,
             country: country
@@ -235,7 +236,7 @@ const setAlarmDetails=(value,name)=>{
     useEffect(() => {
         const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
         const upcomingAlarm = allAlarms.filter((item) => item.alarmTimestamp > Date.now());
-        const newUpcoming=upcomingAlarm.filter((item)=>!item.isAlarmSnooze)
+        const newUpcoming = upcomingAlarm.filter((item) => !item.isAlarmSnooze)
         setUpcomingAlarms(newUpcoming);
         const pastAlarm = allAlarms.filter((item) => item.alarmTimestamp < Date.now());
         setPastAlarms(pastAlarm);
@@ -286,20 +287,19 @@ const setAlarmDetails=(value,name)=>{
     }
 
     const SnoozeAlarm = () => {
-        console.log(currentAlarm,"::");
         pause();
         const newStamp = currentAlarm.alarmTimestamp + 120000;
-        const allAlrams=JSON.parse(localStorage.getItem('Alarms'));
-        allAlrams.forEach((item)=>{
-           if(item.alarmTimestamp === currentAlarm.alarmTimestamp){
-                item.alarmTimestamp=newStamp;
-                item.isAlarmSnooze=true;
+        const allAlrams = JSON.parse(localStorage.getItem('Alarms'));
+        allAlrams.forEach((item) => {
+            if (item.alarmTimestamp === currentAlarm.alarmTimestamp) {
+                item.alarmTimestamp = newStamp;
+                item.isAlarmSnooze = true;
             }
         });
-            localStorage.setItem('Alarms',JSON.stringify(allAlrams));
-            callToAlarm();
-            callAlarm()
-            
+        localStorage.setItem('Alarms', JSON.stringify(allAlrams));
+        callToAlarm();
+        callAlarm()
+
     }
 
     return (
@@ -309,7 +309,7 @@ const setAlarmDetails=(value,name)=>{
             <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
                 <Button variant="success" onClick={handleClick} style={{ marginRight: 10 }}>Set Alarm</Button>
                 <Button variant="danger" onClick={handleStop}>Stop Alarm</Button>
-                <Button variant="success" onClick={ SnoozeAlarm} style={{ marginLeft: 10 }}>Snooze Alarm</Button>
+                <Button variant="success" onClick={SnoozeAlarm} style={{ marginLeft: 10 }}>Snooze Alarm</Button>
             </div>
             <div className="container-fluid d-flex justify-content-evenly">
                 <div className="w-50 m-5 text-center">
