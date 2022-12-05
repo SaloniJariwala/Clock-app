@@ -81,6 +81,9 @@ const Alarm = () => {
     const [flag, setFlag] = useState(false);
     const [alarmPause, setAlarmPause] = useState(false);
     const [alarmAudio, setAlarmAudio] = useState(defaultAlarm);
+    const [snoozebutton,setSnoozeButton]=useState(false);
+    const [isSnooze,setIsSnooze]=useState(false);
+    const [snoozeTime,setSnoozeTime]=useState(300000);
     const audioRef = useRef();
 
     const play = () => {
@@ -156,6 +159,8 @@ const Alarm = () => {
     const handleStop = () => {
         pause();
         callAlarm();
+        setSnoozeButton(false)
+        setIsSnooze(false)
     }
 
     const settingCountryName = (name) => {
@@ -178,6 +183,10 @@ const Alarm = () => {
         }
     }
 
+    const settingSnooze=(value)=>{
+        setIsSnooze(value);
+    }
+
 
     const storeAlarm = (alarm) => {
         const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
@@ -189,10 +198,11 @@ const Alarm = () => {
             timeoutId: '',
             alarmTimestamp: alarmTimestamp,
             isAlarmPause: false,
-            isAlarmSnooze: false,
+            isAlarmSnooze: isSnooze,
             title: alarmTitle,
             note: alarmNote,
-            country: country
+            country: country,
+            snoozeTime:snoozeTime
         };
         newAlarms.push(newAlarm);
         localStorage.setItem('Alarms', JSON.stringify(newAlarms));
@@ -216,6 +226,9 @@ const Alarm = () => {
         } else {
             nearestAlarm = newList[0];
         }
+        if(nearestAlarm?.isAlarmSnooze){
+            setSnoozeButton(true)
+        }
         setCurrentAlarm(nearestAlarm);
         const currTimestamp = Date.now();
         let diff;
@@ -233,14 +246,15 @@ const Alarm = () => {
                 }
             });
             localStorage.setItem('Alarms', JSON.stringify(allAlarms));
+            callAlarm();
         }
     }
 
     useEffect(() => {
         const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
         const upcomingAlarm = allAlarms.filter((item) => item.alarmTimestamp > Date.now());
-        const newUpcoming = upcomingAlarm.filter((item) => !item.isAlarmSnooze)
-        setUpcomingAlarms(newUpcoming);
+        // const newUpcoming = upcomingAlarm.filter((item) => !item.isAlarmSnooze)
+        setUpcomingAlarms(upcomingAlarm);
         const pastAlarm = allAlarms.filter((item) => item.alarmTimestamp < Date.now());
         setPastAlarms(pastAlarm);
     }, [flag]);
@@ -286,18 +300,22 @@ const Alarm = () => {
 
     const SnoozeAlarm = () => {
         pause();
-        const newStamp = currentAlarm.alarmTimestamp + 120000;
+        const newStamp = currentAlarm.alarmTimestamp + snoozeTime;
         const allAlrams = JSON.parse(localStorage.getItem('Alarms'));
         allAlrams.forEach((item) => {
             if (item.alarmTimestamp === currentAlarm.alarmTimestamp) {
                 item.alarmTimestamp = newStamp;
-                item.isAlarmSnooze = true;
+                // item.isAlarmSnooze = true;
             }
         });
         localStorage.setItem('Alarms', JSON.stringify(allAlrams));
         callToAlarm();
         callAlarm()
 
+    }
+
+    const setSnoozeTiming=(value)=>{
+        setSnoozeTime(value);
     }
 
     return (
@@ -307,7 +325,9 @@ const Alarm = () => {
             <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
                 <Button variant="success" onClick={handleClick} style={{ marginRight: 10 }}>Set Alarm</Button>
                 <Button variant="danger" onClick={handleStop}>Stop Alarm</Button>
-                <Button variant="success" onClick={SnoozeAlarm} style={{ marginLeft: 10 }}>Snooze Alarm</Button>
+                {snoozebutton &&  
+                (<Button variant="success" onClick={SnoozeAlarm} style={{ marginLeft: 10 }}>Snooze Alarm</Button>)}
+             
             </div>
             <div className="container-fluid d-flex justify-content-evenly">
                 <div className="w-50 m-5 text-center">
@@ -425,6 +445,8 @@ const Alarm = () => {
                 storeAlarm={storeAlarm}
                 setAlarmDetails={setAlarmDetails}
                 settingCountryName={settingCountryName}
+                setSnoozeTiming={setSnoozeTiming}
+                settingSnooze={settingSnooze}
             />
         </AlarmWrapper >
     );
