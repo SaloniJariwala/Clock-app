@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CountryContainer = ({ options, setCountryName, setGmtTime }) => {
+const CountryContainer = ({ options, setCountryName }) => {
 
     const handleChange = (event) => {
         setCountryName(event.target.value);
