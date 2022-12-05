@@ -177,7 +177,7 @@ const Alarm = () => {
             setAlarmNote(value);
         }
     }
-}
+
 
     const storeAlarm = (alarm) => {
         const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
@@ -236,8 +236,6 @@ const Alarm = () => {
         }
     }
 
-
-
     useEffect(() => {
         const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
         const upcomingAlarm = allAlarms.filter((item) => item.alarmTimestamp > Date.now());
@@ -264,7 +262,6 @@ const Alarm = () => {
             });
             localStorage.setItem('Alarms', JSON.stringify(allAlarms));
             callAlarm()
-
         } else {
             setAlarmPause(false);
             const diff = value.alarmTimestamp - Date.now()
@@ -283,12 +280,8 @@ const Alarm = () => {
                 });
                 localStorage.setItem('Alarms', JSON.stringify(allAlarms));
             }
-
             callAlarm()
-
         }
-
-
     }
 
     const SnoozeAlarm = () => {
