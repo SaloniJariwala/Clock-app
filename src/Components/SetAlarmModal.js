@@ -5,7 +5,6 @@ import { AlarmTitleWrapper } from "./style";
 import HourContainer from "./SetAlarmForm/HourContainer";
 import MinutesContainer from "./SetAlarmForm/MinutesContainer";
 import SecondsContainer from "./SetAlarmForm/SecondsContainer";
-import { notifyUser } from "../Utils/Notification";
 import CountryContainer from "./SetAlarmForm/CountryContainer";
 import { countryData } from "../Data/countryData";
 import moment from "moment";
@@ -21,6 +20,7 @@ const SetAlarmModal = ({
     callToAlarm,
     storeAlarm,
     setAlarmDetails,
+    settingCountryName
 }) => {
     const date = new Date();
 
@@ -39,16 +39,15 @@ const SetAlarmModal = ({
         }
     };
 
-    const setCountryName = (name) => {
-        setCountry(name);
-    };
-
     useEffect(() => {
         callToAlarm();
         callAlarms();
     }, []);
 
-  
+    const setCountryName = (value) => {
+        setCountry(value);
+        settingCountryName(value);
+    }
 
     const countryWiseSetAlarm = (
         action,
@@ -58,11 +57,11 @@ const SetAlarmModal = ({
         gmt
     ) => {
         displayAlarm(hour, minute, second, country, gmt);
-        let fDate;
         const newDate = new Date();
         newDate.setHours(Number(hour));
         newDate.setMinutes(Number(minute));
         newDate.setSeconds(Number(second));
+        let fDate;
         if (action === "back") {
             fDate = moment(newDate).add({ hours: diffHours, minutes: diffMins });
         } else if (action === "ahead") {

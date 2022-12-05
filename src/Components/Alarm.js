@@ -3,7 +3,7 @@ import { Button, OverlayTrigger, Table, Tooltip } from "react-bootstrap";
 import { AlarmWrapper } from "./style";
 import { days, monthNames } from "../Constant";
 import SetAlarmModal from "./SetAlarmModal";
-import alarm from "../Assets/audios/alarm.mp3";
+import defaultAlarm from "../Assets/audios/alarm.mp3";
 import alert from "../Assets/audios/alert.mp3";
 import chipTunes from "../Assets/audios/chiptune.mp3";
 import clockSound from "../Assets/audios/clcokSound.mp3";
@@ -14,13 +14,12 @@ import overSimplified from "../Assets/audios/oversimplified.mp3";
 import superMario from "../Assets/audios/superMario.mp3";
 import { MdOutlineDeleteOutline, MdPauseCircleOutline, MdPlayCircleOutline } from "react-icons/md";
 import { notifyUser } from "../Utils/Notification";
-import moment from "moment";
 
 const audioData = [
     {
         audioId: 1,
         audioTitle: "Alarm",
-        track: alarm
+        track: defaultAlarm
     },
     {
         audioId: 2,
@@ -66,6 +65,7 @@ const audioData = [
 
 const Alarm = () => {
 
+
     const [currentTime, setCurrrentTime] = useState('');
     const [day, setDay] = useState('');
     const [showModal, setShowModal] = useState(false);
@@ -80,7 +80,7 @@ const Alarm = () => {
     const [alarmNote, setAlarmNote] = useState('');
     const [flag, setFlag] = useState(false);
     const [alarmPause, setAlarmPause] = useState(false);
-    const [alarmAudio, setAlarmAudio] = useState(alarm);
+    const [alarmAudio, setAlarmAudio] = useState(defaultAlarm);
     const audioRef = useRef();
 
     const play = () => {
@@ -158,6 +158,10 @@ const Alarm = () => {
         callAlarm();
     }
 
+    const settingCountryName = (name) => {
+        setCountry(name);
+    };
+
     const DeleteAlarm = (value) => {
         let newList = JSON.parse(localStorage.getItem("Alarms")) || [];
         let delAlarm = newList.filter((time) => time.alarmTimestamp !== value.alarmTimestamp)
@@ -173,6 +177,7 @@ const Alarm = () => {
             setAlarmNote(value);
         }
     }
+}
 
     const storeAlarm = (alarm) => {
         const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
@@ -426,6 +431,7 @@ const Alarm = () => {
                 callToAlarm={callToAlarm}
                 storeAlarm={storeAlarm}
                 setAlarmDetails={setAlarmDetails}
+                settingCountryName={settingCountryName}
             />
         </AlarmWrapper >
     );
