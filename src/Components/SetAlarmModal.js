@@ -78,10 +78,10 @@ const SetAlarmModal = ({
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         callToAlarm();
         callAlarms();
-    },[]);
+    }, []);
 
 
 
@@ -95,7 +95,7 @@ const SetAlarmModal = ({
         const newAlarm = {
             timeoutId: '',
             alarmTimestamp: alarmTimestamp,
-            isAlarmPause:false,
+            isAlarmPause: false,
             title: alarmName,
             note: alarmNote,
             country: country

@@ -161,11 +161,8 @@ const Alarm = () => {
 
     const SnoozeAlarm = (value) => {
         const getAlarm = JSON.parse(localStorage.getItem('Alarms')) || [];
-        console.log(getAlarm);
         getAlarm.forEach((item) => {
             const Snoozetime = new Date(item.alarmTimestamp)
-            console.log(Snoozetime);
-
         })
     }
 
