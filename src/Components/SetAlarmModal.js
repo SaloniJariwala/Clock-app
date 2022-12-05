@@ -27,8 +27,7 @@ const SetAlarmModal = ({
     settingCountryName,
     settingAlarmAudio,
     audioData,
-    previewAudio
-    settingCountryName,
+    previewAudio,
     setSnoozeTiming,
     settingSnooze
 }) => {
@@ -175,22 +174,29 @@ const SetAlarmModal = ({
                         onChange={(event) => setAlarmDetails(event.target.value, 'note')}
                     ></textarea>
                 </div>
-                <div>
-                    <Form>
+                <div style={{ padding: "0 10px", marginBottom: "1em" }}>
+                    <Form style={{ display: 'flex', flexDirection: 'column' }}>
                         <label> Set Snooze </label>
-
-                        <Switch onChange={handleSwitch} style={{marginLeft:"5px"}}/>
-                        {snoozeSwitch && (
-                            <>
-                                <Radio.Group name="radiogroup" defaultValue={300000} onChange={(event)=>setSnoozeTiming(event.target.value)} style={{marginLeft:"25px"}}>
-                                    <Radio value={300000}>5 Minute</Radio>
-                                    <Radio value={600000}>10 Minute</Radio>
-                                    <Radio value={900000}>15 Minute</Radio>
-                                </Radio.Group>
-                            </>
-                        )}
-
-
+                        <div style={{ display: 'flex' }}>
+                            <Switch onChange={handleSwitch} style={{ width: '10%', marginTop: 3 }} />
+                            {snoozeSwitch && (
+                                <>
+                                    <Radio.Group
+                                        name="radiogroup"
+                                        defaultValue={300000}
+                                        onChange={(event)=>setSnoozeTiming(event.target.value)}
+                                        style={{
+                                            marginLeft: 20,
+                                            marginTop: 3
+                                        }}
+                                    >
+                                        <Radio value={300000}>5 Minute</Radio>
+                                        <Radio value={600000}>10 Minute</Radio>
+                                        <Radio value={900000}>15 Minute</Radio>
+                                    </Radio.Group>
+                                </>
+                            )}
+                        </div>
                     </Form>
                 </div>
             </Modal.Body>
