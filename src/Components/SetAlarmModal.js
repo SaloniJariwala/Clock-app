@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import "../App.css";
 import { AlarmTitleWrapper } from "./style";
@@ -44,41 +44,75 @@ const SetAlarmModal = ({
     }
 
     const callToAlarm = () => {
+        debugger
         const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
+        debugger
         const currentTimestamp = Date.now();
-        let newList = allAlarms.filter((item) => item.alarmTimestamp > currentTimestamp);
+        debugger
+        let newList = allAlarms.filter((item) => item.alarmTimestamp > currentTimestamp && !item.isAlarmPause);
+        debugger
         let nearestAlarm;
+        debugger
         if (newList.length > 1) {
+            debugger
             for (let i = 0; i < newList.length; i++) {
+                debugger
                 for (let j = 0; j <= i; j++) {
+                    debugger
                     if (newList[j].alarmTimestamp >= newList[i].alarmTimestamp) {
+                        debugger
                         nearestAlarm = newList[j];
+                        debugger
                     }
                 }
             }
         } else {
+            debugger
             nearestAlarm = newList[0];
+            debugger
         }
         const currTimestamp = Date.now();
+        debugger
         let diff;
         diff = nearestAlarm?.alarmTimestamp - currTimestamp;
+        debugger
 
         if (diff >= 0) {
+            debugger
             const id = setTimeout(() => {
-                console.log(id, "id");
-                notifyUser(alarmName, alarmNote);
+                debugger
+                notifyUser(nearestAlarm.title, nearestAlarm.note);
+                debugger
                 play();
+                debugger
                 callAlarms();
+                debugger
             }, diff);
+            debugger
             const allAlarms = JSON.parse(localStorage.getItem('Alarms'));
+            debugger
             allAlarms.forEach((item) => {
+                debugger
                 if (item.alarmTimestamp === nearestAlarm.alarmTimestamp) {
+                    debugger
                     item.timeoutId = id;
+                    debugger
                 }
             });
+            debugger
             localStorage.setItem('Alarms', JSON.stringify(allAlarms));
         }
     }
+
+    useEffect(()=>{
+        debugger
+        callToAlarm();
+        debugger
+        callAlarms();
+    },[]);
+
+
+
 
     const storeAlarm = (alarm) => {
         const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];

@@ -126,24 +126,19 @@ const Alarm = () => {
     const setPauseAlarm = (value) => {
         debugger
             if (!alarmPause) {
-                debugger
                 setAlarmPause(true);
-                debugger
                 clearTimeout(value.timeoutId);
                 const allAlarms = JSON.parse(localStorage.getItem('Alarms'));
-                debugger
                 allAlarms.forEach((item) => {
-                    debugger
                     if (item.alarmTimestamp === value.alarmTimestamp) {
                         debugger
                         item.isAlarmPause=true;
                     }
                 });
-                debugger
                 localStorage.setItem('Alarms', JSON.stringify(allAlarms));
-                debugger
+                callAlarm()
+               
             } else {
-                debugger
                 setAlarmPause(false);
                 debugger
                 const diff = value.alarmTimestamp - Date.now()
@@ -165,16 +160,30 @@ const Alarm = () => {
                         if (item.alarmTimestamp === value.alarmTimestamp) {
                             debugger
                             item.timeoutId = id;
+                            item.isAlarmPause=false
                         }
                     });
                     debugger
                     localStorage.setItem('Alarms', JSON.stringify(allAlarms));
                     debugger
                 }
+    
+                callAlarm()
                
             }
      
 
+    }
+
+
+    const SnoozeAlarm=(value)=>{
+            const getAlarm=JSON.parse(localStorage.getItem('Alarms')) || [];
+            console.log(getAlarm);
+            getAlarm.forEach((item)=>{
+                const Snoozetime=new Date(item.alarmTimestamp)
+                console.log(Snoozetime);
+
+            })
     }
 
     return (
@@ -184,6 +193,7 @@ const Alarm = () => {
             <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
                 <Button variant="success" onClick={handleClick} style={{ marginRight: 10 }}>Set Alarm</Button>
                 <Button variant="danger" onClick={handleStop}>Stop Alarm</Button>
+                <Button variant="success" onClick={SnoozeAlarm} style={{ marginLeft: 10 }}>Snooze Alarm</Button>
             </div>
             <div className="container-fluid d-flex justify-content-evenly">
                 <div className="w-50 m-5 text-center">
@@ -259,7 +269,7 @@ const Alarm = () => {
                                                 style={{ marginLeft: 10 }}
                                                 onClick={() => setPauseAlarm(item)}
                                             >
-                                                {item.isAlarmPause ? <MdPlayCircleOutline /> : <MdPauseCircleOutline />}
+                                                {!item.isAlarmPause ?<MdPauseCircleOutline />: <MdPlayCircleOutline />}
                                             </Button>
                                         </OverlayTrigger>
                                         <OverlayTrigger
