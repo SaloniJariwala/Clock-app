@@ -9,6 +9,8 @@ import CountryContainer from "./SetAlarmForm/CountryContainer";
 import { countryData } from "../Data/countryData";
 import moment from "moment";
 import AudioContainer from "./SetAlarmForm/AudioContainer";
+import Form from 'react-bootstrap/Form';
+import { Switch, Radio } from 'antd';
 
 const SetAlarmModal = ({
     showModal,
@@ -26,6 +28,9 @@ const SetAlarmModal = ({
     settingAlarmAudio,
     audioData,
     previewAudio
+    settingCountryName,
+    setSnoozeTiming,
+    settingSnooze
 }) => {
     const date = new Date();
 
@@ -33,6 +38,7 @@ const SetAlarmModal = ({
     const [minute, setMinute] = useState(date.getMinutes());
     const [second, setSecond] = useState(date.getSeconds());
     const [country, setCountry] = useState("India");
+    const [snoozeSwitch, setSnoozeSwitch] = useState(false)
 
     const setTime = (value, name) => {
         if (name === "hour") {
@@ -53,7 +59,7 @@ const SetAlarmModal = ({
     const setCountryName = (value) => {
         setCountry(value);
         settingCountryName(value);
-    }
+    };
 
     const countryWiseSetAlarm = (
         action,
@@ -110,6 +116,15 @@ const SetAlarmModal = ({
         }
     };
 
+    const handleSwitch = (event) => {
+        settingSnooze(event);
+        if (event) {
+            setSnoozeSwitch(true)
+        } else {
+            setSnoozeSwitch(false)
+        }
+    }
+
     return (
         <Modal centered show={showModal} onHide={closeModal}>
             <Modal.Header closeButton>
@@ -159,6 +174,24 @@ const SetAlarmModal = ({
                         placeholder="Enter Alarm Note"
                         onChange={(event) => setAlarmDetails(event.target.value, 'note')}
                     ></textarea>
+                </div>
+                <div>
+                    <Form>
+                        <label> Set Snooze </label>
+
+                        <Switch onChange={handleSwitch} style={{marginLeft:"5px"}}/>
+                        {snoozeSwitch && (
+                            <>
+                                <Radio.Group name="radiogroup" defaultValue={300000} onChange={(event)=>setSnoozeTiming(event.target.value)} style={{marginLeft:"25px"}}>
+                                    <Radio value={300000}>5 Minute</Radio>
+                                    <Radio value={600000}>10 Minute</Radio>
+                                    <Radio value={900000}>15 Minute</Radio>
+                                </Radio.Group>
+                            </>
+                        )}
+
+
+                    </Form>
                 </div>
             </Modal.Body>
             <Modal.Footer>
