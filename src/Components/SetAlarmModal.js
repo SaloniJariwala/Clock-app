@@ -8,6 +8,7 @@ import SecondsContainer from "./SetAlarmForm/SecondsContainer";
 import CountryContainer from "./SetAlarmForm/CountryContainer";
 import { countryData } from "../Data/countryData";
 import moment from "moment";
+import AudioContainer from "./SetAlarmForm/AudioContainer";
 
 const SetAlarmModal = ({
     showModal,
@@ -15,12 +16,16 @@ const SetAlarmModal = ({
     hourOptions,
     minuteOptions,
     play,
+    pause,
     displayAlarm,
     callAlarms,
     callToAlarm,
     storeAlarm,
     setAlarmDetails,
-    settingCountryName
+    settingCountryName,
+    settingAlarmAudio,
+    audioData,
+    previewAudio
 }) => {
     const date = new Date();
 
@@ -38,6 +43,7 @@ const SetAlarmModal = ({
             setSecond(value);
         }
     };
+
 
     useEffect(() => {
         callToAlarm();
@@ -126,6 +132,15 @@ const SetAlarmModal = ({
                     <div style={{ width: "33%", padding: "0 10px" }}>
                         <SecondsContainer options={minuteOptions} setTime={setTime} />
                     </div>
+                </div>
+                <div style={{ display: "flex", padding: "0 10px", width: "100%", marginBottom: "1em" }}>
+                    <AudioContainer
+                        options={audioData}
+                        settingAlarmAudio={settingAlarmAudio}
+                        play={play}
+                        pause={pause}
+                        previewAudio={previewAudio}
+                    />
                 </div>
                 <div style={{ padding: "0 10px", marginBottom: "1em" }}>
                     <label htmlFor="alarm-title">Alarm Title</label>

@@ -17,47 +17,47 @@ import { notifyUser } from "../Utils/Notification";
 
 const audioData = [
     {
-        audioId: 1,
+        audioId: '1',
         audioTitle: "Alarm",
         track: defaultAlarm
     },
     {
-        audioId: 2,
+        audioId: '2',
         audioTitle: "Alert",
         track: alert
     },
     {
-        audioId: 3,
+        audioId: '3',
         audioTitle: "Chiptune",
         track: chipTunes
     },
     {
-        audioId: 4,
+        audioId: '4',
         audioTitle: "Clock Sound",
         track: clockSound
     },
     {
-        audioId: 5,
+        audioId: '5',
         audioTitle: "Clock Strikes",
         track: clockStrikes
     },
     {
-        audioId: 6,
+        audioId: '6',
         audioTitle: "Clock Chime",
         track: clockChime
     },
     {
-        audioId: 7,
+        audioId: '7',
         audioTitle: "Creepy Clock",
         track: creepyClock
     },
     {
-        audioId: 8,
+        audioId: '8',
         audioTitle: "Over Simplified",
         track: overSimplified
     },
     {
-        audioId: 9,
+        audioId: '9',
         audioTitle: "Super Mario",
         track: superMario
     }
@@ -79,12 +79,24 @@ const Alarm = () => {
     const [alarmNote, setAlarmNote] = useState('');
     const [flag, setFlag] = useState(false);
     const [alarmPause, setAlarmPause] = useState(false);
-    const [alarmAudio, setAlarmAudio] = useState(defaultAlarm);
+    const [alarmAudio, setAlarmAudio] = useState();
     const audioRef = useRef();
+
+    const settingAlarmAudio = (value) => {
+        audioData.forEach((item) => {
+            if (item.audioId === value) {
+                setAlarmAudio(item.track);
+            }
+        });
+    }
 
     const play = () => {
         audioRef.current.play();
         audioRef.current.loop = true;
+    }
+
+    const previewAudio = () => {
+        audioRef.current.play();
     }
 
     const callAlarm = () => {
@@ -281,9 +293,7 @@ const Alarm = () => {
                 });
                 localStorage.setItem('Alarms', JSON.stringify(allAlarms));
             }
-
             callAlarm()
-
         }
 
 
@@ -423,6 +433,7 @@ const Alarm = () => {
                 minuteOptions={minuteOtions}
                 currentTime={currentTime}
                 play={play}
+                pause={pause}
                 handleStop={handleStop}
                 displayAlarm={displayAlarm}
                 callAlarms={callAlarm}
@@ -430,6 +441,9 @@ const Alarm = () => {
                 storeAlarm={storeAlarm}
                 setAlarmDetails={setAlarmDetails}
                 settingCountryName={settingCountryName}
+                audioData={audioData}
+                settingAlarmAudio={settingAlarmAudio}
+                previewAudio={previewAudio}
             />
         </AlarmWrapper >
     );
