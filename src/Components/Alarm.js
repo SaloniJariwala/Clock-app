@@ -99,12 +99,8 @@ const Alarm = () => {
     const DeleteAlarm = (value) => {
         let newList = JSON.parse(localStorage.getItem("Alarms")) || [];
         let delAlarm = newList.filter((time) => time.alarmTimestamp !== value.alarmTimestamp)
-        debugger
-        console.log(delAlarm, "::::");
         clearTimeout(value.timeoutId)
-        debugger
         callAlarm();
-        debugger
         localStorage.setItem('Alarms', JSON.stringify(delAlarm))
     };
 
@@ -124,66 +120,53 @@ const Alarm = () => {
     }
 
     const setPauseAlarm = (value) => {
-        debugger
-            if (!alarmPause) {
-                setAlarmPause(true);
-                clearTimeout(value.timeoutId);
+        if (!alarmPause) {
+            setAlarmPause(true);
+            clearTimeout(value.timeoutId);
+            const allAlarms = JSON.parse(localStorage.getItem('Alarms'));
+            allAlarms.forEach((item) => {
+                if (item.alarmTimestamp === value.alarmTimestamp) {
+                    item.isAlarmPause = true;
+                }
+            });
+            localStorage.setItem('Alarms', JSON.stringify(allAlarms));
+            callAlarm()
+
+        } else {
+            setAlarmPause(false);
+            const diff = value.alarmTimestamp - Date.now()
+            if (diff >= 0) {
+                const id = setTimeout(() => {
+                    notifyUser(value.title, value.note);
+                    play();
+                    callAlarm();
+                }, diff);
                 const allAlarms = JSON.parse(localStorage.getItem('Alarms'));
                 allAlarms.forEach((item) => {
                     if (item.alarmTimestamp === value.alarmTimestamp) {
-                        debugger
-                        item.isAlarmPause=true;
+                        item.timeoutId = id;
+                        item.isAlarmPause = false
                     }
                 });
                 localStorage.setItem('Alarms', JSON.stringify(allAlarms));
-                callAlarm()
-               
-            } else {
-                setAlarmPause(false);
-                debugger
-                const diff = value.alarmTimestamp - Date.now()
-                if (diff >= 0) {
-                    debugger
-                    const id = setTimeout(() => {
-                        debugger
-                        notifyUser(value.title, value.note);
-                        debugger
-                        play();
-                        debugger
-                        callAlarm();
-                    }, diff);
-                    debugger
-                    const allAlarms = JSON.parse(localStorage.getItem('Alarms'));
-                    debugger
-                    allAlarms.forEach((item) => {
-                        debugger
-                        if (item.alarmTimestamp === value.alarmTimestamp) {
-                            debugger
-                            item.timeoutId = id;
-                            item.isAlarmPause=false
-                        }
-                    });
-                    debugger
-                    localStorage.setItem('Alarms', JSON.stringify(allAlarms));
-                    debugger
-                }
-    
-                callAlarm()
-               
             }
-     
+
+            callAlarm()
+
+        }
+
 
     }
 
 
-    const SnoozeAlarm=(value)=>{
-            const getAlarm=JSON.parse(localStorage.getItem('Alarms')) || [];
-            console.log(getAlarm);
-            getAlarm.forEach((item)=>{
-                const Snoozetime=new Date(item.alarmTimestamp)
-                console.log(Snoozetime);
+    const SnoozeAlarm = (value) => {
+        const getAlarm = JSON.parse(localStorage.getItem('Alarms')) || [];
+        console.log(getAlarm);
+        getAlarm.forEach((item) => {
+            const Snoozetime = new Date(item.alarmTimestamp)
+            console.log(Snoozetime);
 
-            })
+        })
     }
 
     return (
@@ -259,7 +242,7 @@ const Alarm = () => {
                                             placement={'top'}
                                             overlay={
                                                 <Tooltip id={`tooltip-${index}`}>
-                                                    {!item.isAlarmPause  ? 'Pause' : 'Play'}
+                                                    {!item.isAlarmPause ? 'Pause' : 'Play'}
                                                 </Tooltip>
                                             }
                                         >
@@ -269,7 +252,7 @@ const Alarm = () => {
                                                 style={{ marginLeft: 10 }}
                                                 onClick={() => setPauseAlarm(item)}
                                             >
-                                                {!item.isAlarmPause ?<MdPauseCircleOutline />: <MdPlayCircleOutline />}
+                                                {!item.isAlarmPause ? <MdPauseCircleOutline /> : <MdPlayCircleOutline />}
                                             </Button>
                                         </OverlayTrigger>
                                         <OverlayTrigger
