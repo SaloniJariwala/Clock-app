@@ -4,64 +4,9 @@ import { AlarmWrapper } from "../style";
 import { days, monthNames } from "../../Constant";
 import SetAlarmModal from "./SetAlarmModal";
 import defaultAlarm from "../../Assets/audios/alarm.mp3";
-import alert from "../../Assets/audios/alert.mp3";
-import chipTunes from "../../Assets/audios/chiptune.mp3";
-import clockSound from "../../Assets/audios/clcokSound.mp3";
-import clockStrikes from "../../Assets/audios/clcokStrikes.mp3";
-import clockChime from "../../Assets/audios/clockChime.mp3";
-import creepyClock from "../../Assets/audios/creepyClock.mp3";
-import overSimplified from "../../Assets/audios/oversimplified.mp3";
-import superMario from "../../Assets/audios/superMario.mp3";
 import { MdOutlineDeleteOutline, MdPauseCircleOutline, MdPlayCircleOutline } from "react-icons/md";
 import { notifyUser } from "../../Utils/Notification";
-
-const audioData = [
-    {
-        audioId: '1',
-        audioTitle: "Alarm",
-        track: defaultAlarm
-    },
-    {
-        audioId: '2',
-        audioTitle: "Alert",
-        track: alert
-    },
-    {
-        audioId: '3',
-        audioTitle: "Chiptune",
-        track: chipTunes
-    },
-    {
-        audioId: '4',
-        audioTitle: "Clock Sound",
-        track: clockSound
-    },
-    {
-        audioId: '5',
-        audioTitle: "Clock Strikes",
-        track: clockStrikes
-    },
-    {
-        audioId: '6',
-        audioTitle: "Clock Chime",
-        track: clockChime
-    },
-    {
-        audioId: '7',
-        audioTitle: "Creepy Clock",
-        track: creepyClock
-    },
-    {
-        audioId: '8',
-        audioTitle: "Over Simplified",
-        track: overSimplified
-    },
-    {
-        audioId: '9',
-        audioTitle: "Super Mario",
-        track: superMario
-    }
-];
+import { audioData } from "../../Data/audioData";
 
 const Alarm = () => {
 
@@ -83,6 +28,7 @@ const Alarm = () => {
     const [snoozebutton, setSnoozeButton] = useState(false);
     const [isSnooze, setIsSnooze] = useState(false);
     const [snoozeTime, setSnoozeTime] = useState(300000);
+    const [volume, setVolume] = useState(50);
     const audioRef = useRef();
 
     const settingAlarmAudio = (value, name) => {
@@ -114,6 +60,14 @@ const Alarm = () => {
     const pause = () => {
         audioRef.current.pause();
     };
+
+    const settingVolume = (value) => {
+        setVolume(value);
+    };
+
+    useEffect(() => {
+        audioRef.current.volume = volume / 100;
+    }, [volume]);
 
     const closeModal = () => {
         setShowModal(false);
@@ -174,7 +128,7 @@ const Alarm = () => {
 
     const handleStop = () => {
         pause();
-        callAlarm();
+        setFlag(!flag);
         setSnoozeButton(false);
         setIsSnooze(false)
     };
@@ -187,7 +141,7 @@ const Alarm = () => {
         let newList = JSON.parse(localStorage.getItem("Alarms")) || [];
         let delAlarm = newList.filter((time) => time.alarmTimestamp !== value.alarmTimestamp);
         clearTimeout(value.timeoutId);
-        callAlarm();
+        setFlag(!flag);
         localStorage.setItem('Alarms', JSON.stringify(delAlarm))
     };
 
@@ -223,7 +177,7 @@ const Alarm = () => {
         newAlarms.push(newAlarm);
         localStorage.setItem('Alarms', JSON.stringify(newAlarms));
         closeModal();
-        callAlarm();
+        setFlag(!flag);
     };
 
     const callToAlarm = () => {
@@ -253,7 +207,7 @@ const Alarm = () => {
             const id = setTimeout(() => {
                 notifyUser(nearestAlarm.title, nearestAlarm.note);
                 play();
-                callAlarm();
+                setFlag(!flag);
             }, diff);
             const allAlarms = JSON.parse(localStorage.getItem('Alarms'));
             allAlarms.forEach((item) => {
@@ -262,7 +216,7 @@ const Alarm = () => {
                 }
             });
             localStorage.setItem('Alarms', JSON.stringify(allAlarms));
-            callAlarm();
+            setFlag(!flag);
         }
     };
 
@@ -290,7 +244,7 @@ const Alarm = () => {
                 }
             });
             localStorage.setItem('Alarms', JSON.stringify(allAlarms));
-            callAlarm()
+            setFlag(!flag);
         } else {
             setAlarmPause(false);
             const diff = value.alarmTimestamp - Date.now();
@@ -298,7 +252,7 @@ const Alarm = () => {
                 const id = setTimeout(() => {
                     notifyUser(value.title, value.note);
                     play();
-                    callAlarm();
+                    setFlag(!flag);
                 }, diff);
                 const allAlarms = JSON.parse(localStorage.getItem('Alarms'));
                 allAlarms.forEach((item) => {
@@ -309,7 +263,7 @@ const Alarm = () => {
                 });
                 localStorage.setItem('Alarms', JSON.stringify(allAlarms));
             }
-            callAlarm();
+            setFlag(!flag);
         }
     };
 
@@ -324,7 +278,7 @@ const Alarm = () => {
         });
         localStorage.setItem('Alarms', JSON.stringify(allAlrams));
         callToAlarm();
-        callAlarm()
+        setFlag(!flag);
 
     };
 
@@ -467,6 +421,7 @@ const Alarm = () => {
                 settingSnooze={settingSnooze}
                 setAlarmAudioTone={setAlarmAudioTone}
                 alarmAudio={alarmAudio}
+                settingVolume={settingVolume}
             />
         </AlarmWrapper >
     );

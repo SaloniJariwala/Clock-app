@@ -11,6 +11,7 @@ import moment from "moment";
 import AudioContainer from "./SetAlarmForm/AudioContainer";
 import Form from 'react-bootstrap/Form';
 import { Switch, Radio } from 'antd';
+import VolumeContainer from "./SetAlarmForm/VolumeContainer";
 
 const SetAlarmModal = ({
     showModal,
@@ -31,7 +32,8 @@ const SetAlarmModal = ({
     setSnoozeTiming,
     settingSnooze,
     setAlarmAudioTone,
-    alarmAudio
+    alarmAudio,
+    settingVolume
 }) => {
     const date = new Date();
 
@@ -125,6 +127,11 @@ const SetAlarmModal = ({
         }
     }
 
+    const onCancel = () => {
+        pause();
+        closeModal();
+    }
+
     return (
         <Modal centered show={showModal} onHide={closeModal}>
             <Modal.Header closeButton>
@@ -158,6 +165,9 @@ const SetAlarmModal = ({
                         alarmAudio={alarmAudio}
                         setAlarmAudioTone={setAlarmAudioTone}
                     />
+                </div>
+                <div style={{ display: "flex", padding: "0 10px", width: "100%", marginBottom: "1em" }}>
+                    <VolumeContainer settingVolume={settingVolume} />
                 </div>
                 <div style={{ padding: "0 10px", marginBottom: "1em" }}>
                     <label htmlFor="alarm-title">Alarm Title</label>
@@ -206,12 +216,13 @@ const SetAlarmModal = ({
             <Modal.Footer>
                 <AlarmTitleWrapper>
                     <div className="footer-row">
-                        <Button onClick={play}>Test</Button>
+                        <Button variant="outline-secondary" style={{ width: 100 }} onClick={play}>Test</Button>
                         <div>
-                            <Button onClick={closeModal}>Cancel</Button>
+                            <Button variant="outline-danger" style={{ width: 100 }} onClick={onCancel}>Cancel</Button>
                             <Button
-                                style={{ background: "rebeccapurple", color: "white" }}
+                                variant="outline-primary"
                                 onClick={checkCountry}
+                                style={{ marginLeft: 10, width: 100 }}
                             >
                                 Start
                             </Button>

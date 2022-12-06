@@ -21,6 +21,7 @@ const AudioContainer = ({
     };
 
     const handleChange = (event) => {
+        setAudioName(event.target.value);
         settingAlarmAudio(event.target.value, 'local');
     };
 

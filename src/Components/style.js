@@ -139,13 +139,11 @@ export const AlarmWrapper = styled.div`
 `;
 
 export const AlarmTitleWrapper = styled.div`
-    .btn-start {
-      background-color: rebeccapurple!important;
-      color: white!important;
-    }
+  width: 100%;
     .footer-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      width: 100%;
     }
 `;
