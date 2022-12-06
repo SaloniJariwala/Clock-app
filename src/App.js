@@ -4,7 +4,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Layout from './Components/Layout';
 import Clock from "./Components/Clock";
-import Alarm from './Components/Alarm';
+import Alarm from './Pages/AlarmPage';
 import Stopwatch from "./Components/Stopwatch";
 import Timer from "./Components/Timer";
 

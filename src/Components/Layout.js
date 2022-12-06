@@ -1,15 +1,11 @@
 import { NavbarWrapper, SidebarWrapper, SideBox } from "./style";
 import { ReactComponent as ClockLogo } from "../Assets/svg/clock-logo.svg";
 import React, { useState } from "react";
-// // import { DownOutlined } from "@ant-design/icons";
-// import { VscColorMode } from "react-icons/vsc";
-// import { FiSettings } from "react-icons/fi";
 import { ReactComponent as Clock } from "../Assets/svg/clock.svg";
 import { ReactComponent as Alarm } from "../Assets/svg/alarm.svg";
 import { ReactComponent as Stopwatch } from "../Assets/svg/stopwatch.svg";
 import { ReactComponent as Timer } from "../Assets/svg/timer.svg";
 import { useNavigate } from "react-router-dom";
-// import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 
 const items = [
     {
@@ -41,22 +37,7 @@ const items = [
 const Layout = ({ Component }) => {
 
     const navigate = useNavigate();
-    // const [toolsClicked, setToolsClicked] = useState(false);
-    // const [currentTool, setCurrentTool] = useState('');
     const [currentSide, setCurrentSide] = useState('');
-
-    // const handleToolsClick = (event) => {
-    //     event.preventDefault();
-    //     setToolsClicked(!toolsClicked);
-    // };
-
-    // const handleToolsMouseOver = (event, name) => {
-    //     setCurrentTool(name);
-    // };
-
-    // const handleToolsMouseOut = () => {
-    //     setCurrentTool(null);
-    // };
 
     const handleSideMouseOver = (event, name) => {
         setCurrentSide(name);

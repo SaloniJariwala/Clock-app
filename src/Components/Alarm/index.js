@@ -1,19 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, OverlayTrigger, Table, Tooltip } from "react-bootstrap";
-import { AlarmWrapper } from "./style";
-import { days, monthNames } from "../Constant";
+import { AlarmWrapper } from "../style";
+import { days, monthNames } from "../../Constant";
 import SetAlarmModal from "./SetAlarmModal";
-import defaultAlarm from "../Assets/audios/alarm.mp3";
-import alert from "../Assets/audios/alert.mp3";
-import chipTunes from "../Assets/audios/chiptune.mp3";
-import clockSound from "../Assets/audios/clcokSound.mp3";
-import clockStrikes from "../Assets/audios/clcokStrikes.mp3";
-import clockChime from "../Assets/audios/clockChime.mp3";
-import creepyClock from "../Assets/audios/creepyClock.mp3";
-import overSimplified from "../Assets/audios/oversimplified.mp3";
-import superMario from "../Assets/audios/superMario.mp3";
+import defaultAlarm from "../../Assets/audios/alarm.mp3";
+import alert from "../../Assets/audios/alert.mp3";
+import chipTunes from "../../Assets/audios/chiptune.mp3";
+import clockSound from "../../Assets/audios/clcokSound.mp3";
+import clockStrikes from "../../Assets/audios/clcokStrikes.mp3";
+import clockChime from "../../Assets/audios/clockChime.mp3";
+import creepyClock from "../../Assets/audios/creepyClock.mp3";
+import overSimplified from "../../Assets/audios/oversimplified.mp3";
+import superMario from "../../Assets/audios/superMario.mp3";
 import { MdOutlineDeleteOutline, MdPauseCircleOutline, MdPlayCircleOutline } from "react-icons/md";
-import { notifyUser } from "../Utils/Notification";
+import { notifyUser } from "../../Utils/Notification";
 
 const audioData = [
     {
@@ -65,7 +65,6 @@ const audioData = [
 
 const Alarm = () => {
 
-
     const [currentTime, setCurrrentTime] = useState('');
     const [day, setDay] = useState('');
     const [showModal, setShowModal] = useState(false);
@@ -81,39 +80,44 @@ const Alarm = () => {
     const [flag, setFlag] = useState(false);
     const [alarmPause, setAlarmPause] = useState(false);
     const [alarmAudio, setAlarmAudio] = useState(defaultAlarm);
-    const [snoozebutton,setSnoozeButton]=useState(false);
-    const [isSnooze,setIsSnooze]=useState(false);
-    const [snoozeTime,setSnoozeTime]=useState(300000);
+    const [snoozebutton, setSnoozeButton] = useState(false);
+    const [isSnooze, setIsSnooze] = useState(false);
+    const [snoozeTime, setSnoozeTime] = useState(300000);
     const audioRef = useRef();
 
-    const settingAlarmAudio = (value) => {
-        audioData.forEach((item) => {
-            if (item.audioId === value) {
-                setAlarmAudio(item.track);
-            }
-        });
-    }
+    const settingAlarmAudio = (value, name) => {
+        if (name === 'local') {
+            setAlarmAudio(value);
+        } else {
+            const url = URL.createObjectURL(value);
+            setAlarmAudio(url);
+        }
+    };
+
+    const setAlarmAudioTone = (value) => {
+        setAlarmAudio(value);
+    };
 
     const play = () => {
         audioRef.current.play();
         audioRef.current.loop = true;
-    }
+    };
 
     const previewAudio = () => {
         audioRef.current.play();
-    }
+    };
 
     const callAlarm = () => {
         setFlag(!flag);
-    }
+    };
 
     const pause = () => {
         audioRef.current.pause();
-    }
+    };
 
     const closeModal = () => {
         setShowModal(false);
-    }
+    };
 
     const displayAlarm = (hour, minute, second, country, GMT) => {
         const newAlarm = {
@@ -148,7 +152,7 @@ const Alarm = () => {
             }
         }
         setHourOptions(arr);
-    }
+    };
 
     const getMinutes = () => {
         let mArr = [];
@@ -160,20 +164,20 @@ const Alarm = () => {
             }
         }
         setMinuteOptions(mArr);
-    }
+    };
 
     const handleClick = () => {
         getHours();
         getMinutes();
         setShowModal(true);
-    }
+    };
 
     const handleStop = () => {
         pause();
         callAlarm();
-        setSnoozeButton(false)
+        setSnoozeButton(false);
         setIsSnooze(false)
-    }
+    };
 
     const settingCountryName = (name) => {
         setCountry(name);
@@ -181,8 +185,8 @@ const Alarm = () => {
 
     const DeleteAlarm = (value) => {
         let newList = JSON.parse(localStorage.getItem("Alarms")) || [];
-        let delAlarm = newList.filter((time) => time.alarmTimestamp !== value.alarmTimestamp)
-        clearTimeout(value.timeoutId)
+        let delAlarm = newList.filter((time) => time.alarmTimestamp !== value.alarmTimestamp);
+        clearTimeout(value.timeoutId);
         callAlarm();
         localStorage.setItem('Alarms', JSON.stringify(delAlarm))
     };
@@ -193,11 +197,11 @@ const Alarm = () => {
         } else {
             setAlarmNote(value);
         }
-    }
+    };
 
-    const settingSnooze=(value)=>{
+    const settingSnooze = (value) => {
         setIsSnooze(value);
-    }
+    };
 
 
     const storeAlarm = (alarm) => {
@@ -214,13 +218,13 @@ const Alarm = () => {
             title: alarmTitle,
             note: alarmNote,
             country: country,
-            snoozeTime:snoozeTime
+            snoozeTime: snoozeTime
         };
         newAlarms.push(newAlarm);
         localStorage.setItem('Alarms', JSON.stringify(newAlarms));
         closeModal();
         callAlarm();
-    }
+    };
 
     const callToAlarm = () => {
         const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
@@ -238,7 +242,7 @@ const Alarm = () => {
         } else {
             nearestAlarm = newList[0];
         }
-        if(nearestAlarm?.isAlarmSnooze){
+        if (nearestAlarm?.isAlarmSnooze) {
             setSnoozeButton(true)
         }
         setCurrentAlarm(nearestAlarm);
@@ -260,12 +264,11 @@ const Alarm = () => {
             localStorage.setItem('Alarms', JSON.stringify(allAlarms));
             callAlarm();
         }
-    }
+    };
 
     useEffect(() => {
         const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
         const upcomingAlarm = allAlarms.filter((item) => item.alarmTimestamp > Date.now());
-        // const newUpcoming = upcomingAlarm.filter((item) => !item.isAlarmSnooze)
         setUpcomingAlarms(upcomingAlarm);
         const pastAlarm = allAlarms.filter((item) => item.alarmTimestamp < Date.now());
         setPastAlarms(pastAlarm);
@@ -274,7 +277,7 @@ const Alarm = () => {
     const getTime = (timestamp) => {
         const date = new Date(timestamp);
         return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
-    }
+    };
 
     const setPauseAlarm = (value) => {
         if (!alarmPause) {
@@ -290,7 +293,7 @@ const Alarm = () => {
             callAlarm()
         } else {
             setAlarmPause(false);
-            const diff = value.alarmTimestamp - Date.now()
+            const diff = value.alarmTimestamp - Date.now();
             if (diff >= 0) {
                 const id = setTimeout(() => {
                     notifyUser(value.title, value.note);
@@ -301,14 +304,14 @@ const Alarm = () => {
                 allAlarms.forEach((item) => {
                     if (item.alarmTimestamp === value.alarmTimestamp) {
                         item.timeoutId = id;
-                        item.isAlarmPause = false
+                        item.isAlarmPause = false;
                     }
                 });
                 localStorage.setItem('Alarms', JSON.stringify(allAlarms));
             }
-            callAlarm()
+            callAlarm();
         }
-    }
+    };
 
     const SnoozeAlarm = () => {
         pause();
@@ -317,18 +320,17 @@ const Alarm = () => {
         allAlrams.forEach((item) => {
             if (item.alarmTimestamp === currentAlarm.alarmTimestamp) {
                 item.alarmTimestamp = newStamp;
-                // item.isAlarmSnooze = true;
             }
         });
         localStorage.setItem('Alarms', JSON.stringify(allAlrams));
         callToAlarm();
         callAlarm()
 
-    }
+    };
 
-    const setSnoozeTiming=(value)=>{
+    const setSnoozeTiming = (value) => {
         setSnoozeTime(value);
-    }
+    };
 
     return (
         <AlarmWrapper>
@@ -337,9 +339,9 @@ const Alarm = () => {
             <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
                 <Button variant="success" onClick={handleClick} style={{ marginRight: 10 }}>Set Alarm</Button>
                 <Button variant="danger" onClick={handleStop}>Stop Alarm</Button>
-                {snoozebutton &&  
-                (<Button variant="success" onClick={SnoozeAlarm} style={{ marginLeft: 10 }}>Snooze Alarm</Button>)}
-             
+                {snoozebutton &&
+                    (<Button variant="success" onClick={SnoozeAlarm} style={{ marginLeft: 10 }}>Snooze Alarm</Button>)}
+
             </div>
             <div className="container-fluid d-flex justify-content-evenly">
                 <div className="w-50 m-5 text-center">
@@ -463,6 +465,8 @@ const Alarm = () => {
                 previewAudio={previewAudio}
                 setSnoozeTiming={setSnoozeTiming}
                 settingSnooze={settingSnooze}
+                setAlarmAudioTone={setAlarmAudioTone}
+                alarmAudio={alarmAudio}
             />
         </AlarmWrapper >
     );

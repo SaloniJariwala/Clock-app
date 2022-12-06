@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
-import "../App.css";
-import { AlarmTitleWrapper } from "./style";
+import "../../App.css";
+import { AlarmTitleWrapper } from "../style";
 import HourContainer from "./SetAlarmForm/HourContainer";
 import MinutesContainer from "./SetAlarmForm/MinutesContainer";
 import SecondsContainer from "./SetAlarmForm/SecondsContainer";
 import CountryContainer from "./SetAlarmForm/CountryContainer";
-import { countryData } from "../Data/countryData";
+import { countryData } from "../../Data/countryData";
 import moment from "moment";
 import AudioContainer from "./SetAlarmForm/AudioContainer";
 import Form from 'react-bootstrap/Form';
@@ -29,7 +29,9 @@ const SetAlarmModal = ({
     audioData,
     previewAudio,
     setSnoozeTiming,
-    settingSnooze
+    settingSnooze,
+    setAlarmAudioTone,
+    alarmAudio
 }) => {
     const date = new Date();
 
@@ -48,7 +50,6 @@ const SetAlarmModal = ({
             setSecond(value);
         }
     };
-
 
     useEffect(() => {
         callToAlarm();
@@ -154,6 +155,8 @@ const SetAlarmModal = ({
                         play={play}
                         pause={pause}
                         previewAudio={previewAudio}
+                        alarmAudio={alarmAudio}
+                        setAlarmAudioTone={setAlarmAudioTone}
                     />
                 </div>
                 <div style={{ padding: "0 10px", marginBottom: "1em" }}>
@@ -184,7 +187,7 @@ const SetAlarmModal = ({
                                     <Radio.Group
                                         name="radiogroup"
                                         defaultValue={300000}
-                                        onChange={(event)=>setSnoozeTiming(event.target.value)}
+                                        onChange={(event) => setSnoozeTiming(event.target.value)}
                                         style={{
                                             marginLeft: 20,
                                             marginTop: 3
