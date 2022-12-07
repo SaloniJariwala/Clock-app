@@ -87,6 +87,10 @@ const SetAlarmModal = ({
         callToAlarm();
     };
 
+    const onTest=()=>{
+        console.log("hi");
+    }
+
     const checkCountry = () => {
         switch (country) {
             case "India":
@@ -216,7 +220,7 @@ const SetAlarmModal = ({
             <Modal.Footer>
                 <AlarmTitleWrapper>
                     <div className="footer-row">
-                        <Button variant="outline-secondary" style={{ width: 100 }} onClick={play}>Test</Button>
+                        <Button variant="outline-secondary" style={{ width: 100 }} onClick={onTest}>Test</Button>
                         <div>
                             <Button variant="outline-danger" style={{ width: 100 }} onClick={onCancel}>Cancel</Button>
                             <Button
