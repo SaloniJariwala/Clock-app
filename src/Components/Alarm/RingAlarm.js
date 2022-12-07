@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Modal } from "react-bootstrap";
 
 const RingAlarm=({
@@ -6,7 +6,8 @@ const RingAlarm=({
     snonzeModal,
     handleStop,
     SnoozeAlarm,
-    showSnooze
+    showSnooze,
+    currentAlarm
 })=> {
 
     return (
@@ -15,6 +16,10 @@ const RingAlarm=({
         <span className="alarm-modal-title">Set Alarm</span>
     </Modal.Header>
     <Modal.Body>
+         <div>
+                <div>{currentAlarm?.title}</div> 
+                <div>{currentAlarm?.note}</div>   
+         </div>
     <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
                 <Button variant="danger" onClick={handleStop}>Stop Alarm</Button>
                 {showSnooze ===true  ?
@@ -22,7 +27,6 @@ const RingAlarm=({
 
             </div>
     </Modal.Body>
-   
 </Modal>
   )
 }

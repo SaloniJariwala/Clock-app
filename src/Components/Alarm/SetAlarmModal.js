@@ -33,7 +33,11 @@ const SetAlarmModal = ({
     settingSnooze,
     setAlarmAudioTone,
     alarmAudio,
-    settingVolume
+    settingVolume,
+    setSnoozeModal,
+    snonzeModal,
+                SnoozeAlarm,
+                currentAlarm,
 }) => {
     const date = new Date();
 
@@ -88,7 +92,10 @@ const SetAlarmModal = ({
     };
 
     const onTest=()=>{
-        console.log("hi");
+        setSnoozeModal(true)
+        callToAlarm();
+        callAlarms();
+        play();
     }
 
     const checkCountry = () => {

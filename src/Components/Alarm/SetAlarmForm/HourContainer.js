@@ -9,24 +9,10 @@ const HourContainer = ({
 
     const [currHour, setCurrHour] = useState(newDate.getHours());
 
-    // const getHour = () => {
-    //     setCurrHour(newDate.getHours().toString());
-    // }
-
     const handleChange = (event) => {
         setTime(event.target.value, 'hour');
         setCurrHour(event.target.value);
     }
-
-    // useEffect(() => {
-    //     getHour();
-    //     const newDate = new Date();
-    //     setTime(newDate.getHours().toString(), 'hour');
-    // }, []);
-
-    // setInterval(() => {
-    //     getHour();
-    // }, 3600 * 1000);
 
     return (
         <div>

@@ -21,8 +21,8 @@ const Alarm = () => {
     const [pastAlarms, setPastAlarms] = useState([]);
     const [currentAlarm, setCurrentAlarm] = useState();
     const [country, setCountry] = useState('India');
-    const [alarmTitle, setAlarmTitle] = useState('');
-    const [alarmNote, setAlarmNote] = useState('');
+    const [alarmTitle, setAlarmTitle] = useState('Test');
+    const [alarmNote, setAlarmNote] = useState('Test');
     const [flag, setFlag] = useState(false);
     const [alarmPause, setAlarmPause] = useState(false);
     const [alarmAudio, setAlarmAudio] = useState(defaultAlarm);
@@ -316,7 +316,6 @@ const Alarm = () => {
                 SnoozeAlarm={SnoozeAlarm}
                 currentAlarm={currentAlarm}
                 showSnooze={showSnooze}
-
             />
             <div className="container-fluid d-flex justify-content-evenly">
                 <div className="w-50 m-5 text-center">
@@ -462,6 +461,10 @@ const Alarm = () => {
                 setAlarmAudioTone={setAlarmAudioTone}
                 alarmAudio={alarmAudio}
                 settingVolume={settingVolume}
+                setSnoozeModal={setSnoozeModal}
+                snonzeModal={snonzeModal}
+                SnoozeAlarm={SnoozeAlarm}
+                currentAlarm={currentAlarm}
             />
         </AlarmWrapper >
     );
