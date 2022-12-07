@@ -31,13 +31,8 @@ const SetAlarmModal = ({
     setSnoozeTiming,
     settingSnooze,
     setAlarmAudioTone,
-    settingVolume
-    alarmAudio,
     settingVolume,
     setSnoozeModal,
-    snonzeModal,
-                SnoozeAlarm,
-                currentAlarm,
 }) => {
 
     const date = new Date();
@@ -92,7 +87,7 @@ const SetAlarmModal = ({
         callToAlarm();
     };
 
-    const onTest=()=>{
+    const onTest = () => {
         setSnoozeModal(true)
         callToAlarm();
         callAlarms();
