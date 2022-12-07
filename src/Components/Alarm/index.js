@@ -316,6 +316,7 @@ const Alarm = () => {
                 SnoozeAlarm={SnoozeAlarm}
                 currentAlarm={currentAlarm}
                 showSnooze={showSnooze}
+                getTime={getTime}
             />
             <div className="container-fluid d-flex justify-content-evenly">
                 <div className="w-50 m-5 text-center">

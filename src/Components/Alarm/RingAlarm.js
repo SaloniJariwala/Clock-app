@@ -7,7 +7,8 @@ const RingAlarm=({
     handleStop,
     SnoozeAlarm,
     showSnooze,
-    currentAlarm
+    currentAlarm,
+    getTime
 })=> {
 
     return (
@@ -16,9 +17,10 @@ const RingAlarm=({
         <span className="alarm-modal-title">Set Alarm</span>
     </Modal.Header>
     <Modal.Body>
-         <div>
-                <div>{currentAlarm?.title}</div> 
-                <div>{currentAlarm?.note}</div>   
+         <div style={{alignItems:"center"}}>
+               <div>Time :{getTime(currentAlarm?.alarmTimestamp)}</div>
+                <div>Title:{currentAlarm?.title}</div> 
+                <div>Note:{currentAlarm?.note}</div>   
          </div>
     <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
                 <Button variant="danger" onClick={handleStop}>Stop Alarm</Button>
