@@ -1,30 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const SecondsContainer = ({
-    options,
-    setTime
-}) => {
+const SecondsContainer = ({ setAlarmDetails }) => {
 
     const newDate = new Date();
 
     const [currSec, setCurrSec] = useState(newDate.getSeconds());
+    const [options, setOptions] = useState([]);
 
-    // const getSec = () => {
-    //     setCurrSec(newDate.getSeconds().toString());
-    // }
-
-    // useEffect(() => {
-    //     getSec();
-    //     const newDate = new Date();
-    //     setTime(newDate.getSeconds().toString(), 'second');
-    // }, []);
-
-    // setInterval(() => {
-    //     getSec();
-    // }, 1000);
+    useEffect(() => {
+        const getSeconds = () => {
+            let mArr = [];
+            for (let j = 0; j <= 59; j++) {
+                if (j < 10) {
+                    mArr = [...mArr, `0${j.toString()}`];
+                } else {
+                    mArr = [...mArr, j.toString()];
+                }
+            }
+            setOptions(mArr);
+        };
+        getSeconds();
+    }, []);
 
     const handleChange = (event) => {
-        setTime(event.target.value, 'second');
+        setAlarmDetails(event.target.value, 'second');
         setCurrSec(event.target.value);
     }
 
@@ -38,7 +37,7 @@ const SecondsContainer = ({
                 value={currSec}
                 onChange={handleChange}
             >
-                {options.map((item, index) => (
+                {options?.map((item, index) => (
                     <option key={index} value={item}>{item}</option>
                 ))}
             </select>

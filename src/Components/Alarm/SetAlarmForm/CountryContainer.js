@@ -1,9 +1,10 @@
 import React from 'react';
+import { countryData } from "../../../Data/countryData";
 
-const CountryContainer = ({ options, setCountryName }) => {
+const CountryContainer = ({ setAlarmDetails }) => {
 
     const handleChange = (event) => {
-        setCountryName(event.target.value);
+        setAlarmDetails(event.target.value, 'country');
     }
 
     return (
@@ -18,7 +19,7 @@ const CountryContainer = ({ options, setCountryName }) => {
                 onChange={handleChange}
             >
                 <option value="default" disabled>--Select Country--</option>
-                {options.map((item, index) => (
+                {countryData?.map((item, index) => (
                     <option
                         key={index}
                         value={item.countryName}

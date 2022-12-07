@@ -13,6 +13,7 @@ const AudioContainer = ({
     pause,
     play,
     setAlarmAudioTone,
+    setAlarmDetails
 }) => {
 
     const { isAudioPlay } = useSelector((state) => state.audioReducer);
@@ -27,6 +28,7 @@ const AudioContainer = ({
 
     const handleChange = (event) => {
         setAudioName(event.target.value);
+        setAlarmDetails(event.target.value, 'tune');
         settingAlarmAudio(event.target.value, 'local');
     };
 

@@ -1,6 +1,5 @@
 import { AudioActionTypes } from "../../Constant/AudioTypes";
 
-
 const initState = {
     isAudioPlay: false,
 };

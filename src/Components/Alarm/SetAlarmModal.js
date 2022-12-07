@@ -6,30 +6,25 @@ import HourContainer from "./SetAlarmForm/HourContainer";
 import MinutesContainer from "./SetAlarmForm/MinutesContainer";
 import SecondsContainer from "./SetAlarmForm/SecondsContainer";
 import CountryContainer from "./SetAlarmForm/CountryContainer";
-import { countryData } from "../../Data/countryData";
 import moment from "moment";
 import AudioContainer from "./SetAlarmForm/AudioContainer";
 import Form from 'react-bootstrap/Form';
 import { Switch, Radio } from 'antd';
 import VolumeContainer from "./SetAlarmForm/VolumeContainer";
+import defaultAlarmTune from "../../Assets/audios/alarm.mp3";
+import { useDispatch, useSelector } from "react-redux";
+import { setAllAlarmDetails } from "../../Redux/Actions/SetAlarmModalActions";
 
 const SetAlarmModal = ({
-    showModal,
     closeModal,
-    hourOptions,
-    minuteOptions,
     play,
     pause,
-    displayAlarm,
     callAlarms,
     callToAlarm,
     storeAlarm,
-    setAlarmDetails,
-    settingCountryName,
     settingAlarmAudio,
     audioData,
     setSnoozeTiming,
-    settingSnooze,
     setAlarmAudioTone,
     settingVolume,
     setSnoozeModal,
@@ -37,40 +32,53 @@ const SetAlarmModal = ({
 
     const date = new Date();
 
+    const dispatch = useDispatch();
+    const { showModal } = useSelector((state) => state.setAlarmModalReducer);
+
     const [hour, setHour] = useState(date.getHours());
     const [minute, setMinute] = useState(date.getMinutes());
     const [second, setSecond] = useState(date.getSeconds());
     const [country, setCountry] = useState("India");
-    const [snoozeSwitch, setSnoozeSwitch] = useState(false)
+    const [alarmTitle, setAlarmTitle] = useState('Test Title');
+    const [alarmNote, setAlarmNote] = useState('Test Note');
+    const [snoozeTime, setSnoozeTime] = useState(300000);
+    const [alarmTune, setAlarmTune] = useState(defaultAlarmTune);
+    const [alarmVolume, setAlarmVolume] = useState(50);
+    const [isSnooze, setIsSnooze] = useState(false);
 
-    const setTime = (value, name) => {
-        if (name === "hour") {
+    const setAlarmDetails = (value, name) => {
+        if (name === 'country') {
+            setCountry(value);
+        } else if (name === 'hour') {
             setHour(value);
-        } else if (name === "minute") {
+        } else if (name === 'minute') {
             setMinute(value);
-        } else {
+        } else if (name === 'second') {
             setSecond(value);
+        } else if (name === 'title') {
+            setAlarmTitle(value);
+        } else if (name === 'note') {
+            setAlarmNote(value);
+        } else if (name === 'snooze') {
+            setSnoozeTime(value);
+        } else if (name === 'tune') {
+            setAlarmTune(value);
+        } else if (name === 'volume') {
+            setAlarmVolume(value);
         }
-    };
+    }
 
     useEffect(() => {
         callToAlarm();
         callAlarms();
     }, []);
 
-    const setCountryName = (value) => {
-        setCountry(value);
-        settingCountryName(value);
-    };
-
     const countryWiseSetAlarm = (
         action,
         diffHours = 0,
         diffMins = 0,
-        country,
-        gmt
     ) => {
-        displayAlarm(hour, minute, second, country, gmt);
+
         const newDate = new Date();
         newDate.setHours(Number(hour));
         newDate.setMinutes(Number(minute));
@@ -83,7 +91,25 @@ const SetAlarmModal = ({
         } else {
             fDate = moment(newDate);
         }
-        storeAlarm(fDate);
+        debugger
+        const orgDate = fDate.toDate();
+        debugger
+        let payload = {
+            country: country,
+            alarmDate: orgDate,
+            alarmTitle: alarmTitle,
+            alarmNote: alarmNote,
+            alarmTune: alarmTune,
+            alarmVolume: alarmVolume
+        };
+        debugger
+        if (isSnooze) {
+            payload = { ...payload, snoozTime: snoozeTime };
+        }
+        debugger
+        dispatch(setAllAlarmDetails(payload));
+        debugger
+        storeAlarm();
         callToAlarm();
     };
 
@@ -97,27 +123,27 @@ const SetAlarmModal = ({
     const checkCountry = () => {
         switch (country) {
             case "India":
-                countryWiseSetAlarm("india", 0, 0, "GMT+5.30");
+                countryWiseSetAlarm("india", 0, 0);
                 break;
 
             case "USA":
-                countryWiseSetAlarm("back", 10, 30, "USA", "GMT-5");
+                countryWiseSetAlarm("back", 10, 30);
                 break;
 
             case "Japan":
-                countryWiseSetAlarm("ahead", 3, 30, "Japan", "GMT+9");
+                countryWiseSetAlarm("ahead", 3, 30);
                 break;
 
             case "Canada":
-                countryWiseSetAlarm("back", 10, 30, "Canada", "GMT-5");
+                countryWiseSetAlarm("back", 10, 30);
                 break;
 
             case "Australia":
-                countryWiseSetAlarm("ahead", 5, 30, "Australia", "GMT+11");
+                countryWiseSetAlarm("ahead", 5, 30);
                 break;
 
             case "London":
-                countryWiseSetAlarm("back", 5, 30, "London", "GMT");
+                countryWiseSetAlarm("back", 5, 30);
                 break;
 
             default:
@@ -126,11 +152,10 @@ const SetAlarmModal = ({
     };
 
     const handleSwitch = (event) => {
-        settingSnooze(event);
         if (event) {
-            setSnoozeSwitch(true)
+            setIsSnooze(true);
         } else {
-            setSnoozeSwitch(false)
+            setIsSnooze(false);
         }
     }
 
@@ -146,20 +171,17 @@ const SetAlarmModal = ({
             </Modal.Header>
             <Modal.Body>
                 <div style={{ padding: "0 10px", marginBottom: "1em" }}>
-                    <CountryContainer
-                        options={countryData}
-                        setCountryName={setCountryName}
-                    />
+                    <CountryContainer setAlarmDetails={setAlarmDetails} />
                 </div>
                 <div style={{ display: "flex", width: "100%", marginBottom: "1em" }}>
                     <div style={{ width: "33%", padding: "0 10px" }}>
-                        <HourContainer options={hourOptions} setTime={setTime} />
+                        <HourContainer setAlarmDetails={setAlarmDetails} />
                     </div>
                     <div style={{ width: "33%", padding: "0 10px" }}>
-                        <MinutesContainer options={minuteOptions} setTime={setTime} />
+                        <MinutesContainer setAlarmDetails={setAlarmDetails} />
                     </div>
                     <div style={{ width: "33%", padding: "0 10px" }}>
-                        <SecondsContainer options={minuteOptions} setTime={setTime} />
+                        <SecondsContainer setAlarmDetails={setAlarmDetails} />
                     </div>
                 </div>
                 <div style={{ display: "flex", padding: "0 10px", width: "100%", marginBottom: "1em" }}>
@@ -169,10 +191,11 @@ const SetAlarmModal = ({
                         play={play}
                         pause={pause}
                         setAlarmAudioTone={setAlarmAudioTone}
+                        setAlarmDetails={setAlarmDetails}
                     />
                 </div>
                 <div style={{ display: "flex", padding: "0 10px", width: "100%", marginBottom: "1em" }}>
-                    <VolumeContainer settingVolume={settingVolume} />
+                    <VolumeContainer settingVolume={settingVolume} setAlarmDetails={setAlarmDetails} />
                 </div>
                 <div style={{ padding: "0 10px", marginBottom: "1em" }}>
                     <label htmlFor="alarm-title">Alarm Title</label>
@@ -197,12 +220,12 @@ const SetAlarmModal = ({
                         <label> Set Snooze </label>
                         <div style={{ display: 'flex' }}>
                             <Switch onChange={handleSwitch} style={{ width: '10%', marginTop: 3 }} />
-                            {snoozeSwitch && (
+                            {isSnooze && (
                                 <>
                                     <Radio.Group
                                         name="radiogroup"
                                         defaultValue={300000}
-                                        onChange={(event) => setSnoozeTiming(event.target.value)}
+                                        onChange={(event) => setSnoozeTiming(event.target.value, 'snooze')}
                                         style={{
                                             marginLeft: 20,
                                             marginTop: 3
