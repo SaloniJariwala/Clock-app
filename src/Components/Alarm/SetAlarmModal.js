@@ -32,6 +32,12 @@ const SetAlarmModal = ({
     settingSnooze,
     setAlarmAudioTone,
     settingVolume
+    alarmAudio,
+    settingVolume,
+    setSnoozeModal,
+    snonzeModal,
+                SnoozeAlarm,
+                currentAlarm,
 }) => {
 
     const date = new Date();
@@ -85,6 +91,13 @@ const SetAlarmModal = ({
         storeAlarm(fDate);
         callToAlarm();
     };
+
+    const onTest=()=>{
+        setSnoozeModal(true)
+        callToAlarm();
+        callAlarms();
+        play();
+    }
 
     const checkCountry = () => {
         switch (country) {
@@ -213,7 +226,7 @@ const SetAlarmModal = ({
             <Modal.Footer>
                 <AlarmTitleWrapper>
                     <div className="footer-row">
-                        <Button variant="outline-secondary" style={{ width: 100 }} onClick={play}>Test</Button>
+                        <Button variant="outline-secondary" style={{ width: 100 }} onClick={onTest}>Test</Button>
                         <div>
                             <Button variant="outline-danger" style={{ width: 100 }} onClick={onCancel}>Cancel</Button>
                             <Button

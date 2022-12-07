@@ -4,9 +4,10 @@ import { AlarmWrapper } from "../style";
 import { days, monthNames } from "../../Constant";
 import SetAlarmModal from "./SetAlarmModal";
 import defaultAlarm from "../../Assets/audios/alarm.mp3";
-import { MdOutlineDeleteOutline, MdPauseCircleOutline, MdPlayCircleOutline } from "react-icons/md";
+import { MdOutlineDeleteOutline, MdPauseCircleOutline, MdPlayCircleOutline, MdZoomOutMap, MdOutlineZoomOutMap } from "react-icons/md";
 import { notifyUser } from "../../Utils/Notification";
 import { audioData } from "../../Data/audioData";
+import RingAlarm from "./RingAlarm";
 
 const Alarm = () => {
 
@@ -20,8 +21,8 @@ const Alarm = () => {
     const [pastAlarms, setPastAlarms] = useState([]);
     const [currentAlarm, setCurrentAlarm] = useState();
     const [country, setCountry] = useState('India');
-    const [alarmTitle, setAlarmTitle] = useState('');
-    const [alarmNote, setAlarmNote] = useState('');
+    const [alarmTitle, setAlarmTitle] = useState('Test');
+    const [alarmNote, setAlarmNote] = useState('Test');
     const [flag, setFlag] = useState(false);
     const [alarmPause, setAlarmPause] = useState(false);
     const [alarmAudio, setAlarmAudio] = useState(defaultAlarm);
@@ -29,6 +30,8 @@ const Alarm = () => {
     const [isSnooze, setIsSnooze] = useState(false);
     const [snoozeTime, setSnoozeTime] = useState();
     const [volume, setVolume] = useState(50);
+    const [snonzeModal, setSnoozeModal] = useState(false);
+    const [showSnooze, setShowSnooze] = useState(false);
     const audioRef = useRef();
 
     const settingAlarmAudio = (value, name) => {
@@ -68,6 +71,10 @@ const Alarm = () => {
     const closeModal = () => {
         setShowModal(false);
     };
+
+    const closeRingModal = () => {
+        setSnoozeModal(false);
+    }
 
     const displayAlarm = (hour, minute, second, country, GMT) => {
         const newAlarm = {
@@ -126,7 +133,8 @@ const Alarm = () => {
         pause();
         setFlag(!flag);
         setSnoozeButton(false);
-        setIsSnooze(false)
+        setIsSnooze(false);
+        setSnoozeModal(false);
     };
 
     const settingCountryName = (name) => {
@@ -168,7 +176,7 @@ const Alarm = () => {
             title: alarmTitle,
             note: alarmNote,
             country: country,
-            snoozeTime: isSnooze ? snoozeTime : ''
+            snoozeTime: isSnooze ? snoozeTime : ""
         };
         newAlarms.push(newAlarm);
         localStorage.setItem('Alarms', JSON.stringify(newAlarms));
@@ -192,7 +200,6 @@ const Alarm = () => {
         } else {
             nearestAlarm = newList[0];
         }
-        debugger
         if (nearestAlarm?.isAlarmSnooze) {
             setSnoozeButton(true)
         }
@@ -205,6 +212,12 @@ const Alarm = () => {
                 notifyUser(nearestAlarm.title, nearestAlarm.note);
                 play();
                 setFlag(!flag);
+                const allAlarms = JSON.parse(localStorage.getItem('Alarms'));
+                const filterSnoozeData = allAlarms.filter((item) => item.timeoutId === id)
+                if (filterSnoozeData) {
+                    setShowSnooze(true);
+                }
+                setSnoozeModal(true);
             }, diff);
             const allAlarms = JSON.parse(localStorage.getItem('Alarms'));
             allAlarms.forEach((item) => {
@@ -276,7 +289,7 @@ const Alarm = () => {
         localStorage.setItem('Alarms', JSON.stringify(allAlrams));
         callToAlarm();
         setFlag(!flag);
-
+        setSnoozeModal(false);
     };
 
     const setSnoozeTiming = (value) => {
@@ -308,11 +321,17 @@ const Alarm = () => {
             <p className="day">{day}</p>
             <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
                 <Button variant="success" onClick={handleClick} style={{ marginRight: 10 }}>Set Alarm</Button>
-                <Button variant="danger" onClick={handleStop}>Stop Alarm</Button>
-                {snoozebutton &&
-                    (<Button variant="success" onClick={SnoozeAlarm} style={{ marginLeft: 10 }}>Snooze Alarm</Button>)}
-
             </div>
+
+            <RingAlarm
+                closeRingModal={closeRingModal}
+                snonzeModal={snonzeModal}
+                handleStop={handleStop}
+                SnoozeAlarm={SnoozeAlarm}
+                currentAlarm={currentAlarm}
+                showSnooze={showSnooze}
+                getTime={getTime}
+            />
             <div className="container-fluid d-flex justify-content-evenly">
                 <div className="w-50 m-5 text-center">
                     <h3 className="text-decoration-underline">Past Alarm</h3>
@@ -363,7 +382,6 @@ const Alarm = () => {
                                 <th>Title</th>
                                 <th>Alarm Time</th>
                                 <th>Date</th>
-                                <th>Remaining Time</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -373,7 +391,6 @@ const Alarm = () => {
                                     <td>{item.title}</td>
                                     <td>{getTime(item.alarmTimestamp)}</td>
                                     <td>{new Date(item.alarmTimestamp).toLocaleDateString()}</td>
-                                    <td>{countRemaining(item.alarmTimestamp)}</td>
                                     <td>
                                         <OverlayTrigger
                                             placement={'top'}
@@ -409,6 +426,23 @@ const Alarm = () => {
                                                 <MdOutlineDeleteOutline />
                                             </Button>
                                         </OverlayTrigger>
+
+                                        <OverlayTrigger
+                                            placement={'top'}
+                                            overlay={
+                                                <Tooltip id={`tooltip-${index}`}>
+                                                    View
+                                                </Tooltip>
+                                            }
+                                        >
+                                            <Button
+                                                className="btn-sm"
+                                                variant="outline-info"
+                                                style={{ marginLeft: 10 }}
+                                            >
+                                                <MdZoomOutMap />
+                                            </Button>
+                                        </OverlayTrigger>
                                     </td>
                                 </tr>
                             ))}
@@ -438,6 +472,10 @@ const Alarm = () => {
                 settingSnooze={settingSnooze}
                 setAlarmAudioTone={setAlarmAudioTone}
                 settingVolume={settingVolume}
+                setSnoozeModal={setSnoozeModal}
+                snonzeModal={snonzeModal}
+                SnoozeAlarm={SnoozeAlarm}
+                currentAlarm={currentAlarm}
             />
         </AlarmWrapper >
     );
