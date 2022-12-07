@@ -3,18 +3,23 @@ import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { GrPlay, GrPause } from "react-icons/gr";
 import { BsThreeDots } from "react-icons/bs";
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { setIsAudioPause, setIsAudioPlay } from '../../../Redux/Actions/AudioActions';
 
 const AudioContainer = ({
     options,
     settingAlarmAudio,
-    previewAudio,
     pause,
+    play,
     setAlarmAudioTone,
-    alarmAudio
 }) => {
 
+    const { isAudioPlay } = useSelector((state) => state.audioReducer);
+
+    const dispatch = useDispatch();
     const [audioPlay, setAudioPlay] = useState(false);
-    const [audioName, setAudioName] = useState(alarmAudio);
+    const [audioName, setAudioName] = useState('');
 
     const handleButtonClick = () => {
         setAudioPlay(!audioPlay);
@@ -24,6 +29,22 @@ const AudioContainer = ({
         setAudioName(event.target.value);
         settingAlarmAudio(event.target.value, 'local');
     };
+
+    useEffect(() => {
+        if (isAudioPlay) {
+            play();
+        } else {
+            pause();
+        }
+    }, [isAudioPlay]);
+
+    const handleAudioPlay = () => {
+        dispatch(setIsAudioPlay());
+    }
+
+    const handleAudioPause = () => {
+        dispatch(setIsAudioPause());
+    }
 
     const handleFileChange = (event) => {
         setAudioName(event.target.files[0].name);
@@ -59,7 +80,7 @@ const AudioContainer = ({
                     style={{ marginLeft: 10, backgroundColor: 'white', border: '1px solid #ced4da' }}
                     onClick={handleButtonClick}
                 >
-                    {!audioPlay ? <GrPlay onClick={previewAudio} /> : <GrPause onClick={pause} />}
+                    {!audioPlay ? <GrPlay onClick={handleAudioPlay} /> : <GrPause onClick={handleAudioPause} />}
                 </Button>
                 <Button
                     className="btn"

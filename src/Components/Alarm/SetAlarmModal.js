@@ -28,13 +28,12 @@ const SetAlarmModal = ({
     settingCountryName,
     settingAlarmAudio,
     audioData,
-    previewAudio,
     setSnoozeTiming,
     settingSnooze,
     setAlarmAudioTone,
-    alarmAudio,
     settingVolume
 }) => {
+
     const date = new Date();
 
     const [hour, setHour] = useState(date.getHours());
@@ -161,8 +160,6 @@ const SetAlarmModal = ({
                         settingAlarmAudio={settingAlarmAudio}
                         play={play}
                         pause={pause}
-                        previewAudio={previewAudio}
-                        alarmAudio={alarmAudio}
                         setAlarmAudioTone={setAlarmAudioTone}
                     />
                 </div>

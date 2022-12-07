@@ -27,7 +27,7 @@ const Alarm = () => {
     const [alarmAudio, setAlarmAudio] = useState(defaultAlarm);
     const [snoozebutton, setSnoozeButton] = useState(false);
     const [isSnooze, setIsSnooze] = useState(false);
-    const [snoozeTime, setSnoozeTime] = useState(300000);
+    const [snoozeTime, setSnoozeTime] = useState();
     const [volume, setVolume] = useState(50);
     const audioRef = useRef();
 
@@ -47,10 +47,6 @@ const Alarm = () => {
     const play = () => {
         audioRef.current.play();
         audioRef.current.loop = true;
-    };
-
-    const previewAudio = () => {
-        audioRef.current.play();
     };
 
     const callAlarm = () => {
@@ -172,7 +168,7 @@ const Alarm = () => {
             title: alarmTitle,
             note: alarmNote,
             country: country,
-            snoozeTime: snoozeTime
+            snoozeTime: isSnooze ? snoozeTime : ''
         };
         newAlarms.push(newAlarm);
         localStorage.setItem('Alarms', JSON.stringify(newAlarms));
@@ -196,6 +192,7 @@ const Alarm = () => {
         } else {
             nearestAlarm = newList[0];
         }
+        debugger
         if (nearestAlarm?.isAlarmSnooze) {
             setSnoozeButton(true)
         }
@@ -286,6 +283,25 @@ const Alarm = () => {
         setSnoozeTime(value);
     };
 
+    const countRemaining = (alarmTime) => {
+        const current = Date.now();
+        const remaining = alarmTime - current;
+
+        let seconds = Math.floor(remaining / 1000);
+        let minutes = Math.floor(seconds / 60);
+        let hours = Math.floor(minutes / 60);
+
+        seconds = seconds % 60;
+        minutes = minutes % 60;
+        hours = hours % 24;
+
+        const str = `${hours > 0 ? (hours < 10 ? `0${hours}:` : `${hours}:`) : "00:"}` +
+            `${minutes > 0 ? (minutes < 10 ? `0${minutes}:` : `${minutes}:`) : "00:"}` +
+            `${seconds > 0 ? (seconds < 10 ? `0${seconds}` : `${seconds}`) : "00"}`;
+
+        return str;
+    }
+
     return (
         <AlarmWrapper>
             <h1 className="display">{currentTime}</h1>
@@ -304,7 +320,7 @@ const Alarm = () => {
                         <thead>
                             <tr>
                                 <th>Title</th>
-                                <th>Time</th>
+                                <th>Alarm Time</th>
                                 <th>Date</th>
                                 <th>Actions</th>
                             </tr>
@@ -345,8 +361,9 @@ const Alarm = () => {
                         <thead>
                             <tr>
                                 <th>Title</th>
-                                <th>Time</th>
+                                <th>Alarm Time</th>
                                 <th>Date</th>
+                                <th>Remaining Time</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -356,6 +373,7 @@ const Alarm = () => {
                                     <td>{item.title}</td>
                                     <td>{getTime(item.alarmTimestamp)}</td>
                                     <td>{new Date(item.alarmTimestamp).toLocaleDateString()}</td>
+                                    <td>{countRemaining(item.alarmTimestamp)}</td>
                                     <td>
                                         <OverlayTrigger
                                             placement={'top'}
@@ -416,11 +434,9 @@ const Alarm = () => {
                 settingCountryName={settingCountryName}
                 audioData={audioData}
                 settingAlarmAudio={settingAlarmAudio}
-                previewAudio={previewAudio}
                 setSnoozeTiming={setSnoozeTiming}
                 settingSnooze={settingSnooze}
                 setAlarmAudioTone={setAlarmAudioTone}
-                alarmAudio={alarmAudio}
                 settingVolume={settingVolume}
             />
         </AlarmWrapper >
