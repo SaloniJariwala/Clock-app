@@ -116,10 +116,12 @@ const SetAlarmModal = ({
 
     const onTest = () => {
         checkCountry('isTest');
+        setIsSnooze(false);
         setShowTestModal(true);
     }
 
     const checkCountry = (test = '') => {
+        setIsSnooze(false);
         setIsRepertAlarm(false);
         switch (country) {
             case "India":
@@ -166,6 +168,7 @@ const SetAlarmModal = ({
 
     const onCancel = () => {
         setIsRepertAlarm(false);
+        setIsSnooze(false);
         pause();
         closeModal();
     }
