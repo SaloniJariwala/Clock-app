@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
-import { Switch, Radio } from 'antd';
+import { Switch, Radio, Checkbox } from 'antd';
 import moment from "moment";
 import "../../App.css";
 import { AlarmTitleWrapper } from "../style";
@@ -23,6 +23,7 @@ const SetAlarmModal = ({
     storeAlarm,
     settingAlarmAudio,
     settingVolume,
+    setRepertAlarm,
 }) => {
 
     const date = new Date();
@@ -39,6 +40,8 @@ const SetAlarmModal = ({
     const [isSnooze, setIsSnooze] = useState(false);
     const [showTestModal, setShowTestModal] = useState(false);
     const [testAlarm, setTestAlarm] = useState();
+    const [alarmRepeatValue, setAlarmRepeatValue] = useState();
+    const [isRepeatAlarm, setIsRepertAlarm] = useState(false);
 
     const setAlarmDetails = (value, name) => {
         if (name === 'country') {
@@ -59,8 +62,10 @@ const SetAlarmModal = ({
             setAlarmTune(value);
         } else if (name === 'volume') {
             setAlarmVolume(value);
+        } else if (name === 'repeat') {
+            setAlarmRepeatValue(value);
         }
-    }
+    };
 
     useEffect(() => {
         callToAlarm();
@@ -98,6 +103,9 @@ const SetAlarmModal = ({
         if (isSnooze) {
             payload = { ...payload, snoozeTime: snoozeTime };
         }
+        if (isRepeatAlarm) {
+            payload = { ...payload, alarmRepeat: alarmRepeatValue };
+        }
         if (test === 'isTest') {
             setTestAlarm(payload);
         } else {
@@ -112,6 +120,7 @@ const SetAlarmModal = ({
     }
 
     const checkCountry = (test = '') => {
+        setIsRepertAlarm(false);
         switch (country) {
             case "India":
                 countryWiseSetAlarm("india", 0, 0, test);
@@ -156,9 +165,19 @@ const SetAlarmModal = ({
     }
 
     const onCancel = () => {
+        setIsRepertAlarm(false);
         pause();
         closeModal();
     }
+
+    const onRepertAlarm = (e) => {
+        // setRepertAlarm(e.target.checked)
+        if (e.target.checked) {
+            setIsRepertAlarm(true)
+        } else {
+            setIsRepertAlarm(false)
+        }
+    };
 
     return (
         <>
@@ -235,6 +254,27 @@ const SetAlarmModal = ({
                             </div>
                         </Form>
                     </div>
+                    <div style={{ padding: "0 10px", marginBottom: "1em" }}>
+                        <Checkbox onChange={onRepertAlarm}>Repert Alarm</Checkbox>
+                        {isRepeatAlarm && (
+                            <>
+                                <Radio.Group
+                                    name="radiogroup"
+                                    defaultValue={'never'}
+                                    onChange={(event) => setAlarmDetails(event.target.value, 'repeat')}
+                                    style={{
+                                        marginLeft: 20,
+                                        marginTop: 3
+                                    }}
+                                >
+                                    <Radio value={'never'}>Never</Radio>
+                                    <Radio value={'daily'}>Daily</Radio>
+                                    <Radio value={'weekdays'}>Weekdays</Radio>
+                                    <Radio value={'weekends'}>Weekends</Radio>
+                                </Radio.Group>
+                            </>
+                        )}
+                    </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <AlarmTitleWrapper>
@@ -261,5 +301,7 @@ const SetAlarmModal = ({
             />
         </>
     );
+
 };
+
 export default SetAlarmModal;

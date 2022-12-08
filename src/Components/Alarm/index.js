@@ -3,18 +3,23 @@ import { Button, OverlayTrigger, Table, Tooltip } from "react-bootstrap";
 import { AlarmWrapper } from "../style";
 import { days, monthNames } from "../../Constant";
 import SetAlarmModal from "./SetAlarmModal";
-import { MdOutlineDeleteOutline, MdPauseCircleOutline, MdPlayCircleOutline, MdZoomOutMap } from "react-icons/md";
+import defaultAlarm from "../../Assets/audios/alarm.mp3";
+import {
+    MdOutlineDeleteOutline,
+    MdPauseCircleOutline,
+    MdPlayCircleOutline,
+    MdZoomOutMap,
+} from "react-icons/md";
 import { notifyUser } from "../../Utils/Notification";
 import RingAlarm from "./RingAlarm";
-import defaultAlarm from "../../Assets/audios/alarm.mp3";
 
 const Alarm = () => {
 
-    const [day, setDay] = useState('');
     const [currentTime, setCurrrentTime] = useState('');
-    const [upcomingAlarms, setUpcomingAlarms] = useState([]);
+    const [day, setDay] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [pastAlarms, setPastAlarms] = useState([]);
+    const [upcomingAlarms, setUpcomingAlarms] = useState([]);
     const [currentAlarm, setCurrentAlarm] = useState();
     const [flag, setFlag] = useState(false);
     const [alarmPause, setAlarmPause] = useState(false);
@@ -82,7 +87,9 @@ const Alarm = () => {
 
     const DeleteAlarm = (value) => {
         let newList = JSON.parse(localStorage.getItem("Alarms")) || [];
-        let delAlarm = newList.filter((time) => time.alarmTimestamp !== value.alarmTimestamp);
+        let delAlarm = newList.filter(
+            (time) => time.alarmTimestamp !== value.alarmTimestamp
+        );
         clearTimeout(value.timeoutId);
         setFlag(!flag);
         localStorage.setItem('Alarms', JSON.stringify(delAlarm))
@@ -104,6 +111,10 @@ const Alarm = () => {
         if (isSnooze) {
             newAlarm = { ...newAlarm, snoozeTime: alarmDetails?.snoozeTime };
         };
+        const isRepeatAlarm = 'alarmRepeat' in alarmDetails;
+        if (isRepeatAlarm) {
+            newAlarm = { ...newAlarm, alarmRepeat: alarmDetails?.alarmRepeat };
+        }
         allAlarms.push(newAlarm);
         localStorage.setItem('Alarms', JSON.stringify(allAlarms));
         closeModal();
@@ -138,6 +149,61 @@ const Alarm = () => {
                 setFlag(!flag);
                 setCurrentAlarm(nearestAlarm);
                 setShowRingModal(true);
+                if (nearestAlarm.alarmRepeat === "never") {
+                    const newStamp = nearestAlarm.alarmTimestamp;
+                    const getallAlrams = JSON.parse(localStorage.getItem("Alarms"));
+                    getallAlrams.forEach((item) => {
+                        if (item.alarmTimestamp === nearestAlarm.alarmTimestamp) {
+                            item.alarmTimestamp = newStamp;
+                        }
+                    });
+                    localStorage.setItem("Alarms", JSON.stringify(getallAlrams));
+                    setFlag(!flag);
+                    getAlarms();
+                } else if (nearestAlarm.alarmRepeat === "daily") {
+                    const dailyTimeStamp = nearestAlarm.alarmTimestamp + 86400000;
+                    const getallAlrams = JSON.parse(localStorage.getItem("Alarms"));
+                    getallAlrams.forEach((item) => {
+                        if (item.alarmTimestamp === nearestAlarm.alarmTimestamp) {
+                            item.alarmTimestamp = dailyTimeStamp;
+                        }
+                    });
+                    localStorage.setItem("Alarms", JSON.stringify(getallAlrams));
+                    setFlag(!flag);
+                } else if (nearestAlarm.alarmRepeat === "weekdays") {
+
+                    const weekDaysStamp = nearestAlarm.alarmTimestamp + 86400000;
+                    const getallAlrams = JSON.parse(localStorage.getItem("Alarms"));
+                    const day = new Date(nearestAlarm.alarmTimestamp).toLocaleString(
+                        'default', { weekday: 'short' }
+                    );
+                    if (day === 'Mon' || day === 'Tue' || day === 'Wed' || day === 'Thu' || day === 'Fri'
+                    ) {
+                        getallAlrams.forEach((item) => {
+                            if (item.alarmTimestamp === nearestAlarm.alarmTimestamp) {
+                                item.alarmTimestamp = weekDaysStamp;
+                            }
+                        });
+                    }
+                    localStorage.setItem("Alarms", JSON.stringify(getallAlrams));
+                    setFlag(!flag);
+                }
+                else if (nearestAlarm.alarmRepeat === "weekends") {
+                    const weekendStamp = nearestAlarm.alarmTimestamp + 86400000;
+                    const getallAlrams = JSON.parse(localStorage.getItem("Alarms"));
+                    const day = new Date(nearestAlarm.alarmTimestamp).toLocaleString(
+                        'default', { weekday: 'short' }
+                    );
+                    if (day === "Sat" || day === "Sun") {
+                        getallAlrams.forEach((item) => {
+                            if (item.alarmTimestamp === nearestAlarm.alarmTimestamp) {
+                                item.alarmTimestamp = weekendStamp;
+                            }
+                        });
+                    }
+                    localStorage.setItem("Alarms", JSON.stringify(getallAlrams));
+                    setFlag(!flag);
+                }
             }, diff);
             const allAlarms = JSON.parse(localStorage.getItem('Alarms'));
             allAlarms.forEach((item) => {
@@ -148,7 +214,6 @@ const Alarm = () => {
             localStorage.setItem('Alarms', JSON.stringify(allAlarms));
             setFlag(!flag);
         }
-
     };
 
     useEffect(() => {
@@ -215,7 +280,7 @@ const Alarm = () => {
             `${seconds > 0 ? (seconds < 10 ? `0${seconds}` : `${seconds}`) : "00"}`;
 
         return str;
-    }
+    };
 
     return (
         <AlarmWrapper>
