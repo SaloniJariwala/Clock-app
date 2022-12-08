@@ -10,7 +10,7 @@ import { countryData } from "../../Data/countryData";
 import moment from "moment";
 import AudioContainer from "./SetAlarmForm/AudioContainer";
 import Form from 'react-bootstrap/Form';
-import { Switch, Radio } from 'antd';
+import { Switch, Radio,Checkbox } from 'antd';
 import VolumeContainer from "./SetAlarmForm/VolumeContainer";
 
 const SetAlarmModal = ({
@@ -31,13 +31,9 @@ const SetAlarmModal = ({
     setSnoozeTiming,
     settingSnooze,
     setAlarmAudioTone,
-    settingVolume
-    alarmAudio,
     settingVolume,
     setSnoozeModal,
-    snonzeModal,
-                SnoozeAlarm,
-                currentAlarm,
+    setRepertAlarm,
 }) => {
 
     const date = new Date();
@@ -46,7 +42,8 @@ const SetAlarmModal = ({
     const [minute, setMinute] = useState(date.getMinutes());
     const [second, setSecond] = useState(date.getSeconds());
     const [country, setCountry] = useState("India");
-    const [snoozeSwitch, setSnoozeSwitch] = useState(false)
+    const [snoozeSwitch, setSnoozeSwitch] = useState(false);
+    const [isRepeatAlarm,setIsRepertAlarm]=useState(false);
 
     const setTime = (value, name) => {
         if (name === "hour") {
@@ -93,13 +90,17 @@ const SetAlarmModal = ({
     };
 
     const onTest=()=>{
-        setSnoozeModal(true)
+        setSnoozeSwitch(false);
+        setIsRepertAlarm(false); 
+        setSnoozeModal(true);
         callToAlarm();
         callAlarms();
         play();
     }
 
     const checkCountry = () => {
+        setSnoozeSwitch(false);
+        setIsRepertAlarm(false); 
         switch (country) {
             case "India":
                 countryWiseSetAlarm("india", 0, 0, "GMT+5.30");
@@ -140,9 +141,21 @@ const SetAlarmModal = ({
     }
 
     const onCancel = () => {
+        setSnoozeSwitch(false);
+        setIsRepertAlarm(false) ;
         pause();
         closeModal();
     }
+
+    const onRepertAlarm = (e) => {
+        setRepertAlarm(e.target.checked)
+        if(e.target.checked){
+            setIsRepertAlarm(true)
+        }else{
+            setIsRepertAlarm(false) 
+        }
+
+      };
 
     return (
         <Modal centered show={showModal} onHide={closeModal}>
@@ -207,7 +220,7 @@ const SetAlarmModal = ({
                                     <Radio.Group
                                         name="radiogroup"
                                         defaultValue={300000}
-                                        onChange={(event) => setSnoozeTiming(event.target.value)}
+                                        onChange={(e) => setSnoozeTiming(e.target.checked)}
                                         style={{
                                             marginLeft: 20,
                                             marginTop: 3
@@ -221,6 +234,27 @@ const SetAlarmModal = ({
                             )}
                         </div>
                     </Form>
+                </div>
+                <div style={{ padding: "0 10px", marginBottom: "1em" }}>
+                <Checkbox onChange={onRepertAlarm}>Repert Alarm</Checkbox>
+                {isRepeatAlarm && (
+                                <>
+                                    <Radio.Group
+                                        name="radiogroup"
+                                        defaultValue={'never'}
+                                        onChange={(event) => setRepertAlarm(event.target.value)}
+                                        style={{
+                                            marginLeft: 20,
+                                            marginTop: 3
+                                        }}
+                                    >
+                                        <Radio value={'never'}>Never</Radio>
+                                        <Radio value={'daily'}>Daily</Radio>
+                                        <Radio value={'weekdays'}>Weekdays</Radio>
+                                        <Radio value={'weekends'}>Weekends</Radio>
+                                    </Radio.Group>
+                                </>
+                            )}
                 </div>
             </Modal.Body>
             <Modal.Footer>
