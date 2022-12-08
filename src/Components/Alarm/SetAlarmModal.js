@@ -1,38 +1,28 @@
 import { useEffect, useState } from "react";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, Form } from "react-bootstrap";
+import { Switch, Radio } from 'antd';
+import moment from "moment";
 import "../../App.css";
 import { AlarmTitleWrapper } from "../style";
 import HourContainer from "./SetAlarmForm/HourContainer";
 import MinutesContainer from "./SetAlarmForm/MinutesContainer";
 import SecondsContainer from "./SetAlarmForm/SecondsContainer";
 import CountryContainer from "./SetAlarmForm/CountryContainer";
-import { countryData } from "../../Data/countryData";
-import moment from "moment";
 import AudioContainer from "./SetAlarmForm/AudioContainer";
-import Form from 'react-bootstrap/Form';
-import { Switch, Radio } from 'antd';
 import VolumeContainer from "./SetAlarmForm/VolumeContainer";
+import defaultAlarmTune from "../../Assets/audios/alarm.mp3";
+import TestModal from "./TestModal";
 
 const SetAlarmModal = ({
     showModal,
     closeModal,
-    hourOptions,
-    minuteOptions,
     play,
     pause,
-    displayAlarm,
-    callAlarms,
+    getAlarms,
     callToAlarm,
     storeAlarm,
-    setAlarmDetails,
-    settingCountryName,
     settingAlarmAudio,
-    audioData,
-    setSnoozeTiming,
-    settingSnooze,
-    setAlarmAudioTone,
     settingVolume,
-    setSnoozeModal,
 }) => {
 
     const date = new Date();
@@ -41,36 +31,49 @@ const SetAlarmModal = ({
     const [minute, setMinute] = useState(date.getMinutes());
     const [second, setSecond] = useState(date.getSeconds());
     const [country, setCountry] = useState("India");
-    const [snoozeSwitch, setSnoozeSwitch] = useState(false)
+    const [alarmTitle, setAlarmTitle] = useState('Test Title');
+    const [alarmNote, setAlarmNote] = useState('Test Note');
+    const [snoozeTime, setSnoozeTime] = useState(300000);
+    const [alarmTune, setAlarmTune] = useState(defaultAlarmTune);
+    const [alarmVolume, setAlarmVolume] = useState(50);
+    const [isSnooze, setIsSnooze] = useState(false);
+    const [showTestModal, setShowTestModal] = useState(false);
+    const [testAlarm, setTestAlarm] = useState();
 
-    const setTime = (value, name) => {
-        if (name === "hour") {
+    const setAlarmDetails = (value, name) => {
+        if (name === 'country') {
+            setCountry(value);
+        } else if (name === 'hour') {
             setHour(value);
-        } else if (name === "minute") {
+        } else if (name === 'minute') {
             setMinute(value);
-        } else {
+        } else if (name === 'second') {
             setSecond(value);
+        } else if (name === 'title') {
+            setAlarmTitle(value);
+        } else if (name === 'note') {
+            setAlarmNote(value);
+        } else if (name === 'snooze') {
+            setSnoozeTime(value);
+        } else if (name === 'tune') {
+            setAlarmTune(value);
+        } else if (name === 'volume') {
+            setAlarmVolume(value);
         }
-    };
+    }
 
     useEffect(() => {
         callToAlarm();
-        callAlarms();
+        getAlarms();
     }, []);
-
-    const setCountryName = (value) => {
-        setCountry(value);
-        settingCountryName(value);
-    };
 
     const countryWiseSetAlarm = (
         action,
         diffHours = 0,
         diffMins = 0,
-        country,
-        gmt
+        test = ''
     ) => {
-        displayAlarm(hour, minute, second, country, gmt);
+
         const newDate = new Date();
         newDate.setHours(Number(hour));
         newDate.setMinutes(Number(minute));
@@ -83,41 +86,55 @@ const SetAlarmModal = ({
         } else {
             fDate = moment(newDate);
         }
-        storeAlarm(fDate);
-        callToAlarm();
+        const orgDate = fDate.toDate();
+        let payload = {
+            country: country,
+            alarmDate: orgDate,
+            alarmTitle: alarmTitle,
+            alarmNote: alarmNote,
+            alarmTune: alarmTune,
+            alarmVolume: alarmVolume
+        };
+        if (isSnooze) {
+            payload = { ...payload, snoozeTime: snoozeTime };
+        }
+        if (test === 'isTest') {
+            setTestAlarm(payload);
+        } else {
+            storeAlarm(payload);
+            callToAlarm();
+        }
     };
 
     const onTest = () => {
-        setSnoozeModal(true)
-        callToAlarm();
-        callAlarms();
-        play();
+        checkCountry('isTest');
+        setShowTestModal(true);
     }
 
-    const checkCountry = () => {
+    const checkCountry = (test = '') => {
         switch (country) {
             case "India":
-                countryWiseSetAlarm("india", 0, 0, "GMT+5.30");
+                countryWiseSetAlarm("india", 0, 0, test);
                 break;
 
             case "USA":
-                countryWiseSetAlarm("back", 10, 30, "USA", "GMT-5");
+                countryWiseSetAlarm("back", 10, 30, test);
                 break;
 
             case "Japan":
-                countryWiseSetAlarm("ahead", 3, 30, "Japan", "GMT+9");
+                countryWiseSetAlarm("ahead", 3, 30, test);
                 break;
 
             case "Canada":
-                countryWiseSetAlarm("back", 10, 30, "Canada", "GMT-5");
+                countryWiseSetAlarm("back", 10, 30, test);
                 break;
 
             case "Australia":
-                countryWiseSetAlarm("ahead", 5, 30, "Australia", "GMT+11");
+                countryWiseSetAlarm("ahead", 5, 30, test);
                 break;
 
             case "London":
-                countryWiseSetAlarm("back", 5, 30, "London", "GMT");
+                countryWiseSetAlarm("back", 5, 30, test);
                 break;
 
             default:
@@ -126,12 +143,16 @@ const SetAlarmModal = ({
     };
 
     const handleSwitch = (event) => {
-        settingSnooze(event);
         if (event) {
-            setSnoozeSwitch(true)
+            setIsSnooze(true);
         } else {
-            setSnoozeSwitch(false)
+            setIsSnooze(false);
         }
+    }
+
+    const closeTestModal = () => {
+        pause();
+        setShowTestModal();
     }
 
     const onCancel = () => {
@@ -140,103 +161,105 @@ const SetAlarmModal = ({
     }
 
     return (
-        <Modal centered show={showModal} onHide={closeModal}>
-            <Modal.Header closeButton>
-                <span className="alarm-modal-title">Set Alarm</span>
-            </Modal.Header>
-            <Modal.Body>
-                <div style={{ padding: "0 10px", marginBottom: "1em" }}>
-                    <CountryContainer
-                        options={countryData}
-                        setCountryName={setCountryName}
-                    />
-                </div>
-                <div style={{ display: "flex", width: "100%", marginBottom: "1em" }}>
-                    <div style={{ width: "33%", padding: "0 10px" }}>
-                        <HourContainer options={hourOptions} setTime={setTime} />
+        <>
+            <Modal centered show={showModal} onHide={closeModal}>
+                <Modal.Header closeButton>
+                    <span className="alarm-modal-title">Set Alarm</span>
+                </Modal.Header>
+                <Modal.Body>
+                    <div style={{ padding: "0 10px", marginBottom: "1em" }}>
+                        <CountryContainer setAlarmDetails={setAlarmDetails} />
                     </div>
-                    <div style={{ width: "33%", padding: "0 10px" }}>
-                        <MinutesContainer options={minuteOptions} setTime={setTime} />
-                    </div>
-                    <div style={{ width: "33%", padding: "0 10px" }}>
-                        <SecondsContainer options={minuteOptions} setTime={setTime} />
-                    </div>
-                </div>
-                <div style={{ display: "flex", padding: "0 10px", width: "100%", marginBottom: "1em" }}>
-                    <AudioContainer
-                        options={audioData}
-                        settingAlarmAudio={settingAlarmAudio}
-                        play={play}
-                        pause={pause}
-                        setAlarmAudioTone={setAlarmAudioTone}
-                    />
-                </div>
-                <div style={{ display: "flex", padding: "0 10px", width: "100%", marginBottom: "1em" }}>
-                    <VolumeContainer settingVolume={settingVolume} />
-                </div>
-                <div style={{ padding: "0 10px", marginBottom: "1em" }}>
-                    <label htmlFor="alarm-title">Alarm Title</label>
-                    <input
-                        id="alarm-title"
-                        className="form-control"
-                        placeholder="Enter Alarm Title"
-                        onChange={(event) => setAlarmDetails(event.target.value, 'title')}
-                    />
-                </div>
-                <div style={{ padding: "0 10px", marginBottom: "1em" }}>
-                    <label htmlFor="alarm-note">Alarm Note</label>
-                    <textarea
-                        id="alarm-note"
-                        className="form-control"
-                        placeholder="Enter Alarm Note"
-                        onChange={(event) => setAlarmDetails(event.target.value, 'note')}
-                    ></textarea>
-                </div>
-                <div style={{ padding: "0 10px", marginBottom: "1em" }}>
-                    <Form style={{ display: 'flex', flexDirection: 'column' }}>
-                        <label> Set Snooze </label>
-                        <div style={{ display: 'flex' }}>
-                            <Switch onChange={handleSwitch} style={{ width: '10%', marginTop: 3 }} />
-                            {snoozeSwitch && (
-                                <>
-                                    <Radio.Group
-                                        name="radiogroup"
-                                        defaultValue={300000}
-                                        onChange={(event) => setSnoozeTiming(event.target.value)}
-                                        style={{
-                                            marginLeft: 20,
-                                            marginTop: 3
-                                        }}
-                                    >
-                                        <Radio value={300000}>5 Minute</Radio>
-                                        <Radio value={600000}>10 Minute</Radio>
-                                        <Radio value={900000}>15 Minute</Radio>
-                                    </Radio.Group>
-                                </>
-                            )}
+                    <div style={{ display: "flex", width: "100%", marginBottom: "1em" }}>
+                        <div style={{ width: "33%", padding: "0 10px" }}>
+                            <HourContainer setAlarmDetails={setAlarmDetails} />
                         </div>
-                    </Form>
-                </div>
-            </Modal.Body>
-            <Modal.Footer>
-                <AlarmTitleWrapper>
-                    <div className="footer-row">
-                        <Button variant="outline-secondary" style={{ width: 100 }} onClick={onTest}>Test</Button>
-                        <div>
-                            <Button variant="outline-danger" style={{ width: 100 }} onClick={onCancel}>Cancel</Button>
-                            <Button
-                                variant="outline-primary"
-                                onClick={checkCountry}
-                                style={{ marginLeft: 10, width: 100 }}
-                            >
-                                Start
-                            </Button>
+                        <div style={{ width: "33%", padding: "0 10px" }}>
+                            <MinutesContainer setAlarmDetails={setAlarmDetails} />
+                        </div>
+                        <div style={{ width: "33%", padding: "0 10px" }}>
+                            <SecondsContainer setAlarmDetails={setAlarmDetails} />
                         </div>
                     </div>
-                </AlarmTitleWrapper>
-            </Modal.Footer>
-        </Modal>
+                    <div style={{ display: "flex", padding: "0 10px", width: "100%", marginBottom: "1em" }}>
+                        <AudioContainer
+                            settingAlarmAudio={settingAlarmAudio}
+                            play={play}
+                            pause={pause}
+                            setAlarmDetails={setAlarmDetails}
+                        />
+                    </div>
+                    <div style={{ display: "flex", padding: "0 10px", width: "100%", marginBottom: "1em" }}>
+                        <VolumeContainer settingVolume={settingVolume} setAlarmDetails={setAlarmDetails} />
+                    </div>
+                    <div style={{ padding: "0 10px", marginBottom: "1em" }}>
+                        <label htmlFor="alarm-title">Alarm Title</label>
+                        <input
+                            id="alarm-title"
+                            className="form-control"
+                            placeholder="Enter Alarm Title"
+                            onChange={(event) => setAlarmDetails(event.target.value, 'title')}
+                        />
+                    </div>
+                    <div style={{ padding: "0 10px", marginBottom: "1em" }}>
+                        <label htmlFor="alarm-note">Alarm Note</label>
+                        <textarea
+                            id="alarm-note"
+                            className="form-control"
+                            placeholder="Enter Alarm Note"
+                            onChange={(event) => setAlarmDetails(event.target.value, 'note')}
+                        ></textarea>
+                    </div>
+                    <div style={{ padding: "0 10px", marginBottom: "1em" }}>
+                        <Form style={{ display: 'flex', flexDirection: 'column' }}>
+                            <label> Set Snooze </label>
+                            <div style={{ display: 'flex' }}>
+                                <Switch onChange={handleSwitch} style={{ width: '10%', marginTop: 3 }} />
+                                {isSnooze && (
+                                    <>
+                                        <Radio.Group
+                                            name="radiogroup"
+                                            defaultValue={300000}
+                                            onChange={(event) => setAlarmDetails(event.target.value, 'snooze')}
+                                            style={{
+                                                marginLeft: 20,
+                                                marginTop: 3
+                                            }}
+                                        >
+                                            <Radio value={300000}>5 Minute</Radio>
+                                            <Radio value={600000}>10 Minute</Radio>
+                                            <Radio value={900000}>15 Minute</Radio>
+                                        </Radio.Group>
+                                    </>
+                                )}
+                            </div>
+                        </Form>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <AlarmTitleWrapper>
+                        <div className="footer-row">
+                            <Button variant="outline-secondary" style={{ width: 100 }} onClick={onTest}>Test</Button>
+                            <div>
+                                <Button variant="outline-danger" style={{ width: 100 }} onClick={onCancel}>Cancel</Button>
+                                <Button
+                                    variant="outline-primary"
+                                    onClick={checkCountry}
+                                    style={{ marginLeft: 10, width: 100 }}
+                                >
+                                    Start
+                                </Button>
+                            </div>
+                        </div>
+                    </AlarmTitleWrapper>
+                </Modal.Footer>
+            </Modal>
+            <TestModal
+                showTestModal={showTestModal}
+                closeTestModal={closeTestModal}
+                alarm={testAlarm}
+            />
+        </>
     );
 };
-
 export default SetAlarmModal;

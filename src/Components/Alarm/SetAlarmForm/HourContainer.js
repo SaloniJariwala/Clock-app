@@ -1,16 +1,32 @@
+import { useEffect } from "react";
 import { useState } from "react";
 
 const HourContainer = ({
-    options,
-    setTime
+    setAlarmDetails
 }) => {
 
     const newDate = new Date();
 
     const [currHour, setCurrHour] = useState(newDate.getHours());
+    const [options, setOptions] = useState([]);
+
+    useEffect(() => {
+        const getHours = () => {
+            let arr = [];
+            for (let i = 0; i <= 23; i++) {
+                if (i < 10) {
+                    arr = [...arr, `0${i.toString()}`];
+                } else {
+                    arr = [...arr, i.toString()];
+                }
+            }
+            setOptions(arr);
+        };
+        getHours();
+    }, []);
 
     const handleChange = (event) => {
-        setTime(event.target.value, 'hour');
+        setAlarmDetails(event.target.value, 'hour');
         setCurrHour(event.target.value);
     }
 
@@ -24,7 +40,7 @@ const HourContainer = ({
                 value={currHour}
                 onChange={handleChange}
             >
-                {options.map((item, index) => (
+                {options?.map((item, index) => (
                     <option
                         key={index}
                         value={item}

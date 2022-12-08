@@ -1,10 +1,11 @@
 import { Slider } from 'antd';
 import React from 'react'
 
-const VolumeContainer = ({ settingVolume }) => {
+const VolumeContainer = ({ settingVolume, setAlarmDetails }) => {
 
     const handleChange = (value) => {
         settingVolume(value);
+        setAlarmDetails(value, 'volume');
     }
 
     return (
