@@ -3,22 +3,15 @@ import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { GrPlay, GrPause } from "react-icons/gr";
 import { BsThreeDots } from "react-icons/bs";
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { setIsAudioPause, setIsAudioPlay } from '../../../Redux/Actions/AudioActions';
+import { audioData } from '../../../Data/audioData';
 
 const AudioContainer = ({
-    options,
     settingAlarmAudio,
     pause,
     play,
-    setAlarmAudioTone,
     setAlarmDetails
 }) => {
 
-    const { isAudioPlay } = useSelector((state) => state.audioReducer);
-
-    const dispatch = useDispatch();
     const [audioPlay, setAudioPlay] = useState(false);
     const [audioName, setAudioName] = useState('');
 
@@ -32,25 +25,8 @@ const AudioContainer = ({
         settingAlarmAudio(event.target.value, 'local');
     };
 
-    useEffect(() => {
-        if (isAudioPlay) {
-            play();
-        } else {
-            pause();
-        }
-    }, [isAudioPlay]);
-
-    const handleAudioPlay = () => {
-        dispatch(setIsAudioPlay());
-    }
-
-    const handleAudioPause = () => {
-        dispatch(setIsAudioPause());
-    }
-
     const handleFileChange = (event) => {
         setAudioName(event.target.files[0].name);
-        setAlarmAudioTone(event.target.files[0].name);
         settingAlarmAudio(event.target.files[0], 'browse')
     };
 
@@ -65,7 +41,7 @@ const AudioContainer = ({
                     value={audioName}
                     onChange={handleChange}
                 >
-                    {options.map((item, index) => (
+                    {audioData?.map((item, index) => (
                         <option
                             key={index}
                             value={item.track}
@@ -82,7 +58,7 @@ const AudioContainer = ({
                     style={{ marginLeft: 10, backgroundColor: 'white', border: '1px solid #ced4da' }}
                     onClick={handleButtonClick}
                 >
-                    {!audioPlay ? <GrPlay onClick={handleAudioPlay} /> : <GrPause onClick={handleAudioPause} />}
+                    {!audioPlay ? <GrPlay onClick={play} /> : <GrPause onClick={pause} />}
                 </Button>
                 <Button
                     className="btn"

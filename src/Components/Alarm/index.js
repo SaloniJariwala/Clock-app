@@ -3,33 +3,35 @@ import { Button, OverlayTrigger, Table, Tooltip } from "react-bootstrap";
 import { AlarmWrapper } from "../style";
 import { days, monthNames } from "../../Constant";
 import SetAlarmModal from "./SetAlarmModal";
-import defaultAlarm from "../../Assets/audios/alarm.mp3";
-import { MdOutlineDeleteOutline, MdPauseCircleOutline, MdPlayCircleOutline, MdZoomOutMap, MdOutlineZoomOutMap } from "react-icons/md";
+import { MdOutlineDeleteOutline, MdPauseCircleOutline, MdPlayCircleOutline, MdZoomOutMap } from "react-icons/md";
 import { notifyUser } from "../../Utils/Notification";
-import { audioData } from "../../Data/audioData";
 import RingAlarm from "./RingAlarm";
-import { useDispatch, useSelector } from "react-redux";
-import { setModalClose, setShowModal } from "../../Redux/Actions/SetAlarmModalActions";
+import defaultAlarm from "../../Assets/audios/alarm.mp3";
 
 const Alarm = () => {
-
-    const dispatch = useDispatch();
-    const { alarmDetails } = useSelector((state) => state.setAlarmModalReducer);
 
     const [day, setDay] = useState('');
     const [currentTime, setCurrrentTime] = useState('');
     const [upcomingAlarms, setUpcomingAlarms] = useState([]);
+    const [showModal, setShowModal] = useState(false);
     const [pastAlarms, setPastAlarms] = useState([]);
     const [currentAlarm, setCurrentAlarm] = useState();
     const [flag, setFlag] = useState(false);
     const [alarmPause, setAlarmPause] = useState(false);
-    const [alarmAudio, setAlarmAudio] = useState();
-    const [snoozeTime, setSnoozeTime] = useState();
+    const [alarmAudio, setAlarmAudio] = useState(defaultAlarm);
     const [volume, setVolume] = useState(50);
-    const [snonzeModal, setSnoozeModal] = useState(false);
-    const [showSnooze, setShowSnooze] = useState(false);
-    const [allAlarmDetails, setAllAlarmDetails] = useState({});
+    const [showRingModal, setShowRingModal] = useState(false);
     const audioRef = useRef();
+
+    useEffect(() => {
+        setInterval(() => {
+            const date = new Date();
+            const time = date.toLocaleTimeString();
+            const dayStr = `${days[date.getDay()].toUpperCase()} - ${monthNames[date.getMonth()].toUpperCase()} ${date.getDate()}. ${date.getFullYear()}`;
+            setCurrrentTime(time);
+            setDay(dayStr);
+        }, 1000);
+    }, []);
 
     const settingAlarmAudio = (value, name) => {
         if (name === 'local') {
@@ -40,22 +42,19 @@ const Alarm = () => {
         }
     };
 
-    const setAlarmAudioTone = (value) => {
-        setAlarmAudio(value);
-    };
-
     const play = () => {
         audioRef.current.play();
         audioRef.current.volume = volume / 100;
         audioRef.current.loop = true;
     };
 
-    const callAlarm = () => {
+    const getAlarms = () => {
         setFlag(!flag);
     };
 
     const pause = () => {
         audioRef.current.pause();
+        setFlag(!flag);
     };
 
     const settingVolume = (value) => {
@@ -67,27 +66,18 @@ const Alarm = () => {
     }, [volume]);
 
     const closeModal = () => {
-        dispatch(setModalClose());
+        setShowModal(false);
     };
 
     const closeRingModal = () => {
-        setSnoozeModal(false);
+        pause();
+        setShowRingModal(false);
     }
-
-    const updateTime = () => {
-        const date = new Date();
-        const time = date.toLocaleTimeString();
-        const dayStr = `${days[date.getDay()].toUpperCase()} - ${monthNames[date.getMonth()].toUpperCase()} ${date.getDate()}. ${date.getFullYear()}`;
-        setCurrrentTime(time);
-        setDay(dayStr);
-    };
-
-    setInterval(updateTime, 1000);
 
     const handleStop = () => {
         pause();
         setFlag(!flag);
-        setSnoozeModal(false);
+        setShowRingModal(false);
     };
 
     const DeleteAlarm = (value) => {
@@ -98,10 +88,8 @@ const Alarm = () => {
         localStorage.setItem('Alarms', JSON.stringify(delAlarm))
     };
 
-    const storeAlarm = () => {
-        debugger
+    const storeAlarm = (alarmDetails) => {
         const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
-        debugger
         let newAlarm = {
             timeoutId: '',
             alarmTimestamp: alarmDetails?.alarmDate?.getTime(),
@@ -109,14 +97,13 @@ const Alarm = () => {
             title: alarmDetails?.alarmTitle,
             note: alarmDetails?.alarmNote,
             country: alarmDetails?.country,
-            alarmTune: alarmDetails?.alarmTune,
+            alarmTune: alarmAudio,
             alarmVolume: alarmDetails?.alarmVolume
         };
         const isSnooze = 'snoozeTime' in alarmDetails;
         if (isSnooze) {
             newAlarm = { ...newAlarm, snoozeTime: alarmDetails?.snoozeTime };
         };
-        debugger
         allAlarms.push(newAlarm);
         localStorage.setItem('Alarms', JSON.stringify(allAlarms));
         closeModal();
@@ -139,21 +126,18 @@ const Alarm = () => {
         } else {
             nearestAlarm = newList[0];
         }
-        setCurrentAlarm(nearestAlarm);
         const currTimestamp = Date.now();
         let diff;
         diff = nearestAlarm?.alarmTimestamp - currTimestamp;
         if (diff >= 0) {
             const id = setTimeout(() => {
+                setAlarmAudio(nearestAlarm?.alarmTune);
+                // setVolume(nearestAlarm?.alarmVolume);
                 notifyUser(nearestAlarm.title, nearestAlarm.note);
                 play();
                 setFlag(!flag);
-                const allAlarms = JSON.parse(localStorage.getItem('Alarms'));
-                const filterSnoozeData = allAlarms.filter((item) => item.timeoutId === id)
-                if (filterSnoozeData) {
-                    setShowSnooze(true);
-                }
-                setSnoozeModal(true);
+                setCurrentAlarm(nearestAlarm);
+                setShowRingModal(true);
             }, diff);
             const allAlarms = JSON.parse(localStorage.getItem('Alarms'));
             allAlarms.forEach((item) => {
@@ -164,6 +148,7 @@ const Alarm = () => {
             localStorage.setItem('Alarms', JSON.stringify(allAlarms));
             setFlag(!flag);
         }
+
     };
 
     useEffect(() => {
@@ -213,25 +198,6 @@ const Alarm = () => {
         }
     };
 
-    const SnoozeAlarm = () => {
-        pause();
-        const newStamp = currentAlarm.alarmTimestamp + snoozeTime;
-        const allAlrams = JSON.parse(localStorage.getItem('Alarms'));
-        allAlrams.forEach((item) => {
-            if (item.alarmTimestamp === currentAlarm.alarmTimestamp) {
-                item.alarmTimestamp = newStamp;
-            }
-        });
-        localStorage.setItem('Alarms', JSON.stringify(allAlrams));
-        callToAlarm();
-        setFlag(!flag);
-        setSnoozeModal(false);
-    };
-
-    const setSnoozeTiming = (value) => {
-        setSnoozeTime(value);
-    };
-
     const countRemaining = (alarmTime) => {
         const current = Date.now();
         const remaining = alarmTime - current;
@@ -253,21 +219,15 @@ const Alarm = () => {
 
     return (
         <AlarmWrapper>
-            <h1 className="display">{currentTime}</h1>
-            <p className="day">{day}</p>
+            {currentTime ? (
+                <>
+                    <h1 className="display">{currentTime}</h1>
+                    <p className="day">{day}</p>
+                </>
+            ) : <h1 className="display">00:00:00</h1>}
             <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                <Button variant="success" onClick={() => dispatch(setShowModal())} style={{ marginRight: 10 }}>Set Alarm</Button>
+                <Button variant="success" onClick={() => setShowModal(true)} style={{ marginRight: 10 }}>Set Alarm</Button>
             </div>
-
-            <RingAlarm
-                closeRingModal={closeRingModal}
-                snonzeModal={snonzeModal}
-                handleStop={handleStop}
-                SnoozeAlarm={SnoozeAlarm}
-                currentAlarm={currentAlarm}
-                showSnooze={showSnooze}
-                getTime={getTime}
-            />
             <div className="container-fluid d-flex justify-content-evenly">
                 <div className="w-50 m-5 text-center">
                     <h3 className="text-decoration-underline">Past Alarm</h3>
@@ -318,6 +278,7 @@ const Alarm = () => {
                                 <th>Title</th>
                                 <th>Alarm Time</th>
                                 <th>Date</th>
+                                <th>Remaining Time</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -327,6 +288,7 @@ const Alarm = () => {
                                     <td>{item.title}</td>
                                     <td>{getTime(item.alarmTimestamp)}</td>
                                     <td>{new Date(item.alarmTimestamp).toLocaleDateString()}</td>
+                                    <td>{countRemaining(item.alarmTimestamp)}</td>
                                     <td>
                                         <OverlayTrigger
                                             placement={'top'}
@@ -388,22 +350,23 @@ const Alarm = () => {
             </div>
             <audio src={alarmAudio} ref={audioRef} />
             <SetAlarmModal
+                showModal={showModal}
                 closeModal={closeModal}
                 play={play}
                 pause={pause}
-                handleStop={handleStop}
-                callAlarms={callAlarm}
+                getAlarms={getAlarms}
                 callToAlarm={callToAlarm}
                 storeAlarm={storeAlarm}
-                audioData={audioData}
                 settingAlarmAudio={settingAlarmAudio}
-                setSnoozeTiming={setSnoozeTiming}
-                setAlarmAudioTone={setAlarmAudioTone}
                 settingVolume={settingVolume}
-                setSnoozeModal={setSnoozeModal}
-                snonzeModal={snonzeModal}
-                SnoozeAlarm={SnoozeAlarm}
+            />
+            <RingAlarm
+                closeRingModal={closeRingModal}
                 currentAlarm={currentAlarm}
+                showRingModal={showRingModal}
+                handleStop={handleStop}
+                callToAlarm={callToAlarm}
+                getTime={getTime}
             />
         </AlarmWrapper >
     );

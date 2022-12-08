@@ -1,5 +1,0 @@
-export const SetAlarmModalTypes = {
-    SET_SHOW_MODAL: 'SET_SHOW_MODAL',
-    SET_CLOSE_MODAL: 'SET_CLOSE_MODAL',
-    SET_ALARM_DETAILS: 'SET_ALARM_DETAILS'
-};
