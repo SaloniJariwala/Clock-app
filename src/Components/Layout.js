@@ -92,7 +92,7 @@ const Layout = ({ Component }) => {
                     <a href="" className="menu-links"><FiSettings /></a>
                 </div> */}
             </NavbarWrapper>
-            <div style={{ display: "flex" }}>
+            <div style={{ display: "flex", height: '91.5vh' }}>
                 <SidebarWrapper>
                     {items.map((item) => (
                         <SideBox
@@ -108,7 +108,7 @@ const Layout = ({ Component }) => {
                         </SideBox>
                     ))}
                 </SidebarWrapper>
-                <div style={{ marginLeft: 100, marginTop: 80, width: '100%', display: 'flex', justifyContent: "center", alignItems: 'center' }}>
+                <div style={{ width: '100%', display: 'flex', justifyContent: "center", alignItems: 'center' }}>
                     <Component />
                 </div>
             </div>
