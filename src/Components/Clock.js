@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ClockWrapper } from "./style";
 import { days, monthNames } from "../Constant";
+import { useEffect } from "react";
 
 const Clock = () => {
 
@@ -15,7 +16,10 @@ const Clock = () => {
         setDay(dayStr);
     };
 
-    setInterval(updateTime, 1000);
+    useEffect(() => {
+        updateTime();
+        setInterval(updateTime, 1000);
+    }, 1000);
 
     return (
         <ClockWrapper>

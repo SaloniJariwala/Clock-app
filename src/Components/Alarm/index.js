@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, OverlayTrigger, Table, Tooltip } from "react-bootstrap";
+import { Button as AntButton } from "antd";
 import { AlarmWrapper } from "../style";
 import { days, monthNames } from "../../Constant";
 import SetAlarmModal from "./SetAlarmModal";
@@ -8,10 +9,11 @@ import {
     MdOutlineDeleteOutline,
     MdPauseCircleOutline,
     MdPlayCircleOutline,
-    MdZoomOutMap,
+    MdSnooze
 } from "react-icons/md";
 import { notifyUser } from "../../Utils/Notification";
 import RingAlarm from "./RingAlarm";
+import { specificTimeData } from "../../Data/specificTimeData";
 
 const Alarm = () => {
 
@@ -28,14 +30,17 @@ const Alarm = () => {
     const [showRingModal, setShowRingModal] = useState(false);
     const audioRef = useRef();
 
+    const updateTime = () => {
+        const date = new Date();
+        const time = date.toLocaleTimeString();
+        const dayStr = `${days[date.getDay()].toUpperCase()} - ${monthNames[date.getMonth()].toUpperCase()} ${date.getDate()}. ${date.getFullYear()}`;
+        setCurrrentTime(time);
+        setDay(dayStr);
+    }
+
     useEffect(() => {
-        setInterval(() => {
-            const date = new Date();
-            const time = date.toLocaleTimeString();
-            const dayStr = `${days[date.getDay()].toUpperCase()} - ${monthNames[date.getMonth()].toUpperCase()} ${date.getDate()}. ${date.getFullYear()}`;
-            setCurrrentTime(time);
-            setDay(dayStr);
-        }, 1000);
+        updateTime();
+        setInterval(updateTime, 1000);
     }, []);
 
     const settingAlarmAudio = (value, name) => {
@@ -100,6 +105,7 @@ const Alarm = () => {
         let newAlarm = {
             timeoutId: '',
             alarmTimestamp: alarmDetails?.alarmDate?.getTime(),
+            orgTimestamp: alarmDetails?.alarmDate?.getTime(),
             isAlarmPause: false,
             title: alarmDetails?.alarmTitle,
             note: alarmDetails?.alarmNote,
@@ -143,7 +149,7 @@ const Alarm = () => {
         if (diff >= 0) {
             const id = setTimeout(() => {
                 setAlarmAudio(nearestAlarm?.alarmTune);
-                // setVolume(nearestAlarm?.alarmVolume);
+                setVolume(nearestAlarm?.alarmVolume);
                 notifyUser(nearestAlarm.title, nearestAlarm.note);
                 play();
                 setFlag(!flag);
@@ -227,6 +233,14 @@ const Alarm = () => {
         return str;
     };
 
+    const handleSpecificTime = (time) => {
+        const alarmTime = new Date(time);
+        console.log(`Alarm Set for ${alarmTime.getHours()}:${alarmTime.getMinutes()}:${alarmTime.getSeconds()}`);
+        const payload = {
+
+        }
+    }
+
     return (
         <AlarmWrapper>
             {currentTime ? (
@@ -254,7 +268,7 @@ const Alarm = () => {
                             {pastAlarms?.map((item, index) => (
                                 <tr key={index}>
                                     <td>{item.title}</td>
-                                    <td>{getTime(item.alarmTimestamp)}</td>
+                                    <td>{getTime(item.orgTimestamp)}</td>
                                     <td>{new Date(item.alarmTimestamp).toLocaleDateString()}</td>
                                     <td>
                                         <OverlayTrigger
@@ -296,7 +310,10 @@ const Alarm = () => {
                             {upcomingAlarms?.map((item, index) => (
                                 <tr key={index}>
                                     <td>{item.title}</td>
-                                    <td>{getTime(item.alarmTimestamp)}</td>
+                                    <td>
+                                        <span>{getTime(item.orgTimestamp)}</span>
+                                        <span style={{ marginLeft: '10px' }}>{item.orgTimestamp !== item.alarmTimestamp && <MdSnooze fill="red" />}</span>
+                                    </td>
                                     <td>{new Date(item.alarmTimestamp).toLocaleDateString()}</td>
                                     <td>{countRemaining(item.alarmTimestamp)}</td>
                                     <td>
@@ -334,29 +351,24 @@ const Alarm = () => {
                                                 <MdOutlineDeleteOutline />
                                             </Button>
                                         </OverlayTrigger>
-
-                                        <OverlayTrigger
-                                            placement={'top'}
-                                            overlay={
-                                                <Tooltip id={`tooltip-${index}`}>
-                                                    View
-                                                </Tooltip>
-                                            }
-                                        >
-                                            <Button
-                                                className="btn-sm"
-                                                variant="outline-info"
-                                                style={{ marginLeft: 10 }}
-                                            >
-                                                <MdZoomOutMap />
-                                            </Button>
-                                        </OverlayTrigger>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </Table>
                 </div>
+            </div>
+            <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap', justifyContent: 'center' }}>
+                {specificTimeData.map((item, index) => (
+                    <AntButton
+                        type="primary"
+                        key={index}
+                        onClick={() => handleSpecificTime(item.value)}
+                        style={{ margin: '10px' }}
+                    >
+                        {item.title}
+                    </AntButton>
+                ))}
             </div>
             <audio src={alarmAudio} ref={audioRef} />
             <SetAlarmModal

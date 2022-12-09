@@ -35,18 +35,19 @@ const RingAlarm = ({
             localStorage.setItem("Alarms", JSON.stringify(getallAlrams));
             getAlarms();
         } else if (currentAlarm.alarmRepeat === "daily") {
-            const dailyTimeStamp = currentAlarm.alarmTimestamp + 86400000;
+            const dailyTimeStamp = currentAlarm.orgTimestamp + 86400000;
             const getallAlrams = JSON.parse(localStorage.getItem("Alarms"));
             getallAlrams.forEach((item) => {
                 if (item.alarmTimestamp === currentAlarm.alarmTimestamp) {
                     item.alarmTimestamp = dailyTimeStamp;
+                    item.orgTimestamp = dailyTimeStamp;
                 }
             });
             localStorage.setItem("Alarms", JSON.stringify(getallAlrams));
             getAlarms();
         } else if (currentAlarm.alarmRepeat === "weekdays") {
 
-            const weekDaysStamp = currentAlarm.alarmTimestamp + 86400000;
+            const weekDaysStamp = currentAlarm.orgTimestamp + 86400000;
             const getallAlrams = JSON.parse(localStorage.getItem("Alarms"));
             const day = new Date(currentAlarm.alarmTimestamp).toLocaleString(
                 'default', { weekday: 'short' }
@@ -56,6 +57,7 @@ const RingAlarm = ({
                 getallAlrams.forEach((item) => {
                     if (item.alarmTimestamp === currentAlarm.alarmTimestamp) {
                         item.alarmTimestamp = weekDaysStamp;
+                        item.orgTimestamp = weekDaysStamp;
                     }
                 });
             }
@@ -63,7 +65,7 @@ const RingAlarm = ({
             getAlarms();
         }
         else if (currentAlarm.alarmRepeat === "weekends") {
-            const weekendStamp = currentAlarm.alarmTimestamp + 86400000;
+            const weekendStamp = currentAlarm.orgTimestamp + 86400000;
             const getallAlrams = JSON.parse(localStorage.getItem("Alarms"));
             const day = new Date(currentAlarm.alarmTimestamp).toLocaleString(
                 'default', { weekday: 'short' }
@@ -72,6 +74,7 @@ const RingAlarm = ({
                 getallAlrams.forEach((item) => {
                     if (item.alarmTimestamp === currentAlarm.alarmTimestamp) {
                         item.alarmTimestamp = weekendStamp;
+                        item.orgTimestamp = weekendStamp;
                     }
                 });
             }

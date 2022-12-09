@@ -9,7 +9,6 @@ import MinutesContainer from "./SetAlarmForm/MinutesContainer";
 import SecondsContainer from "./SetAlarmForm/SecondsContainer";
 import CountryContainer from "./SetAlarmForm/CountryContainer";
 import AudioContainer from "./SetAlarmForm/AudioContainer";
-import VolumeContainer from "./SetAlarmForm/VolumeContainer";
 import defaultAlarmTune from "../../Assets/audios/alarm.mp3";
 import TestModal from "./TestModal";
 
@@ -22,7 +21,6 @@ const SetAlarmModal = ({
   callToAlarm,
   storeAlarm,
   settingAlarmAudio,
-  settingVolume,
 }) => {
   const date = new Date();
 
@@ -42,26 +40,49 @@ const SetAlarmModal = ({
   const [isRepeatAlarm, setIsRepertAlarm] = useState(false);
 
   const setAlarmDetails = (value, name) => {
-    if (name === "country") {
-      setCountry(value);
-    } else if (name === "hour") {
-      setHour(value);
-    } else if (name === "minute") {
-      setMinute(value);
-    } else if (name === "second") {
-      setSecond(value);
-    } else if (name === "title") {
-      setAlarmTitle(value);
-    } else if (name === "note") {
-      setAlarmNote(value);
-    } else if (name === "snooze") {
-      setSnoozeTime(value);
-    } else if (name === "tune") {
-      setAlarmTune(value);
-    } else if (name === "volume") {
-      setAlarmVolume(value);
-    } else if (name === "repeat") {
-      setAlarmRepeatValue(value);
+    switch (name) {
+      case 'country':
+        setCountry(value);
+        break;
+
+      case 'hour':
+        setHour(value);
+        break;
+
+      case 'minute':
+        setMinute(value);
+        break;
+
+      case 'second':
+        setSecond(value);
+        break;
+
+      case 'title':
+        setAlarmTitle(value);
+        break;
+
+      case 'note':
+        setAlarmNote(value);
+        break;
+
+      case 'snooze':
+        setSnoozeTime(value);
+        break;
+
+      case 'tune':
+        setAlarmTune(value);
+        break;
+
+      case 'volume':
+        setAlarmVolume(value);
+        break;
+
+      case 'repeat':
+        setAlarmRepeatValue(value);
+        break;
+
+      default:
+        console.log('Invalid Name');
     }
   };
 
@@ -92,6 +113,7 @@ const SetAlarmModal = ({
     let payload = {
       country: country,
       alarmDate: orgDate,
+      originalAlarm: orgDate,
       alarmTitle: alarmTitle,
       alarmNote: alarmNote,
       alarmTune: alarmTune,
@@ -114,38 +136,45 @@ const SetAlarmModal = ({
   const onTest = () => {
     checkCountry("isTest");
     setShowTestModal(true);
+    play();
   };
 
   const checkCountry = (test = "") => {
-    setIsSnooze(false);
-    setIsRepertAlarm(false);
-    switch (country) {
-      case "India":
-        countryWiseSetAlarm("india", 0, 0, test);
-        break;
+    if (alarmTune === 'selected') {
+      alert('Please fill all data');
+    } else {
+      if (test !== 'isTest') {
+        setIsSnooze(false);
+        setIsRepertAlarm(false);
+      }
+      switch (country) {
+        case "India":
+          countryWiseSetAlarm("india", 0, 0, test);
+          break;
 
-      case "USA":
-        countryWiseSetAlarm("back", 10, 30, test);
-        break;
+        case "USA":
+          countryWiseSetAlarm("back", 10, 30, test);
+          break;
 
-      case "Japan":
-        countryWiseSetAlarm("ahead", 3, 30, test);
-        break;
+        case "Japan":
+          countryWiseSetAlarm("ahead", 3, 30, test);
+          break;
 
-      case "Canada":
-        countryWiseSetAlarm("back", 10, 30, test);
-        break;
+        case "Canada":
+          countryWiseSetAlarm("back", 10, 30, test);
+          break;
 
-      case "Australia":
-        countryWiseSetAlarm("ahead", 5, 30, test);
-        break;
+        case "Australia":
+          countryWiseSetAlarm("ahead", 5, 30, test);
+          break;
 
-      case "London":
-        countryWiseSetAlarm("back", 5, 30, test);
-        break;
+        case "London":
+          countryWiseSetAlarm("back", 5, 30, test);
+          break;
 
-      default:
-        console.log("Invalid Choice");
+        default:
+          console.log("Invalid Choice");
+      }
     }
   };
 
@@ -210,19 +239,6 @@ const SetAlarmModal = ({
               settingAlarmAudio={settingAlarmAudio}
               play={play}
               pause={pause}
-              setAlarmDetails={setAlarmDetails}
-            />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              padding: "0 10px",
-              width: "100%",
-              marginBottom: "1em",
-            }}
-          >
-            <VolumeContainer
-              settingVolume={settingVolume}
               setAlarmDetails={setAlarmDetails}
             />
           </div>

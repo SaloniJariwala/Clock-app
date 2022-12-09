@@ -15,9 +15,9 @@ const HourContainer = ({
             let arr = [];
             for (let i = 0; i <= 23; i++) {
                 if (i < 10) {
-                    arr = [...arr, `0${i.toString()}`];
+                    arr = [...arr, { display: `0${i.toString()}`, value: i.toString() }];
                 } else {
-                    arr = [...arr, i.toString()];
+                    arr = [...arr, { display: `${i.toString()}`, value: i.toString() }];
                 }
             }
             setOptions(arr);
@@ -43,9 +43,9 @@ const HourContainer = ({
                 {options?.map((item, index) => (
                     <option
                         key={index}
-                        value={item}
+                        value={item.value}
                     >
-                        {item}
+                        {item.display}
                     </option>
                 ))}
             </select>

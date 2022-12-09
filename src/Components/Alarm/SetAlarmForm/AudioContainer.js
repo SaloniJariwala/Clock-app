@@ -4,19 +4,42 @@ import { Button } from 'react-bootstrap';
 import { GrPlay, GrPause } from "react-icons/gr";
 import { BsThreeDots } from "react-icons/bs";
 import { audioData } from '../../../Data/audioData';
+import { useRef } from 'react';
+import { Slider } from 'antd';
 
 const AudioContainer = ({
     settingAlarmAudio,
-    pause,
-    play,
     setAlarmDetails
 }) => {
 
-    const [audioPlay, setAudioPlay] = useState(false);
-    const [audioName, setAudioName] = useState('');
+    const audioRef = useRef();
+
+
+    const [audioPlay, setAudioPlay] = useState(true);
+    const [audioName, setAudioName] = useState('selected');
+    const [volume, setVolume] = useState(50);
+
+    const play = () => {
+        audioRef.current.play();
+        audioRef.current.volume = volume / 100;
+        audioRef.current.loop = true;
+    }
+
+    const pause = () => {
+        audioRef.current.pause();
+    };
 
     const handleButtonClick = () => {
-        setAudioPlay(!audioPlay);
+        if (audioName === 'selected') {
+            alert('Please Select Sound first');
+        } else {
+            setAudioPlay(!audioPlay);
+            if (audioPlay) {
+                play();
+            } else {
+                pause();
+            }
+        }
     };
 
     const handleChange = (event) => {
@@ -30,8 +53,15 @@ const AudioContainer = ({
         settingAlarmAudio(event.target.files[0], 'browse')
     };
 
+    const handleVolumeChange = (value) => {
+        pause();
+        setVolume(value);
+        play();
+        setAlarmDetails(value, 'volume');
+    }
+
     return (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
             <span>Sound</span>
             <div style={{ display: "flex" }}>
                 <select
@@ -41,6 +71,7 @@ const AudioContainer = ({
                     value={audioName}
                     onChange={handleChange}
                 >
+                    <option value={'selected'}>--Select Sound--</option>
                     {audioData?.map((item, index) => (
                         <option
                             key={index}
@@ -49,16 +80,14 @@ const AudioContainer = ({
                             {item.audioTitle}
                         </option>
                     ))}
-                    {audioName && (
-                        <option value={audioName}>{audioName}</option>
-                    )}
                 </select>
+                <audio src={audioName} ref={audioRef} />
                 <Button
                     className="btn"
                     style={{ marginLeft: 10, backgroundColor: 'white', border: '1px solid #ced4da' }}
                     onClick={handleButtonClick}
                 >
-                    {!audioPlay ? <GrPlay onClick={play} /> : <GrPause onClick={pause} />}
+                    {!audioPlay ? <GrPause /> : <GrPlay />}
                 </Button>
                 <Button
                     className="btn"
@@ -89,6 +118,10 @@ const AudioContainer = ({
                         }}
                     />
                 </Button>
+            </div>
+            <div style={{ width: '100%' }}>
+                <span>Volume</span>
+                <Slider defaultValue={50} onChange={handleVolumeChange} />
             </div>
         </div>
     )

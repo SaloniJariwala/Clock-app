@@ -13,12 +13,13 @@ const MinutesContainer = ({ setAlarmDetails }) => {
             let mArr = [];
             for (let j = 0; j <= 59; j++) {
                 if (j < 10) {
-                    mArr = [...mArr, `0${j.toString()}`];
+                    mArr = [...mArr, { display: `0${j.toString()}`, value: j.toString() }];
                 } else {
-                    mArr = [...mArr, j.toString()];
+                    mArr = [...mArr, { display: `${j.toString()}`, value: j.toString() }];
                 }
             }
             setOptions(mArr);
+            debugger
         };
         getMinutes();
     }, []);
@@ -41,9 +42,9 @@ const MinutesContainer = ({ setAlarmDetails }) => {
                 {options?.map((item, index) => (
                     <option
                         key={index}
-                        value={item}
+                        value={item.value}
                     >
-                        {item}
+                        {item.display}
                     </option>
                 ))}
             </select>

@@ -10,8 +10,8 @@ const TestModal = ({ showTestModal, closeTestModal, alarm }) => {
       <Modal.Body>
         <div style={{ alignItems: "center" }}>
           <div>
-            Time : {alarm?.alarmDate?.getHours()}:
-            {alarm?.alarmDate?.getMinutes()}:{alarm?.alarmDate?.getSeconds()}
+            Time : {alarm?.originalAlarm?.getHours()}:
+            {alarm?.originalAlarm?.getMinutes()}:{alarm?.originalAlarm?.getSeconds()}
           </div>
           <div>Title : {alarm?.alarmTitle}</div>
           <div>Note : {alarm?.alarmNote}</div>
