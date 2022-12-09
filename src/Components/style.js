@@ -147,3 +147,33 @@ export const AlarmTitleWrapper = styled.div`
       width: 100%;
     }
 `;
+
+
+export const StopWatchWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    .title {
+      color: #555;
+      font-size: 32px;
+      font-weight: 300;
+      margin-bottom: 0;
+    }    
+    .display {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 130px;
+      color: #555;
+      margin-bottom: 0;
+      line-height: 1.5;
+      width: 80%;
+      display: flex;
+      justify-content: center;
+    }
+    .day {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 40px;
+      color: #555;
+    }
+`;
