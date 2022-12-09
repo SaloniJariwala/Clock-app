@@ -5,21 +5,24 @@ import { StopWatchWrapper } from "../style";
 import DisplayStopWatch from "./DisplayStopWatch";
 
 function Index() {
+    const [isInaterval, setIsIntaerVal] = useState();
+    const [status, setStatus] = useState(0);
+    const [isRunning, setIsRunning] = useState(false);
+    const getStopWatch = JSON.parse(localStorage.getItem("stopWatchLap"));
     const [time, setTime] = useState({
+        lastId:0,
         milisecond: 0,
         second: 0,
         minute: 0,
         hour: 0,
     });
-    const [isInaterval, setIsIntaerVal] = useState();
-    const [status, setStatus] = useState(0);
-    const [isRunning, setIsRunning] = useState(false);
-    const getStopWatch = JSON.parse(localStorage.getItem("stopWatchLap"));
-    var updtaeMs = time.milisecond;
-    var updateSecond = time.second;
-    var updateMinute = time.minute;
-    var updateHour = time.hour;
-
+    let updtaeMs = time.milisecond;
+    let updateSecond = time.second;
+    let updateMinute = time.minute;
+    let updateHour = time.hour;
+    let lastId=1;
+   
+    
     const run = () => {
         if (updateMinute === 60) {
             updateHour++;
@@ -60,7 +63,7 @@ function Index() {
     const reset = () => {
         clearInterval(isInaterval);
         setStatus(0);
-        setTime({ milisecond: 0, second: 0, minute: 0, hour: 0 });
+        setTime({milisecond: 0, second: 0, minute: 0, hour: 0 });
     };
 
     const resume = () => {
@@ -72,6 +75,7 @@ function Index() {
         const allStopTime = JSON.parse(localStorage.getItem("stopWatchLap")) || [];
         start();
         allStopTime.push(time);
+        allStopTime.reverse();
         localStorage.setItem("stopWatchLap", JSON.stringify(allStopTime));
     };
 
@@ -99,6 +103,7 @@ function Index() {
                     <Table striped bordered hover className="mt-4">
                         <thead>
                             <tr>
+                            <th>#</th>
                                 <th>Hour</th>
                                 <th>Minutes</th>
                                 <th>MiliSecond</th>
@@ -108,6 +113,7 @@ function Index() {
                         <tbody>
                             {getStopWatch?.map((item, index) => (
                                 <tr key={index}>
+                                    <td>{lastId++}</td>
                                     <td>{item.hour}</td>
                                     <td>{item.minute}</td>
                                     <td>{item.milisecond}</td>
