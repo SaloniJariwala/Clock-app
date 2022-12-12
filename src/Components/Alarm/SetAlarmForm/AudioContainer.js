@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { GrPlay, GrPause } from "react-icons/gr";
 import { BsThreeDots } from "react-icons/bs";
@@ -18,6 +18,11 @@ const AudioContainer = ({
     const [audioPlay, setAudioPlay] = useState(true);
     const [audioName, setAudioName] = useState('selected');
     const [volume, setVolume] = useState(50);
+    const [options, setOptions] = useState([]);
+
+    useEffect(() => {
+        setOptions(audioData);
+    }, []);
 
     const play = () => {
         audioRef.current.play();
@@ -49,8 +54,16 @@ const AudioContainer = ({
     };
 
     const handleFileChange = (event) => {
-        setAudioName(event.target.files[0].name);
-        settingAlarmAudio(event.target.files[0], 'browse')
+        const audio = URL.createObjectURL(event.target.files[0]);
+        const newAudio = {
+            audioTitle: event.target.files[0].name, 
+            track: audio
+        }
+        const array = options;
+        array.push(newAudio);
+        setOptions(array);
+        setAudioName(audio);
+        settingAlarmAudio(event.target.files[0], 'browse');
     };
 
     const handleVolumeChange = (value) => {
@@ -72,7 +85,7 @@ const AudioContainer = ({
                     onChange={handleChange}
                 >
                     <option value={'selected'}>--Select Sound--</option>
-                    {audioData?.map((item, index) => (
+                    {options?.map((item, index) => (
                         <option
                             key={index}
                             value={item.track}

@@ -41,48 +41,48 @@ const SetAlarmModal = ({
 
   const setAlarmDetails = (value, name) => {
     switch (name) {
-      case 'country':
+      case "country":
         setCountry(value);
         break;
 
-      case 'hour':
+      case "hour":
         setHour(value);
         break;
 
-      case 'minute':
+      case "minute":
         setMinute(value);
         break;
 
-      case 'second':
+      case "second":
         setSecond(value);
         break;
 
-      case 'title':
+      case "title":
         setAlarmTitle(value);
         break;
 
-      case 'note':
+      case "note":
         setAlarmNote(value);
         break;
 
-      case 'snooze':
+      case "snooze":
         setSnoozeTime(value);
         break;
 
-      case 'tune':
+      case "tune":
         setAlarmTune(value);
         break;
 
-      case 'volume':
+      case "volume":
         setAlarmVolume(value);
         break;
 
-      case 'repeat':
+      case "repeat":
         setAlarmRepeatValue(value);
         break;
 
       default:
-        console.log('Invalid Name');
+        console.log("Invalid Name");
     }
   };
 
@@ -140,10 +140,10 @@ const SetAlarmModal = ({
   };
 
   const checkCountry = (test = "") => {
-    if (alarmTune === 'selected') {
-      alert('Please fill all data');
+    if (alarmTune === "selected") {
+      alert("Please fill all data");
     } else {
-      if (test !== 'isTest') {
+      if (test !== "isTest") {
         setIsSnooze(false);
         setIsRepertAlarm(false);
       }

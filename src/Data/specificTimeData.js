@@ -95,4 +95,12 @@ export const specificTimeData = [
         title: '2:00 PM',
         value: new Date().setHours(2, 0, 0)
     },
+    {
+        title: '4:30 PM',
+        value: new Date().setHours(16, 30, 0)
+    },
+    {
+        title: '4:35 PM',
+        value: new Date().setHours(16, 35, 0)
+    },
 ];
