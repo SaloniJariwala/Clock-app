@@ -19,7 +19,7 @@ const Clock = () => {
     useEffect(() => {
         updateTime();
         setInterval(updateTime, 1000);
-    }, 1000);
+    }, []);
 
     return (
         <ClockWrapper>
