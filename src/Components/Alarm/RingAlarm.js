@@ -1,3 +1,4 @@
+import { t } from "i18next";
 import React from 'react'
 import { Button, Modal } from "react-bootstrap";
 
@@ -95,14 +96,14 @@ const RingAlarm = ({
             </Modal.Header>
             <Modal.Body>
                 <div style={{ alignItems: "center" }}>
-                    <div>Time : {getTime(currentAlarm?.alarmTimestamp)}</div>
-                    <div>Title : {currentAlarm?.title}</div>
-                    <div>Note : {currentAlarm?.note}</div>
+                    <div>{t('time')} : {getTime(currentAlarm?.alarmTimestamp)}</div>
+                    <div>{t('title')} : {currentAlarm?.title}</div>
+                    <div>{t('note')} : {currentAlarm?.note}</div>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                    <Button variant="danger" onClick={handleStopAlarm}>Stop Alarm</Button>
+                    <Button variant="danger" onClick={handleStopAlarm}>{t('stop_alarm')}</Button>
                     {currentAlarm?.snoozeTime &&
-                        <Button variant="success" onClick={snoozeAlarm} style={{ marginLeft: 10 }}>Snooze Alarm</Button>}
+                        <Button variant="success" onClick={snoozeAlarm} style={{ marginLeft: 10 }}>{t('snooze_alarm')}</Button>}
 
                 </div>
             </Modal.Body>

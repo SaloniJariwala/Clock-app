@@ -6,6 +6,7 @@ import { BsThreeDots } from "react-icons/bs";
 import { audioData } from '../../../Data/audioData';
 import { useRef } from 'react';
 import { Slider } from 'antd';
+import { t } from 'i18next';
 
 const AudioContainer = ({
     settingAlarmAudio,
@@ -56,7 +57,7 @@ const AudioContainer = ({
     const handleFileChange = (event) => {
         const audio = URL.createObjectURL(event.target.files[0]);
         const newAudio = {
-            audioTitle: event.target.files[0].name, 
+            audioTitle: event.target.files[0].name,
             track: audio
         }
         const array = options;
@@ -75,7 +76,7 @@ const AudioContainer = ({
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-            <span>Sound</span>
+            <span>{t('sound')}</span>
             <div style={{ display: "flex" }}>
                 <select
                     className="form-select"
@@ -84,8 +85,8 @@ const AudioContainer = ({
                     value={audioName}
                     onChange={handleChange}
                 >
-                    <option value={'selected'}>--Select Sound--</option>
-                    {options?.map((item, index) => (
+                    <option value={'selected'}>--{t('select_sound')}--</option>
+                    {audioData?.map((item, index) => (
                         <option
                             key={index}
                             value={item.track}
@@ -133,7 +134,7 @@ const AudioContainer = ({
                 </Button>
             </div>
             <div style={{ width: '100%' }}>
-                <span>Volume</span>
+                <span>{t('volume')}</span>
                 <Slider defaultValue={50} onChange={handleVolumeChange} />
             </div>
         </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { countryData } from "../../../Data/countryData";
 
 const CountryContainer = ({ setAlarmDetails }) => {
@@ -7,9 +8,11 @@ const CountryContainer = ({ setAlarmDetails }) => {
         setAlarmDetails(event.target.value, 'country');
     }
 
+    const {t}=useTranslation();
+
     return (
         <div>
-            <span>Country</span>
+            <span>{t('country')}</span>
             <select
                 className="form-select"
                 id="country"
@@ -18,7 +21,7 @@ const CountryContainer = ({ setAlarmDetails }) => {
                 // value={country}
                 onChange={handleChange}
             >
-                <option value="default" disabled>--Select Country--</option>
+                <option value="default" disabled>--{t('select_country')}--</option>
                 {countryData?.map((item, index) => (
                     <option
                         key={index}

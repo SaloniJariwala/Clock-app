@@ -14,6 +14,7 @@ import {
 import { notifyUser } from "../../Utils/Notification";
 import RingAlarm from "./RingAlarm";
 import { specificTimeData } from "../../Data/specificTimeData";
+import { useTranslation } from "react-i18next";
 import { CSVLink } from "react-csv";
 import { BiExport } from "react-icons/bi";
 
@@ -31,6 +32,8 @@ const Alarm = () => {
     const [volume, setVolume] = useState(50);
     const [showRingModal, setShowRingModal] = useState(false);
     const audioRef = useRef();
+    const { t } = useTranslation();
+    document.title = t('alarm_clock')
 
     const updateTime = () => {
         const date = new Date();
@@ -132,7 +135,7 @@ const Alarm = () => {
             newAlarm = alarmDetails;
         }
         allAlarms.push(newAlarm);
-        localStorage.setItem("Alarms", JSON.stringify(allAlarms));
+        localStorage.setItem('Alarms', JSON.stringify(allAlarms));
         closeModal();
         setFlag(!flag);
     };
@@ -180,11 +183,9 @@ const Alarm = () => {
     };
 
     useEffect(() => {
-        const allAlarms = JSON.parse(localStorage.getItem("Alarms")) || [];
+        const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
         setAlarmData(allAlarms);
-        const upcomingAlarm = allAlarms.filter(
-            (item) => item.alarmTimestamp > Date.now()
-        );
+        const upcomingAlarm = allAlarms.filter((item) => item.alarmTimestamp > Date.now());
         setUpcomingAlarms(upcomingAlarm);
         const pastAlarm = allAlarms.filter(
             (item) => item.alarmTimestamp < Date.now()
@@ -288,19 +289,20 @@ const Alarm = () => {
                     onClick={() => setShowModal(true)}
                     style={{ marginRight: 10 }}
                 >
-                    Set Alarm
+                    {" "}
+                    {t("set_alarm")}
                 </Button>
             </div>
             <div className="container-fluid d-flex justify-content-evenly">
                 <div className="w-50 m-5 text-center">
-                    <h3 className="text-decoration-underline">Past Alarm</h3>
+                    <h3 className="text-decoration-underline"> {t("past_alarm")}</h3>
                     <Table striped bordered hover className="mt-4">
                         <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Alarm Time</th>
-                                <th>Date</th>
-                                <th>Actions</th>
+                                <th>{t('title')}</th>
+                                <th>{t('alarm_time')}</th>
+                                <th>{t('date')}</th>
+                                <th>{t('actions')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -313,7 +315,7 @@ const Alarm = () => {
                                         <OverlayTrigger
                                             placement={"top"}
                                             overlay={
-                                                <Tooltip id={`tooltip-${index}`}>Delete</Tooltip>
+                                                <Tooltip id={`tooltip-${index}`}>{t('delete')}</Tooltip>
                                             }
                                         >
                                             <Button
@@ -332,15 +334,15 @@ const Alarm = () => {
                     </Table>
                 </div>
                 <div className="w-50 m-5 text-center">
-                    <h3 className="text-decoration-underline">Upcoming Alarm</h3>
+                    <h3 className="text-decoration-underline">{t('upcoming_alarm')}</h3>
                     <Table striped bordered hover className="mt-4">
                         <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Alarm Time</th>
-                                <th>Date</th>
-                                <th>Remaining Time</th>
-                                <th>Actions</th>
+                                <th>{t('title')}</th>
+                                <th>{t('alarm_time')}</th>
+                                <th>{t('date')}</th>
+                                <th>{t('remaining_time')}</th>
+                                <th>{t('actions')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -362,7 +364,7 @@ const Alarm = () => {
                                             placement={"top"}
                                             overlay={
                                                 <Tooltip id={`tooltip-${index}`}>
-                                                    {!item.isAlarmPause ? "Pause" : "Play"}
+                                                    {!item.isAlarmPause ? t('pause') : t('play')}
                                                 </Tooltip>
                                             }
                                         >
@@ -372,17 +374,13 @@ const Alarm = () => {
                                                 style={{ marginLeft: 10 }}
                                                 onClick={() => setPauseAlarm(item)}
                                             >
-                                                {!item.isAlarmPause ? (
-                                                    <MdPauseCircleOutline />
-                                                ) : (
-                                                    <MdPlayCircleOutline />
-                                                )}
+                                                {!item.isAlarmPause ? <MdPauseCircleOutline /> : <MdPlayCircleOutline />}
                                             </Button>
                                         </OverlayTrigger>
                                         <OverlayTrigger
-                                            placement={"top"}
+                                            placement={'top'}
                                             overlay={
-                                                <Tooltip id={`tooltip-${index}`}>Delete</Tooltip>
+                                                <Tooltip id={`tooltip-${index}`}>{t('delete')}</Tooltip>
                                             }
                                         >
                                             <Button
@@ -405,7 +403,7 @@ const Alarm = () => {
                 <CSVLink data={alarmData} style={{ width: '100%', textDecoration: 'none' }}>
                     <Button variant="outline-secondary" className="d-flex align-items-center justify-content-around w-100">
                         <BiExport />
-                        Export CSV
+                        {t(`export_csv`)}
                     </Button>
                 </CSVLink>
             </div>
@@ -417,16 +415,25 @@ const Alarm = () => {
                     justifyContent: "center",
                 }}
             >
-                {specificTimeData.map((item, index) => (
-                    <AntButton
-                        type="primary"
-                        key={index}
-                        onClick={() => handleSpecificTime(item.value)}
-                        style={{ margin: "10px" }}
-                    >
-                        {item.title}
-                    </AntButton>
-                ))}
+                <div
+                    style={{
+                        display: "flex",
+                        width: "100%",
+                        flexWrap: "wrap",
+                        justifyContent: "center",
+                    }}
+                >
+                    {specificTimeData.map((item, index) => (
+                        <AntButton
+                            type="primary"
+                            key={index}
+                            onClick={() => handleSpecificTime(item.value)}
+                            style={{ margin: "10px" }}
+                        >
+                            {item.title}
+                        </AntButton>
+                    ))}
+                </div>
             </div>
             <audio src={alarmAudio} ref={audioRef} />
             <SetAlarmModal
@@ -453,4 +460,4 @@ const Alarm = () => {
     );
 };
 
-export default Alarm;
+export default Alarm;   

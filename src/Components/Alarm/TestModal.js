@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
+import {t} from "i18next"
 
 const TestModal = ({ showTestModal, closeTestModal, alarm }) => {
   return (
@@ -10,15 +11,15 @@ const TestModal = ({ showTestModal, closeTestModal, alarm }) => {
       <Modal.Body>
         <div style={{ alignItems: "center" }}>
           <div>
-            Time : {alarm?.originalAlarm?.getHours()}:
+            {t('time')} : {alarm?.originalAlarm?.getHours()}:
             {alarm?.originalAlarm?.getMinutes()}:{alarm?.originalAlarm?.getSeconds()}
           </div>
-          <div>Title : {alarm?.alarmTitle}</div>
-          <div>Note : {alarm?.alarmNote}</div>
+          <div>{t('title')} : {alarm?.alarmTitle}</div>
+          <div>{t('note')} : {alarm?.alarmNote}</div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-evenly" }}>
           <Button variant="danger" onClick={closeTestModal}>
-            Okay
+            {t('okay')}
           </Button>
         </div>
       </Modal.Body>
