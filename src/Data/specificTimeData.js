@@ -89,11 +89,11 @@ export const specificTimeData = [
     },
     {
         title: '1:00 PM',
-        value: new Date().setHours(1, 0, 0)
+        value: new Date().setHours(13, 0, 0)
     },
     {
         title: '2:00 PM',
-        value: new Date().setHours(2, 0, 0)
+        value: new Date().setHours(14, 0, 0)
     },
     {
         title: '4:30 PM',
