@@ -9,16 +9,16 @@ import {
     MdOutlineDeleteOutline,
     MdPauseCircleOutline,
     MdPlayCircleOutline,
-    MdSnooze
+    MdSnooze,
 } from "react-icons/md";
 import { notifyUser } from "../../Utils/Notification";
 import RingAlarm from "./RingAlarm";
 import { specificTimeData } from "../../Data/specificTimeData";
+import { useTranslation } from "react-i18next";
 
 const Alarm = () => {
-
-    const [currentTime, setCurrrentTime] = useState('');
-    const [day, setDay] = useState('');
+    const [currentTime, setCurrrentTime] = useState("");
+    const [day, setDay] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [pastAlarms, setPastAlarms] = useState([]);
     const [upcomingAlarms, setUpcomingAlarms] = useState([]);
@@ -29,14 +29,18 @@ const Alarm = () => {
     const [volume, setVolume] = useState(50);
     const [showRingModal, setShowRingModal] = useState(false);
     const audioRef = useRef();
+    const { t } = useTranslation();
+    document.title = t('alarm_clock')
 
     const updateTime = () => {
         const date = new Date();
         const time = date.toLocaleTimeString();
-        const dayStr = `${days[date.getDay()].toUpperCase()} - ${monthNames[date.getMonth()].toUpperCase()} ${date.getDate()}. ${date.getFullYear()}`;
+        const dayStr = `${days[date.getDay()].toUpperCase()} - ${monthNames[
+            date.getMonth()
+        ].toUpperCase()} ${date.getDate()}. ${date.getFullYear()}`;
         setCurrrentTime(time);
         setDay(dayStr);
-    }
+    };
 
     useEffect(() => {
         updateTime();
@@ -44,7 +48,7 @@ const Alarm = () => {
     }, []);
 
     const settingAlarmAudio = (value, name) => {
-        if (name === 'local') {
+        if (name === "local") {
             setAlarmAudio(value);
         } else {
             const url = URL.createObjectURL(value);
@@ -82,7 +86,7 @@ const Alarm = () => {
     const closeRingModal = () => {
         pause();
         setShowRingModal(false);
-    }
+    };
 
     const handleStop = () => {
         pause();
@@ -97,13 +101,13 @@ const Alarm = () => {
         );
         clearTimeout(value.timeoutId);
         setFlag(!flag);
-        localStorage.setItem('Alarms', JSON.stringify(delAlarm))
+        localStorage.setItem("Alarms", JSON.stringify(delAlarm));
     };
 
     const storeAlarm = (alarmDetails) => {
-        const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
+        const allAlarms = JSON.parse(localStorage.getItem("Alarms")) || [];
         let newAlarm = {
-            timeoutId: '',
+            timeoutId: "",
             alarmTimestamp: alarmDetails?.alarmDate?.getTime(),
             orgTimestamp: alarmDetails?.alarmDate?.getTime(),
             isAlarmPause: false,
@@ -111,26 +115,28 @@ const Alarm = () => {
             note: alarmDetails?.alarmNote,
             country: alarmDetails?.country,
             alarmTune: alarmAudio,
-            alarmVolume: alarmDetails?.alarmVolume
+            alarmVolume: alarmDetails?.alarmVolume,
         };
-        const isSnooze = 'snoozeTime' in alarmDetails;
+        const isSnooze = "snoozeTime" in alarmDetails;
         if (isSnooze) {
             newAlarm = { ...newAlarm, snoozeTime: alarmDetails?.snoozeTime };
-        };
-        const isRepeatAlarm = 'alarmRepeat' in alarmDetails;
+        }
+        const isRepeatAlarm = "alarmRepeat" in alarmDetails;
         if (isRepeatAlarm) {
             newAlarm = { ...newAlarm, alarmRepeat: alarmDetails?.alarmRepeat };
         }
         allAlarms.push(newAlarm);
-        localStorage.setItem('Alarms', JSON.stringify(allAlarms));
+        localStorage.setItem("Alarms", JSON.stringify(allAlarms));
         closeModal();
         setFlag(!flag);
     };
 
     const callToAlarm = () => {
-        const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
+        const allAlarms = JSON.parse(localStorage.getItem("Alarms")) || [];
         const currentTimestamp = Date.now();
-        let newList = allAlarms.filter((item) => item.alarmTimestamp > currentTimestamp && !item.isAlarmPause);
+        let newList = allAlarms.filter(
+            (item) => item.alarmTimestamp > currentTimestamp && !item.isAlarmPause
+        );
         let nearestAlarm;
         if (newList.length > 1) {
             for (let i = 0; i < newList.length; i++) {
@@ -156,41 +162,45 @@ const Alarm = () => {
                 setCurrentAlarm(nearestAlarm);
                 setShowRingModal(true);
             }, diff);
-            const allAlarms = JSON.parse(localStorage.getItem('Alarms'));
+            const allAlarms = JSON.parse(localStorage.getItem("Alarms"));
             allAlarms.forEach((item) => {
                 if (item.alarmTimestamp === nearestAlarm.alarmTimestamp) {
                     item.timeoutId = id;
                 }
             });
-            localStorage.setItem('Alarms', JSON.stringify(allAlarms));
+            localStorage.setItem("Alarms", JSON.stringify(allAlarms));
             setFlag(!flag);
         }
     };
 
     useEffect(() => {
-        const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
-        const upcomingAlarm = allAlarms.filter((item) => item.alarmTimestamp > Date.now());
+        const allAlarms = JSON.parse(localStorage.getItem("Alarms")) || [];
+        const upcomingAlarm = allAlarms.filter(
+            (item) => item.alarmTimestamp > Date.now()
+        );
         setUpcomingAlarms(upcomingAlarm);
-        const pastAlarm = allAlarms.filter((item) => item.alarmTimestamp < Date.now());
+        const pastAlarm = allAlarms.filter(
+            (item) => item.alarmTimestamp < Date.now()
+        );
         setPastAlarms(pastAlarm);
     }, [flag]);
 
     const getTime = (timestamp) => {
         const date = new Date(timestamp);
-        return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+        return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
     };
 
     const setPauseAlarm = (value) => {
         if (!alarmPause) {
             setAlarmPause(true);
             clearTimeout(value.timeoutId);
-            const allAlarms = JSON.parse(localStorage.getItem('Alarms'));
+            const allAlarms = JSON.parse(localStorage.getItem("Alarms"));
             allAlarms.forEach((item) => {
                 if (item.alarmTimestamp === value.alarmTimestamp) {
                     item.isAlarmPause = true;
                 }
             });
-            localStorage.setItem('Alarms', JSON.stringify(allAlarms));
+            localStorage.setItem("Alarms", JSON.stringify(allAlarms));
             setFlag(!flag);
         } else {
             setAlarmPause(false);
@@ -201,14 +211,14 @@ const Alarm = () => {
                     play();
                     setFlag(!flag);
                 }, diff);
-                const allAlarms = JSON.parse(localStorage.getItem('Alarms'));
+                const allAlarms = JSON.parse(localStorage.getItem("Alarms"));
                 allAlarms.forEach((item) => {
                     if (item.alarmTimestamp === value.alarmTimestamp) {
                         item.timeoutId = id;
                         item.isAlarmPause = false;
                     }
                 });
-                localStorage.setItem('Alarms', JSON.stringify(allAlarms));
+                localStorage.setItem("Alarms", JSON.stringify(allAlarms));
             }
             setFlag(!flag);
         }
@@ -226,8 +236,10 @@ const Alarm = () => {
         minutes = minutes % 60;
         hours = hours % 24;
 
-        const str = `${hours > 0 ? (hours < 10 ? `0${hours}:` : `${hours}:`) : "00:"}` +
-            `${minutes > 0 ? (minutes < 10 ? `0${minutes}:` : `${minutes}:`) : "00:"}` +
+        const str =
+            `${hours > 0 ? (hours < 10 ? `0${hours}:` : `${hours}:`) : "00:"}` +
+            `${minutes > 0 ? (minutes < 10 ? `0${minutes}:` : `${minutes}:`) : "00:"
+            }` +
             `${seconds > 0 ? (seconds < 10 ? `0${seconds}` : `${seconds}`) : "00"}`;
 
         return str;
@@ -235,11 +247,11 @@ const Alarm = () => {
 
     const handleSpecificTime = (time) => {
         const alarmTime = new Date(time);
-        console.log(`Alarm Set for ${alarmTime.getHours()}:${alarmTime.getMinutes()}:${alarmTime.getSeconds()}`);
-        const payload = {
-
-        }
-    }
+        console.log(
+            `Alarm Set for ${alarmTime.getHours()}:${alarmTime.getMinutes()}:${alarmTime.getSeconds()}`
+        );
+        const payload = {};
+    };
 
     return (
         <AlarmWrapper>
@@ -248,20 +260,29 @@ const Alarm = () => {
                     <h1 className="display">{currentTime}</h1>
                     <p className="day">{day}</p>
                 </>
-            ) : <h1 className="display">00:00:00</h1>}
-            <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                <Button variant="success" onClick={() => setShowModal(true)} style={{ marginRight: 10 }}>Set Alarm</Button>
+            ) : (
+                <h1 className="display">00:00:00</h1>
+            )}
+            <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+                <Button
+                    variant="success"
+                    onClick={() => setShowModal(true)}
+                    style={{ marginRight: 10 }}
+                >
+                    {" "}
+                    {t("set_alarm")}
+                </Button>
             </div>
             <div className="container-fluid d-flex justify-content-evenly">
                 <div className="w-50 m-5 text-center">
-                    <h3 className="text-decoration-underline">Past Alarm</h3>
+                    <h3 className="text-decoration-underline"> {t("past_alarm")}</h3>
                     <Table striped bordered hover className="mt-4">
                         <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Alarm Time</th>
-                                <th>Date</th>
-                                <th>Actions</th>
+                                <th>{t('title')}</th>
+                                <th>{t('alarm_time')}</th>
+                                <th>{t('date')}</th>
+                                <th>{t('actions')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -272,11 +293,9 @@ const Alarm = () => {
                                     <td>{new Date(item.alarmTimestamp).toLocaleDateString()}</td>
                                     <td>
                                         <OverlayTrigger
-                                            placement={'top'}
+                                            placement={"top"}
                                             overlay={
-                                                <Tooltip id={`tooltip-${index}`}>
-                                                    Delete
-                                                </Tooltip>
+                                                <Tooltip id={`tooltip-${index}`}>{t('delete')}</Tooltip>
                                             }
                                         >
                                             <Button
@@ -295,15 +314,15 @@ const Alarm = () => {
                     </Table>
                 </div>
                 <div className="w-50 m-5 text-center">
-                    <h3 className="text-decoration-underline">Upcoming Alarm</h3>
+                    <h3 className="text-decoration-underline">{t('upcoming_alarm')}</h3>
                     <Table striped bordered hover className="mt-4">
                         <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Alarm Time</th>
-                                <th>Date</th>
-                                <th>Remaining Time</th>
-                                <th>Actions</th>
+                                <th>{t('title')}</th>
+                                <th>{t('alarm_time')}</th>
+                                <th>{t('date')}</th>
+                                <th>{t('remaining_time')}</th>
+                                <th>{t('actions')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -312,16 +331,20 @@ const Alarm = () => {
                                     <td>{item.title}</td>
                                     <td>
                                         <span>{getTime(item.orgTimestamp)}</span>
-                                        <span style={{ marginLeft: '10px' }}>{item.orgTimestamp !== item.alarmTimestamp && <MdSnooze fill="red" />}</span>
+                                        <span style={{ marginLeft: "10px" }}>
+                                            {item.orgTimestamp !== item.alarmTimestamp && (
+                                                <MdSnooze fill="red" />
+                                            )}
+                                        </span>
                                     </td>
                                     <td>{new Date(item.alarmTimestamp).toLocaleDateString()}</td>
                                     <td>{countRemaining(item.alarmTimestamp)}</td>
                                     <td>
                                         <OverlayTrigger
-                                            placement={'top'}
+                                            placement={"top"}
                                             overlay={
                                                 <Tooltip id={`tooltip-${index}`}>
-                                                    {!item.isAlarmPause ? 'Pause' : 'Play'}
+                                                    {!item.isAlarmPause ? t('pause') : t('play')}
                                                 </Tooltip>
                                             }
                                         >
@@ -331,15 +354,17 @@ const Alarm = () => {
                                                 style={{ marginLeft: 10 }}
                                                 onClick={() => setPauseAlarm(item)}
                                             >
-                                                {!item.isAlarmPause ? <MdPauseCircleOutline /> : <MdPlayCircleOutline />}
+                                                {!item.isAlarmPause ? (
+                                                    <MdPauseCircleOutline />
+                                                ) : (
+                                                    <MdPlayCircleOutline />
+                                                )}
                                             </Button>
                                         </OverlayTrigger>
                                         <OverlayTrigger
-                                            placement={'top'}
+                                            placement={"top"}
                                             overlay={
-                                                <Tooltip id={`tooltip-${index}`}>
-                                                    Delete
-                                                </Tooltip>
+                                                <Tooltip id={`tooltip-${index}`}>{t('delete')}</Tooltip>
                                             }
                                         >
                                             <Button
@@ -358,13 +383,20 @@ const Alarm = () => {
                     </Table>
                 </div>
             </div>
-            <div style={{ display: 'flex', width: '100%', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div
+                style={{
+                    display: "flex",
+                    width: "100%",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                }}
+            >
                 {specificTimeData.map((item, index) => (
                     <AntButton
                         type="primary"
                         key={index}
                         onClick={() => handleSpecificTime(item.value)}
-                        style={{ margin: '10px' }}
+                        style={{ margin: "10px" }}
                     >
                         {item.title}
                     </AntButton>
@@ -391,8 +423,8 @@ const Alarm = () => {
                 getTime={getTime}
                 getAlarms={getAlarms}
             />
-        </AlarmWrapper >
+        </AlarmWrapper>
     );
 };
 
-export default Alarm;   
+export default Alarm;

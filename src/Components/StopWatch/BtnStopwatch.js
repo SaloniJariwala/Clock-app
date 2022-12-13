@@ -1,6 +1,7 @@
 import React from "react";
 import { StopWatchWrapper } from "../style";
 import { Button } from "react-bootstrap";
+import {t} from "i18next"
 
 const Stopwatch = (props) => {
     return (
@@ -9,14 +10,14 @@ const Stopwatch = (props) => {
                 {props.status === 0 && (
                     <>
                         <Button variant="danger" onClick={props.start}>
-                            Start
+                           {t('start')}
                         </Button>
                         <Button
                             variant="primary"
                             onClick={props.resetHistory}
                             style={{ marginLeft: 10 }}
                         >
-                            Reset Histrory
+                           {t('reset_histrory')}
                         </Button>
                     </>
                 )}
@@ -28,21 +29,14 @@ const Stopwatch = (props) => {
                             style={{ marginLeft: 10 }}
                             onClick={props.stop}
                         >
-                            Stop
+                              {t('stop')}
                         </Button>
                         <Button
                             variant="success"
                             style={{ marginLeft: 10 }}
                             onClick={props.lap}
                         >
-                            Lap
-                        </Button>
-                        <Button
-                            variant="primary"
-                            style={{ marginLeft: 10 }}
-                            onClick={props.reset}
-                        >
-                            Reset
+                              {t('lap')}
                         </Button>
                     </div>
                 )}
@@ -54,14 +48,14 @@ const Stopwatch = (props) => {
                             style={{ marginLeft: 10 }}
                             onClick={props.resume}
                         >
-                            Resume
+                               {t('resume')}
                         </Button>
                         <Button
-                            variant="success"
+                            variant="primary"
                             style={{ marginLeft: 10 }}
                             onClick={props.reset}
                         >
-                            Reset
+                             {t('reset')}
                         </Button>
                     </div>
                 )}

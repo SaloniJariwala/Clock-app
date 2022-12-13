@@ -11,6 +11,7 @@ import CountryContainer from "./SetAlarmForm/CountryContainer";
 import AudioContainer from "./SetAlarmForm/AudioContainer";
 import defaultAlarmTune from "../../Assets/audios/alarm.mp3";
 import TestModal from "./TestModal";
+import { t } from "i18next";
 
 const SetAlarmModal = ({
   showModal,
@@ -210,7 +211,7 @@ const SetAlarmModal = ({
     <>
       <Modal centered show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
-          <span className="alarm-modal-title">Set Alarm</span>
+          <span className="alarm-modal-title">{t('set_alarm')}</span>
         </Modal.Header>
         <Modal.Body>
           <div style={{ padding: "0 10px", marginBottom: "1em" }}>
@@ -243,26 +244,26 @@ const SetAlarmModal = ({
             />
           </div>
           <div style={{ padding: "0 10px", marginBottom: "1em" }}>
-            <label htmlFor="alarm-title">Alarm Title</label>
+            <label htmlFor="alarm-title">{t('alarm_title')}</label>
             <input
               id="alarm-title"
               className="form-control"
-              placeholder="Enter Alarm Title"
+              placeholder={t('enter_alarm_title')}
               onChange={(event) => setAlarmDetails(event.target.value, "title")}
             />
           </div>
           <div style={{ padding: "0 10px", marginBottom: "1em" }}>
-            <label htmlFor="alarm-note">Alarm Note</label>
+            <label htmlFor="alarm-note">{t('alarm_note')}</label>
             <textarea
               id="alarm-note"
               className="form-control"
-              placeholder="Enter Alarm Note"
+              placeholder={t('enter_alarm_note')}
               onChange={(event) => setAlarmDetails(event.target.value, "note")}
             ></textarea>
           </div>
           <div style={{ padding: "0 10px", marginBottom: "1em" }}>
             <Form style={{ display: "flex", flexDirection: "column" }}>
-              <label> Set Snooze </label>
+              <label>{t('set_snooze')}</label>
               <div style={{ display: "flex" }}>
                 <Switch
                   onChange={handleSwitch}
@@ -281,9 +282,9 @@ const SetAlarmModal = ({
                         marginTop: 3,
                       }}
                     >
-                      <Radio value={300000}>5 Minute</Radio>
-                      <Radio value={600000}>10 Minute</Radio>
-                      <Radio value={900000}>15 Minute</Radio>
+                      <Radio value={300000}>{t('5_minute')}</Radio>
+                      <Radio value={600000}>{t('10_minute')}</Radio>
+                      <Radio value={900000}>{t('15_minute')}</Radio>
                     </Radio.Group>
                   </>
                 )}
@@ -291,7 +292,7 @@ const SetAlarmModal = ({
             </Form>
           </div>
           <div style={{ padding: "0 10px", marginBottom: "1em" }}>
-            <Checkbox onChange={onRepertAlarm}>Repert Alarm</Checkbox>
+            <Checkbox onChange={onRepertAlarm}>{t('repeat')}</Checkbox>
             {isRepeatAlarm && (
               <>
                 <Radio.Group
@@ -305,10 +306,10 @@ const SetAlarmModal = ({
                     marginTop: 3,
                   }}
                 >
-                  <Radio value={"never"}>Never</Radio>
-                  <Radio value={"daily"}>Daily</Radio>
-                  <Radio value={"weekdays"}>Weekdays</Radio>
-                  <Radio value={"weekends"}>Weekends</Radio>
+                  <Radio value={"never"}>{t('never')}</Radio>
+                  <Radio value={"daily"}>{t('daily')}</Radio>
+                  <Radio value={"weekdays"}>{t('weekdays')}</Radio>
+                  <Radio value={"weekends"}>{t('weekends')}</Radio>
                 </Radio.Group>
               </>
             )}
@@ -322,7 +323,7 @@ const SetAlarmModal = ({
                 style={{ width: 100 }}
                 onClick={onTest}
               >
-                Test
+                {t('test')}
               </Button>
               <div>
                 <Button
@@ -330,14 +331,14 @@ const SetAlarmModal = ({
                   style={{ width: 100 }}
                   onClick={onCancel}
                 >
-                  Cancel
+                   {t('cancle')}
                 </Button>
                 <Button
                   variant="outline-primary"
                   onClick={checkCountry}
                   style={{ marginLeft: 10, width: 100 }}
                 >
-                  Start
+                   {t('start')}
                 </Button>
               </div>
             </div>

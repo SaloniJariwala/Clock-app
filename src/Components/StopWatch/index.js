@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Table } from "react-bootstrap";
 import BtnStopWatch from "../StopWatch/BtnStopwatch";
 import { StopWatchWrapper } from "../style";
+import {t} from "i18next"
 import DisplayStopWatch from "./DisplayStopWatch";
 
 function Index() {
@@ -21,7 +22,8 @@ function Index() {
     let updateMinute = time.minute;
     let updateHour = time.hour;
     let lastId=1;
-   
+    document.title = t('stop_watch') + updateSecond ;
+    
     
     const run = () => {
         if (updateMinute === 60) {
@@ -86,7 +88,7 @@ function Index() {
     return (
         <div>
             <StopWatchWrapper>
-                <h1>Stop watch</h1>
+                <h1>{t('stop_watch')}</h1>
                 <DisplayStopWatch time={time} />
                 <BtnStopWatch
                     start={start}

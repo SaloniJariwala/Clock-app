@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const HourContainer = ({
     setAlarmDetails
 }) => {
 
     const newDate = new Date();
-
+    const {t}=useTranslation();
     const [currHour, setCurrHour] = useState(newDate.getHours());
     const [options, setOptions] = useState([]);
 
@@ -32,7 +33,7 @@ const HourContainer = ({
 
     return (
         <div>
-            <span>Hour</span>
+            <span>{t('hour')}</span>
             <select
                 className="form-select"
                 id="hour"

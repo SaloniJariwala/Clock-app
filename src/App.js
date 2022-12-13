@@ -9,6 +9,7 @@ import Index from "./Components/StopWatch/index";
 import Timer from "./Components/Timer";
 
 function App() {
+
   return (
     <Routes>
       <Route path='/' element={<Layout Component={Clock} />} />

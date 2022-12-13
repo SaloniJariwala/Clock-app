@@ -1,3 +1,4 @@
+import { t } from "i18next";
 import { useEffect, useState } from "react";
 
 const SecondsContainer = ({ setAlarmDetails }) => {
@@ -29,7 +30,7 @@ const SecondsContainer = ({ setAlarmDetails }) => {
 
     return (
         <div>
-            <span>Second</span>
+            <span>{t('seconds')}</span>
             <select
                 className="form-select"
                 id="second"
