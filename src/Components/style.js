@@ -177,3 +177,15 @@ export const StopWatchWrapper = styled.div`
       color: #555;
     }
 `;
+
+export const HolidayWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    display:block;
+    border:red ;
+    border-radius:5px ;
+`;
