@@ -331,14 +331,14 @@ const SetAlarmModal = ({
                   style={{ width: 100 }}
                   onClick={onCancel}
                 >
-                   {t('cancle')}
+                  {t('cancle')}
                 </Button>
                 <Button
                   variant="outline-primary"
                   onClick={checkCountry}
                   style={{ marginLeft: 10, width: 100 }}
                 >
-                   {t('start')}
+                  {t('start')}
                 </Button>
               </div>
             </div>

@@ -249,7 +249,6 @@ const Alarm = () => {
             `${minutes > 0 ? (minutes < 10 ? `0${minutes}:` : `${minutes}:`) : "00:"
             }` +
             `${seconds > 0 ? (seconds < 10 ? `0${seconds}` : `${seconds}`) : "00"}`;
-
         return str;
     };
 
@@ -258,9 +257,6 @@ const Alarm = () => {
             time = time + 86400000;
         }
         const alarmTime = new Date(time);
-        console.log(
-            `Alarm Set for ${alarmTime.getHours()}:${alarmTime.getMinutes()}:${alarmTime.getSeconds()}`
-        );
         const payload = {
             timeoutId: "",
             alarmTimestamp: time,
