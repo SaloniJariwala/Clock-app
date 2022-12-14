@@ -101,7 +101,7 @@ const Layout = ({ Component }) => {
                     <span>Clockify</span>
                 </a>
                 <div className="d-flex justify-content-end align-items-center language-select-root">
-                    <div className="language-select">
+                    <div>
                         <button
                             className="btn btn-secondary dropdown-toggle"
                             type="button"
@@ -171,7 +171,7 @@ const Layout = ({ Component }) => {
                     <a href="" className="menu-links"><FiSettings /></a>
                 </div> */}
             </NavbarWrapper>
-            <div style={{ display: "flex", height: "91.5vh" }}>
+            <div style={{ display: "flex", height: "100vh" }}>
                 <SidebarWrapper>
                     {items.map((item) => (
                         <SideBox
@@ -193,6 +193,7 @@ const Layout = ({ Component }) => {
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
+                        height: '100%'
                     }}
                 >
                     <Component />

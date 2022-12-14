@@ -30,7 +30,7 @@ const SecondsContainer = ({ setAlarmDetails }) => {
 
     return (
         <div>
-            <span>{t('seconds')}</span>
+            <span>{t('second')}</span>
             <select
                 className="form-select"
                 id="second"
