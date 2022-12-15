@@ -10,29 +10,28 @@ const Timer = () => {
 
     document.title = t('timer');
     const audioRef = useRef();
+    let countdownTimer;
     const [showModal, setShowModal] = useState(false);
-    const [hour, setHour] = useState(10);
-    const [minute, setMinute] = useState(10);
-    const [second, setSecond] = useState(10);
     const [sound, setSound] = useState(defaultTimerSound);
     const [title, setTitle] = useState('Test Title');
     const [timerHour, setTimerHour] = useState(0);
     const [timerMinute, setTimerMinute] = useState(0);
     const [timerSecond, setTimerSecond] = useState(0);
     const [isSetTimer, setIsSetTimer] = useState(false);
+    const [isInaterval, setIsInterVal] = useState();
 
     const setTimerDetails = (value, name) => {
         switch (name) {
             case 'hour':
-                setHour(value);
+                setTimerHour(value);
                 break;
 
             case 'minute':
-                setMinute(value);
+                setTimerMinute(value);
                 break;
 
             case 'second':
-                setSecond(value);
+                setTimerSecond(value);
                 break;
 
             case 'sound':
@@ -52,32 +51,55 @@ const Timer = () => {
         setShowModal(false);
     }
 
-    const toMilliseconds = (hrs, min, sec) => {
-        return (hrs * 60 * 60 + min * 60 + sec) * 1000;
-    }
-
-    const stopInterval = () => {
-
-    }
 
     const timer = () => {
-        if (timerHour === 0 && timerMinute === 0 && timerSecond === 0) {
-            stopInterval();
-        } else if (timerSecond) {
-
+        // closeModal();
+        if (timerSecond > 60) {
+            timerMinute++;
+            timerSecond = parseInt(timerSecond) - 59;
         }
+        if (timerMinute > 60) {
+            timerHour++;
+            timerMinute = parseInt(timerMinute) - 60;
+        }
+        let min1 = timerMinute > 60 ? 60 : timerMinute;
+        setTimerMinute(min1);
+        // Formatting the time - END
+
+        // Updating the Time - START
+        if (timerHour == 0 && timerMinute == 0 && timerSecond == 0) {
+            timerHour = 0;
+            timerMinute = 0;
+            timerSecond = 0;
+            stopInterval();
+        } else if (timerSecond != 0) {
+            let sec = `${timerSecond <= 10 ? "0" : ""}${timerSecond - 1}`;
+            setTimerSecond(sec);
+        } else if (timerMinute != 0 && timerSecond == 0) {
+            timerSecond = 59;
+            let min = `${timerMinute <= 10 ? "0" : ""}${timerMinute - 1}`;
+            setTimerMinute(min);
+        } else if (timerHour != 0 && timerMinute == 0) {
+            timerMinute = 60;
+            let hr = `${timerHour <= 10 ? "0" : ""}${timerHour - 1}`;
+        }
+        return;
+    };
+
+    function stopInterval(state) {
+        setIsSetTimer(false);
+        clearInterval(countdownTimer);
     }
 
     const setTimerStart = () => {
-        setIsSetTimer(true);
-        setTimerHour(hour);
-        setTimerMinute(minute);
-        setTimerSecond(second);
         closeModal();
-        const countdownTimer = setInterval(() => {
-            timer();
-        }, 1000);
-    }
+        function startInterval() {
+            countdownTimer = setInterval(function () {
+                timer();
+            }, 1000);
+        }
+        startInterval();
+    };
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
