@@ -19,8 +19,7 @@ const Timer = () => {
     const [timerHour, setTimerHour] = useState(0);
     const [timerMinute, setTimerMinute] = useState(0);
     const [timerSecond, setTimerSecond] = useState(0);
-
-    const [time, setTime] = useState();
+    const [isSetTimer, setIsSetTimer] = useState(false);
 
     const setTimerDetails = (value, name) => {
         switch (name) {
@@ -57,28 +56,27 @@ const Timer = () => {
         return (hrs * 60 * 60 + min * 60 + sec) * 1000;
     }
 
+    const stopInterval = () => {
+
+    }
+
+    const timer = () => {
+        if (timerHour === 0 && timerMinute === 0 && timerSecond === 0) {
+            stopInterval();
+        } else if (timerSecond) {
+
+        }
+    }
+
     const setTimerStart = () => {
-        debugger
+        setIsSetTimer(true);
+        setTimerHour(hour);
+        setTimerMinute(minute);
+        setTimerSecond(second);
         closeModal();
-        debugger
-        // const countDownDate = new Date().setHours(hour, minute, second);
-        let countDownTime = toMilliseconds(hour, minute, second);
-        debugger
-        // setTime(countDownTime);
-        setInterval(() => {
-            const hours = Math.floor((countDownTime % (24 * 60 * 60 * 1000)) / (1000 * 60 * 60));
-            const minutes = Math.floor((countDownTime % (60 * 60 * 1000)) / (1000 * 60));
-            const seconds = Math.ceil((countDownTime % (60 * 1000)) / 1000);
-            debugger
-            setTimerHour(hours);
-            setTimerMinute(minutes);
-            setTimerSecond(seconds);
-            debugger
-            countDownTime--;
-            debugger
+        const countdownTimer = setInterval(() => {
+            timer();
         }, 1000);
-        debugger
-        debugger
     }
 
     return (
@@ -89,13 +87,20 @@ const Timer = () => {
                 timerSecond={timerSecond}
                 title={title}
             />
-            <Button
-                variant="outline-success"
-                onClick={() => setShowModal(true)}
-                style={{ margin: '40px 0' }}
-            >
-                {t(`set_timer`)}
-            </Button>
+            {isSetTimer ? (
+                <div>
+                    <Button variant="outline-warning" style={{ marginRight: 20 }}>Stop</Button>
+                    <Button variant="outline-danger">Reset</Button>
+                </div>
+            ) : (
+                <Button
+                    variant="outline-success"
+                    onClick={() => setShowModal(true)}
+                    style={{ margin: '40px 0' }}
+                >
+                    {t(`set_timer`)}
+                </Button>
+            )}
             <audio src={sound} ref={audioRef} />
             <SetTimerModal
                 showModal={showModal}

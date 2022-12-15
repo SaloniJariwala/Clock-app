@@ -26,7 +26,7 @@ const DisplayTimer = ({
                     </div>:
                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                         {timerSecond < 10 ? '0' + timerSecond : timerSecond}
-                        <small style={{ fontSize: 40 }}>Minutes</small>
+                        <small style={{ fontSize: 40 }}>Seconds</small>
                     </div>
                 </div>
             </div>
