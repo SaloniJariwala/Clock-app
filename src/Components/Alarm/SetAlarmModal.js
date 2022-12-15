@@ -331,7 +331,7 @@ const SetAlarmModal = ({
                   style={{ width: 100 }}
                   onClick={onCancel}
                 >
-                   {t('cancle')}
+                   {t('cancel')}
                 </Button>
                 <Button
                   variant="outline-primary"

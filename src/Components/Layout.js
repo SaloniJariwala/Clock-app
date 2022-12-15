@@ -5,13 +5,18 @@ import { ReactComponent as Clock } from "../Assets/svg/clock.svg";
 import { ReactComponent as Alarm } from "../Assets/svg/alarm.svg";
 import { ReactComponent as Stopwatch } from "../Assets/svg/stopwatch.svg";
 import { ReactComponent as Timer } from "../Assets/svg/timer.svg";
-import Indiaflag from "../Assets/svg/india.png"
-import Japanflag from "../Assets/svg/japan.png"
+import Indiaflag from "../Assets/svg/india.png";
+import Japanflag from "../Assets/svg/japan.png";
+import Frenchflag from "../Assets/svg/france.png";
+import EnglandFlag from "../Assets/svg/england.png";
+import ChinaFlag from "../Assets/svg/china.png";
+import SpainFlag from "../Assets/svg/spain.png";
 import { Link, useNavigate } from "react-router-dom";
 import { TfiWorld } from "react-icons/tfi";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
+import { Switch } from "antd";
 
 
 const Layout = ({ Component }) => {
@@ -48,6 +53,12 @@ const Layout = ({ Component }) => {
 
     const languages = [
         {
+            code: 'hi',
+            name: 'Hindi',
+            country_code: 'in',
+            icon: <img src={Indiaflag} alt="notfound" style={{ width: "20px", height: "20px", marginRight: "10px" }} />
+        },
+        {
             code: 'jp',
             name: 'Japan',
             country_code: 'jp',
@@ -57,7 +68,25 @@ const Layout = ({ Component }) => {
             code: 'en',
             name: 'English',
             country_code: 'gb',
-            icon: <img src={Indiaflag} alt="notfound" style={{ width: "20px", height: "20px", marginRight: "10px" }} />,
+            icon: <img src={EnglandFlag} alt="notfound" style={{ width: "20px", height: "20px", marginRight: "10px" }} />,
+        },
+        {
+            code: 'fr',
+            name: 'French',
+            country_code: 'fr',
+            icon: <img src={Frenchflag} alt="notfound" style={{ width: "20px", height: "20px", marginRight: "10px" }} />,
+        },
+        {
+            code: 'cn',
+            name: 'Chinese',
+            country_code: 'cn',
+            icon: <img src={ChinaFlag} alt="notfound" style={{ width: "20px", height: "20px", marginRight: "10px" }} />,
+        },
+        {
+            code: 'sp',
+            name: 'Spanish',
+            country_code: 'sp',
+            icon: <img src={SpainFlag} alt="notfound" style={{ width: "20px", height: "20px", marginRight: "10px" }} />,
         },
     ]
 
@@ -92,6 +121,9 @@ const Layout = ({ Component }) => {
         }
     };
 
+    const handleSwitchChange = () => {
+
+    }
 
     return (
         <>
@@ -101,6 +133,14 @@ const Layout = ({ Component }) => {
                     <span>Clockify</span>
                 </a>
                 <div className="d-flex justify-content-end align-items-center language-select-root">
+                    <div style={{ marginRight: 20 }}>
+                        <Switch
+                            size="default"
+                            checkedChildren="12Hrs"
+                            unCheckedChildren="24Hrs"
+                            onChange={handleSwitchChange}
+                        />
+                    </div>
                     <div className="language-select">
                         <button
                             className="btn btn-secondary dropdown-toggle"
