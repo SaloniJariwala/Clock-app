@@ -18,9 +18,12 @@ import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Switch } from "antd";
-
+import { FormatState } from "../Context/FormatProvider";
 
 const Layout = ({ Component }) => {
+
+    const { format, setFormat } = FormatState();
+
     const navigate = useNavigate();
     const [currentSide, setCurrentSide] = useState("");
     const { t } = useTranslation();
@@ -100,9 +103,6 @@ const Layout = ({ Component }) => {
     const currentLanguageCode = localStorage.getItem("i18nextLng") || "en";
     const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
 
-
-
-
     useEffect(() => {
         document.body.dir = currentLanguage.dir || "ltr";
         // document.title = t("app_title");
@@ -131,7 +131,11 @@ const Layout = ({ Component }) => {
     };
 
     const handleSwitchChange = () => {
-
+        if (format === 24) {
+            setFormat(12);
+        } else {
+            setFormat(24);
+        }
     }
 
     return (
@@ -243,7 +247,7 @@ const Layout = ({ Component }) => {
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
-                        height: "max-content"
+                        height: 'auto'
                     }}
                 >
                     <Component />

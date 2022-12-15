@@ -64,7 +64,7 @@ export const SidebarWrapper = styled.div`
   background-color: #3d3c3c;
   /* position: fixed; */
   width: 100px;
-  /* height: 100vh; */
+  height: auto;
   display: flex;
   flex-direction: column;
   .is-active-sides {
@@ -101,6 +101,7 @@ export const ClockWrapper = styled.div`
       color: #555;
       margin-bottom: 0;
       line-height: 1.5;
+      display: flex;
     }
     .day {
       font-family: 'Orbitron', sans-serif;

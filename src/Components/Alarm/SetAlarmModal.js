@@ -90,6 +90,7 @@ const SetAlarmModal = ({
   useEffect(() => {
     callToAlarm();
     getAlarms();
+    // eslint-disable-next-line
   }, []);
 
   const countryWiseSetAlarm = (
