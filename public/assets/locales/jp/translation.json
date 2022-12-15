@@ -56,5 +56,6 @@
     "alarm": "警報",
     "Alert": "アラート",
     "India": "インド",
-    "export_csv": "書き出す CSV"
+    "export_csv": "書き出す CSV",
+    "holidays":"休日"
 }

@@ -56,5 +56,6 @@
     "alarm": "Alarm",
     "Alert": "Alert",
     "India": "India",
-    "export_csv": "Export CSV"
+    "export_csv": "Export CSV",
+    "holidays":"Holidays"
 }

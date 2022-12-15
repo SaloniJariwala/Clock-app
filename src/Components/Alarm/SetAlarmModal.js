@@ -338,7 +338,7 @@ const SetAlarmModal = ({
                   onClick={checkCountry}
                   style={{ marginLeft: 10, width: 100 }}
                 >
-                   {t('start')}
+                  {t('start')}
                 </Button>
               </div>
             </div>

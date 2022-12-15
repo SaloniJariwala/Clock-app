@@ -5,12 +5,13 @@ import { ReactComponent as Clock } from "../Assets/svg/clock.svg";
 import { ReactComponent as Alarm } from "../Assets/svg/alarm.svg";
 import { ReactComponent as Stopwatch } from "../Assets/svg/stopwatch.svg";
 import { ReactComponent as Timer } from "../Assets/svg/timer.svg";
-import Indiaflag from "../Assets/svg/india.png";
-import Japanflag from "../Assets/svg/japan.png";
 import Frenchflag from "../Assets/svg/france.png";
 import EnglandFlag from "../Assets/svg/england.png";
 import ChinaFlag from "../Assets/svg/china.png";
 import SpainFlag from "../Assets/svg/spain.png";
+import { ReactComponent as Holiday } from "../Assets/svg/holiday.svg";
+import Indiaflag from "../Assets/svg/india.png"
+import Japanflag from "../Assets/svg/japan.png"
 import { Link, useNavigate } from "react-router-dom";
 import { TfiWorld } from "react-icons/tfi";
 import i18next from "i18next";
@@ -48,6 +49,12 @@ const Layout = ({ Component }) => {
             icon: <Timer />,
             img: "/images/timer.png",
             key: "4",
+        },
+        {
+            label: t("holidays"),
+            icon: <Holiday />,
+            img: "/images/timer.png",
+            key: "5",
         },
     ];
 
@@ -116,8 +123,10 @@ const Layout = ({ Component }) => {
             navigate("/alarm");
         } else if (name === t("stopwatch")) {
             navigate("/stopwatch");
-        } else {
+        } else if (name === t("timer")) {
             navigate("/timer");
+        } else {
+            navigate("/holidays");
         }
     };
 
@@ -132,6 +141,7 @@ const Layout = ({ Component }) => {
                     <ClockLogo height={80} width={80} />
                     <span>Clockify</span>
                 </a>
+
                 <div className="d-flex justify-content-end align-items-center language-select-root">
                     <div style={{ marginRight: 20 }}>
                         <Switch
@@ -211,7 +221,7 @@ const Layout = ({ Component }) => {
                     <a href="" className="menu-links"><FiSettings /></a>
                 </div> */}
             </NavbarWrapper>
-            <div style={{ display: "flex", height: "91.5vh" }}>
+            <div style={{ display: "flex", height: "100%" }}>
                 <SidebarWrapper>
                     {items.map((item) => (
                         <SideBox
@@ -233,6 +243,7 @@ const Layout = ({ Component }) => {
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
+                        height: "max-content"
                     }}
                 >
                     <Component />
