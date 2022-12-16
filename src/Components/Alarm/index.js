@@ -6,6 +6,7 @@ import { days, monthNames } from "../../Constant";
 import SetAlarmModal from "./SetAlarmModal";
 import defaultAlarm from "../../Assets/audios/alarm.mp3";
 import {
+    MdEdit,
     MdOutlineDeleteOutline,
     MdPauseCircleOutline,
     MdPlayCircleOutline,
@@ -33,7 +34,7 @@ const Alarm = () => {
     const [showRingModal, setShowRingModal] = useState(false);
     const audioRef = useRef();
     const { t } = useTranslation();
-    document.title = t('alarm_clock')
+    document.title = t('alarm_clock');
 
     const updateTime = () => {
         const date = new Date();
@@ -371,6 +372,21 @@ const Alarm = () => {
                                                 onClick={() => setPauseAlarm(item)}
                                             >
                                                 {!item.isAlarmPause ? <MdPauseCircleOutline /> : <MdPlayCircleOutline />}
+                                            </Button>
+                                        </OverlayTrigger>
+                                        <OverlayTrigger
+                                            placement={'top'}
+                                            overlay={
+                                                <Tooltip id={`tooltip-${index}`}>{t('edit')}</Tooltip>
+                                            }
+                                        >
+                                            <Button
+                                                className="btn-sm"
+                                                variant="outline-secondary"
+                                                style={{ marginLeft: 10 }}
+                                            // onClick={() => DeleteAlarm(item)}
+                                            >
+                                                <MdEdit />
                                             </Button>
                                         </OverlayTrigger>
                                         <OverlayTrigger

@@ -8,6 +8,7 @@ import Alarm from './Pages/AlarmPage';
 import Index from "./Components/StopWatch/index";
 import Timer from "./Components/Timer";
 import Holiday from "./Components/Holiday";
+import Reminder from "./Pages/ReminderPage";
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
       <Route path='/stopwatch' element={<Layout Component={Index} />} />
       <Route path='/timer' element={<Layout Component={Timer} />} />
       <Route path='/holidays' element={<Layout Component={Holiday} />} />
+      <Route path='/reminder' element={<Layout Component={Reminder} />} />
     </Routes>
   );
 }

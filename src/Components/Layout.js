@@ -5,6 +5,7 @@ import { ReactComponent as Clock } from "../Assets/svg/clock.svg";
 import { ReactComponent as Alarm } from "../Assets/svg/alarm.svg";
 import { ReactComponent as Stopwatch } from "../Assets/svg/stopwatch.svg";
 import { ReactComponent as Timer } from "../Assets/svg/timer.svg";
+import { ReactComponent as Reminder } from "../Assets/svg/reminder.svg";
 import Frenchflag from "../Assets/svg/france.png";
 import EnglandFlag from "../Assets/svg/england.png";
 import ChinaFlag from "../Assets/svg/china.png";
@@ -16,9 +17,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { TfiWorld } from "react-icons/tfi";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
-import classNames from "classnames";
 import { Switch } from "antd";
 import { FormatState } from "../Context/FormatProvider";
+import classNames from "classnames";
 
 const Layout = ({ Component }) => {
 
@@ -32,32 +33,37 @@ const Layout = ({ Component }) => {
         {
             label: t("clock"),
             icon: <Clock />,
-            img: "/images/clock.png",
+            // img: "/images/clock.png",
             key: "1",
         },
         {
             label: t("alarm_clock"),
             icon: <Alarm />,
-            img: "/images/alarm.png",
+            // img: "/images/alarm.png",
             key: "2",
         },
         {
             label: t("stopwatch"),
             icon: <Stopwatch />,
-            img: "/images/stopwatch.png",
+            // img: "/images/stopwatch.png",
             key: "3",
         },
         {
             label: t("timer"),
             icon: <Timer />,
-            img: "/images/timer.png",
+            // img: "/images/timer.png",
             key: "4",
+        },
+        {
+            label: t("reminder"),
+            icon: <Reminder />,
+            key: "5"
         },
         {
             label: t("holidays"),
             icon: <Holiday />,
-            img: "/images/timer.png",
-            key: "5",
+            // img: "/images/timer.png",
+            key: "6",
         },
     ];
 
@@ -125,6 +131,8 @@ const Layout = ({ Component }) => {
             navigate("/stopwatch");
         } else if (name === t("timer")) {
             navigate("/timer");
+        } else if (name === t("reminder")) {
+            navigate("/reminder");
         } else {
             navigate("/holidays");
         }
@@ -143,7 +151,7 @@ const Layout = ({ Component }) => {
             <NavbarWrapper>
                 <a href="/" className="logo">
                     <ClockLogo height={80} width={80} />
-                    <span>Clockify</span>
+                    <span>{t('clockify')}</span>
                 </a>
 
                 <div className="d-flex justify-content-end align-items-center language-select-root">
@@ -236,8 +244,10 @@ const Layout = ({ Component }) => {
                             onClick={(event) => openTool(event, item.label)}
                         >
                             {/*<img src={item.img} alt={'logo'} />*/}
-                            {item.icon}
-                            <span>{item.label}</span>
+                            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                                {item.icon}
+                                <span style={{ textAlign: 'center' }}>{item.label}</span>
+                            </div>
                         </SideBox>
                     ))}
                 </SidebarWrapper>
