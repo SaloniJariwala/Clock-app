@@ -63,8 +63,8 @@ export const Link = styled.div`
 export const SidebarWrapper = styled.div`
   background-color: #3d3c3c;
   /* position: fixed; */
-  width: 100px;
-  height: auto;
+  width: 150px;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   .is-active-sides {
@@ -81,6 +81,7 @@ export const SideBox = styled.div`
     height: 100px;
     width: 100%;
     border-bottom: 1px solid #474646;
+    padding: 20px 0;
     cursor: pointer;
 `;
 
