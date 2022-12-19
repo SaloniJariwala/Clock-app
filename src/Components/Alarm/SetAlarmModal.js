@@ -12,6 +12,7 @@ import AudioContainer from "./SetAlarmForm/AudioContainer";
 import defaultAlarmTune from "../../Assets/audios/alarm.mp3";
 import TestModal from "./TestModal";
 import { t } from "i18next";
+import { useForm } from "react-hook-form";
 
 const SetAlarmModal = ({
   showModal,
@@ -24,6 +25,8 @@ const SetAlarmModal = ({
   settingAlarmAudio,
 }) => {
   const date = new Date();
+
+  const methods = useForm();
 
   const [hour, setHour] = useState(date.getHours());
   const [minute, setMinute] = useState(date.getMinutes());
@@ -216,7 +219,7 @@ const SetAlarmModal = ({
         </Modal.Header>
         <Modal.Body>
           <div style={{ padding: "0 10px", marginBottom: "1em" }}>
-            <CountryContainer setAlarmDetails={setAlarmDetails} />
+            <CountryContainer setAlarmDetails={setAlarmDetails} methods={methods} />
           </div>
           <div style={{ display: "flex", width: "100%", marginBottom: "1em" }}>
             <div style={{ width: "33%", padding: "0 10px" }}>
@@ -332,7 +335,7 @@ const SetAlarmModal = ({
                   style={{ width: 100 }}
                   onClick={onCancel}
                 >
-                   {t('cancel')}
+                  {t('cancel')}
                 </Button>
                 <Button
                   variant="outline-primary"

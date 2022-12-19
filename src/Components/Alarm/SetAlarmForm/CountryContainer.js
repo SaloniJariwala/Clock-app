@@ -1,4 +1,5 @@
 import React from 'react';
+import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { countryData } from "../../../Data/countryData";
 
@@ -13,6 +14,9 @@ const CountryContainer = ({ setAlarmDetails }) => {
     return (
         <div>
             <span>{t('country')}</span>
+            <Controller
+                control={}
+            />
             <select
                 className="form-select"
                 id="country"
