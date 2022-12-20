@@ -63,8 +63,8 @@ export const Link = styled.div`
 export const SidebarWrapper = styled.div`
   background-color: #3d3c3c;
   /* position: fixed; */
-  width: 100px;
-  /* height: 100vh; */
+  width: 150px;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   .is-active-sides {
@@ -81,6 +81,7 @@ export const SideBox = styled.div`
     height: 100px;
     width: 100%;
     border-bottom: 1px solid #474646;
+    padding: 20px 0;
     cursor: pointer;
 `;
 
@@ -101,6 +102,7 @@ export const ClockWrapper = styled.div`
       color: #555;
       margin-bottom: 0;
       line-height: 1.5;
+      display: flex;
     }
     .day {
       font-family: 'Orbitron', sans-serif;
@@ -176,4 +178,16 @@ export const StopWatchWrapper = styled.div`
       font-size: 40px;
       color: #555;
     }
+`;
+
+export const HolidayWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    display:block;
+    border:red ;
+    border-radius:5px ;
 `;

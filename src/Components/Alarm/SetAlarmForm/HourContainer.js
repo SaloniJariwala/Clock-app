@@ -1,14 +1,12 @@
 import { useEffect } from "react";
 import { useState } from "react";
+import { Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-const HourContainer = ({
-    setAlarmDetails
-}) => {
+const HourContainer = ({ methods, isEdit }) => {
 
-    const newDate = new Date();
-    const {t}=useTranslation();
-    const [currHour, setCurrHour] = useState(newDate.getHours());
+    const { control } = methods;
+    const { t } = useTranslation();
     const [options, setOptions] = useState([]);
 
     useEffect(() => {
@@ -26,30 +24,38 @@ const HourContainer = ({
         getHours();
     }, []);
 
-    const handleChange = (event) => {
-        setAlarmDetails(event.target.value, 'hour');
-        setCurrHour(event.target.value);
-    }
+    useEffect(() => {
+        if (!isEdit) {
+            methods.setValue('hour', '0');
+        }
+        // eslint-disable-next-line
+    }, []);
 
     return (
         <div>
             <span>{t('hour')}</span>
-            <select
-                className="form-select"
-                id="hour"
-                aria-label="Floating label select example"
-                value={currHour}
-                onChange={handleChange}
-            >
-                {options?.map((item, index) => (
-                    <option
-                        key={index}
-                        value={item.value}
+            <Controller
+                control={control}
+                name="hour"
+                render={({ field: { onChange, value } }) => (
+                    <select
+                        className="form-select"
+                        id="hour"
+                        aria-label="Floating label select example"
+                        value={value}
+                        onChange={onChange}
                     >
-                        {item.display}
-                    </option>
-                ))}
-            </select>
+                        {options?.map((item, index) => (
+                            <option
+                                key={index}
+                                value={item.value}
+                            >
+                                {item.display}
+                            </option>
+                        ))}
+                    </select>
+                )}
+            />
         </div>
     );
 };

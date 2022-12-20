@@ -1,0 +1,158 @@
+export const London = [
+    {
+        country: "United Kingdom",
+        iso: "GB",
+        year: 2023,
+        date: "2023-10-31",
+        day: "Tuesday",
+        name: "Halloween",
+        type: "OBSERVANCE",
+    },
+
+    {
+        country: "United Kingdom",
+        iso: "GB",
+        year: 2023,
+        date: "2023-12-25",
+        day: "Monday",
+        name: "Christmas Day",
+        type: "BANK_HOLIDAY",
+    },
+
+    {
+        country: "United Kingdom",
+        iso: "GB",
+        year: 2023,
+        date: "2023-02-14",
+        day: "Tuesday",
+        name: "Valentine's Day",
+        type: "OBSERVANCE",
+    },
+
+    {
+        country: "United Kingdom",
+        iso: "GB",
+        year: 2023,
+        date: "2023-04-02",
+        day: "Sunday",
+        name: "Palm Sunday",
+        type: "CHRISTIAN",
+    },
+
+    {
+        country: "United Kingdom",
+        iso: "GB",
+        year: 2023,
+        date: "2023-06-18",
+        day: "Sunday",
+        name: "Father's Day",
+        type: "OBSERVANCE",
+    },
+
+    {
+        country: "United Kingdom",
+        iso: "GB",
+        year: 2023,
+        date: "2023-04-10",
+        day: "Monday",
+        name: "Easter Monday",
+        type: "LOCAL_OBSERVANCE",
+    },
+
+    {
+        country: "United Kingdom",
+        iso: "GB",
+        year: 2023,
+        date: "2023-12-26",
+        day: "Tuesday",
+        name: "Boxing Day",
+        type: "BANK_HOLIDAY",
+    },
+    {
+        country: "United Kingdom",
+        iso: "GB",
+        year: 2023,
+        date: "2023-11-12",
+        day: "Sunday",
+        name: "Remembrance Sunday",
+        type: "OBSERVANCE",
+    },
+
+    {
+        country: "United Kingdom",
+        iso: "GB",
+        year: 2023,
+        date: "2023-01-22",
+        day: "Sunday",
+        name: "Chinese New Year",
+        type: "OBSERVANCE",
+    },
+
+    {
+        country: "United Kingdom",
+        iso: "GB",
+        year: 2023,
+        date: "2023-01-06",
+        day: "Friday",
+        name: "Epiphany",
+        type: "CHRISTIAN",
+    },
+
+    {
+        country: "United Kingdom",
+        iso: "GB",
+        year: 2023,
+        date: "2023-04-09",
+        day: "Sunday",
+        name: "Easter Sunday",
+        type: "OBSERVANCE_CHRISTIAN",
+    },
+
+    {
+        country: "United Kingdom",
+        iso: "GB",
+        year: 2023,
+        date: "2023-05-28",
+        day: "Sunday",
+        name: "Pentecost",
+        type: "CHRISTIAN",
+    },
+
+    {
+        country: "United Kingdom",
+        iso: "GB",
+        year: 2023,
+        date: "2023-01-01",
+        day: "Sunday",
+        name: "New Year's Day",
+        type: "BANK_HOLIDAY",
+    },
+    {
+        country: "United Kingdom",
+        iso: "GB",
+        year: 2023,
+        date: "2023-04-07",
+        day: "Friday",
+        name: "Good Friday",
+        type: "BANK_HOLIDAY",
+    },
+
+    {
+        country: "United Kingdom",
+        iso: "GB",
+        year: 2023,
+        date: "2023-03-19",
+        day: "Sunday",
+        name: "Mothering Sunday",
+        type: "OBSERVANCE",
+    },
+    {
+        country: "United Kingdom",
+        iso: "GB",
+        year: 2023,
+        date: "2023-02-22",
+        day: "Wednesday",
+        name: "Carnival / Ash Wednesday",
+        type: "CHRISTIAN",
+    },
+];

@@ -11,13 +11,14 @@ import 'bootstrap/dist/js/bootstrap.js'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'flag-icons/css/flag-icons.min.css';
 import './index.css';
+import FormatProvider from './Context/FormatProvider';
 
 i18n
   .use(initReactI18next)
   .use(LanguageDetector)
   .use(HttpApi)
   .init({
-    supportedLngs: ['en', 'jp'],
+    supportedLngs: ['en', 'jp', 'hi', 'fr', 'cn', 'sp'],
     fallbackLng: "en",
     detection: {
       order: ['htmlTag', 'cookie', 'localStorage', 'path', 'subdomain'],
@@ -31,9 +32,11 @@ i18n
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <FormatProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </FormatProvider>
   </React.StrictMode>
 );
 reportWebVitals();

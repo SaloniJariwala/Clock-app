@@ -5,16 +5,26 @@ import { ReactComponent as Clock } from "../Assets/svg/clock.svg";
 import { ReactComponent as Alarm } from "../Assets/svg/alarm.svg";
 import { ReactComponent as Stopwatch } from "../Assets/svg/stopwatch.svg";
 import { ReactComponent as Timer } from "../Assets/svg/timer.svg";
+import { ReactComponent as Reminder } from "../Assets/svg/reminder.svg";
+import Frenchflag from "../Assets/svg/france.png";
+import EnglandFlag from "../Assets/svg/england.png";
+import ChinaFlag from "../Assets/svg/china.png";
+import SpainFlag from "../Assets/svg/spain.png";
+import { ReactComponent as Holiday } from "../Assets/svg/holiday.svg";
 import Indiaflag from "../Assets/svg/india.png"
 import Japanflag from "../Assets/svg/japan.png"
 import { Link, useNavigate } from "react-router-dom";
 import { TfiWorld } from "react-icons/tfi";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
+import { Switch } from "antd";
+import { FormatState } from "../Context/FormatProvider";
 import classNames from "classnames";
 
-
 const Layout = ({ Component }) => {
+
+    const { format, setFormat } = FormatState();
+
     const navigate = useNavigate();
     const [currentSide, setCurrentSide] = useState("");
     const { t } = useTranslation();
@@ -44,9 +54,26 @@ const Layout = ({ Component }) => {
             img: "/images/timer.png",
             key: "4",
         },
+        {
+            label: t("reminder"),
+            icon: <Reminder />,
+            key: "5"
+        },
+        {
+            label: t("holidays"),
+            icon: <Holiday />,
+            // img: "/images/timer.png",
+            key: "6",
+        },
     ];
 
     const languages = [
+        {
+            code: 'hi',
+            name: 'Hindi',
+            country_code: 'in',
+            icon: <img src={Indiaflag} alt="notfound" style={{ width: "20px", height: "20px", marginRight: "10px" }} />
+        },
         {
             code: 'jp',
             name: 'Japan',
@@ -57,15 +84,30 @@ const Layout = ({ Component }) => {
             code: 'en',
             name: 'English',
             country_code: 'gb',
-            icon: <img src={Indiaflag} alt="notfound" style={{ width: "20px", height: "20px", marginRight: "10px" }} />,
+            icon: <img src={EnglandFlag} alt="notfound" style={{ width: "20px", height: "20px", marginRight: "10px" }} />,
+        },
+        {
+            code: 'fr',
+            name: 'French',
+            country_code: 'fr',
+            icon: <img src={Frenchflag} alt="notfound" style={{ width: "20px", height: "20px", marginRight: "10px" }} />,
+        },
+        {
+            code: 'cn',
+            name: 'Chinese',
+            country_code: 'cn',
+            icon: <img src={ChinaFlag} alt="notfound" style={{ width: "20px", height: "20px", marginRight: "10px" }} />,
+        },
+        {
+            code: 'sp',
+            name: 'Spanish',
+            country_code: 'sp',
+            icon: <img src={SpainFlag} alt="notfound" style={{ width: "20px", height: "20px", marginRight: "10px" }} />,
         },
     ]
 
     const currentLanguageCode = localStorage.getItem("i18nextLng") || "en";
     const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
-
-
-
 
     useEffect(() => {
         document.body.dir = currentLanguage.dir || "ltr";
@@ -87,21 +129,41 @@ const Layout = ({ Component }) => {
             navigate("/alarm");
         } else if (name === t("stopwatch")) {
             navigate("/stopwatch");
-        } else {
+        } else if (name === t("timer")) {
             navigate("/timer");
+        } else if (name === t("reminder")) {
+            navigate("/reminder");
+        } else {
+            navigate("/holidays");
         }
     };
 
+    const handleSwitchChange = () => {
+        if (format === 24) {
+            setFormat(12);
+        } else {
+            setFormat(24);
+        }
+    }
 
     return (
         <>
             <NavbarWrapper>
                 <a href="/" className="logo">
                     <ClockLogo height={80} width={80} />
-                    <span>Clockify</span>
+                    <span>{t('clockify')}</span>
                 </a>
+
                 <div className="d-flex justify-content-end align-items-center language-select-root">
-                    <div>
+                    <div style={{ marginRight: 20 }}>
+                        <Switch
+                            size="default"
+                            checkedChildren="12Hrs"
+                            unCheckedChildren="24Hrs"
+                            onChange={handleSwitchChange}
+                        />
+                    </div>
+                    <div className="language-select">
                         <button
                             className="btn btn-secondary dropdown-toggle"
                             type="button"
@@ -171,7 +233,7 @@ const Layout = ({ Component }) => {
                     <a href="" className="menu-links"><FiSettings /></a>
                 </div> */}
             </NavbarWrapper>
-            <div style={{ display: "flex", height: "100vh" }}>
+            <div style={{ display: "flex", height: "100%" }}>
                 <SidebarWrapper>
                     {items.map((item) => (
                         <SideBox
@@ -182,8 +244,10 @@ const Layout = ({ Component }) => {
                             onClick={(event) => openTool(event, item.label)}
                         >
                             {/*<img src={item.img} alt={'logo'} />*/}
-                            {item.icon}
-                            <span>{item.label}</span>
+                            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                                {item.icon}
+                                <span style={{ textAlign: 'center' }}>{item.label}</span>
+                            </div>
                         </SideBox>
                     ))}
                 </SidebarWrapper>
