@@ -1,12 +1,15 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import DisplayTimer from "./Display";
 import SetTimerModal from "./SetTimerModal";
 import BtnTimer from "./BtnTimer";
 import defaultTimerSound from '../../Assets/audios/alarm.mp3';
 import { t } from "i18next";
 import { notifyUser } from "../../Utils/Notification";
+import { useForm } from "react-hook-form";
 
 const Timer = () => {
+
+    const methods = useForm();
 
     document.title = t('timer');
     const audioRef = useRef();
@@ -18,55 +21,33 @@ const Timer = () => {
     const [timerMinute, setTimerMinute] = useState(0);
     const [timerSecond, setTimerSecond] = useState(0);
     const [isInaterval, setIsInterVal] = useState();
-    const [flag, setFlag] = useState(false);
     let updateSecond = timerSecond;
     let updateMinute = timerMinute;
     let updateHour = timerHour;
 
+    const resetForm = () => {
+        methods.setValue('hour', 0);
+        methods.setValue('minute', 0);
+        methods.setValue('second', 0);
+        methods.setValue('title', '');
+        methods.setValue('sound', 'selected');
+    }
+
     const play = () => {
         audioRef.current.play();
-        // audioRef.current.volume = volume / 100;
         audioRef.current.loop = true;
     };
 
     const pause = () => {
         audioRef.current.pause();
-        setFlag(!flag);
     };
 
-    const setTimerDetails = (value, name) => {
-        switch (name) {
-            case 'hour':
-                setTimerHour(value);
-                break;
-
-            case 'minute':
-                setTimerMinute(value);
-                break;
-
-            case 'second':
-                setTimerSecond(value);
-                break;
-
-            case 'sound':
-                setSound(value);
-                break;
-
-            case 'title':
-                setTitle(value);
-                break;
-
-            default:
-                console.log('Invalid Input');
-        }
-    }
-
     const closeModal = () => {
+        resetForm();
         setShowModal(false);
     }
 
     const run = () => {
-
         if (updateSecond > 60) {
             updateMinute++;
             updateSecond = parseInt(updateSecond) - 59;
@@ -75,7 +56,6 @@ const Timer = () => {
             updateHour++;
             updateMinute = parseInt(updateMinute) - 60
         }
-
         updateMinute = updateMinute > 60 ? 60 : updateMinute;
         if (updateSecond !== 0) {
             const sec = `${updateSecond <= 10 ? "0" : ""}${updateSecond--}`;
@@ -94,45 +74,37 @@ const Timer = () => {
         setTimerSecond(updateSecond);
         setTimerMinute(updateMinute);
         setTimerHour(updateHour);
-        setFlag(!flag);
+        count();
     }
 
     function count() {
-        //this function is the count control is will check if the count down is finish
         if (updateHour > 0 && updateMinute > 0 && updateSecond > 0) {
             if (updateSecond === 0) {
-                debugger
                 updateMinute -= 1;
-                debugger
                 updateSecond = 60;
-                setFlag(!flag)
-                debugger
             }
-        } else {
-            debugger
+        } else if (updateHour === 0 && updateMinute === 0 && updateSecond === 0) {
             localStorage.removeItem("timer");
             clearInterval(isInaterval);
-            debugger
+            play();
             console.log('finish');
-            setFlag(!flag)
+            alert("Hello");
+            notifyUser('title');
         }
     }
 
-    const StoreTimer = () => {
-        debugger
+    const StoreTimer = (formData) => {
         const setTimer = {
-            hour: updateHour,
-            minute: updateMinute,
-            second: updateSecond,
-            title: title,
-            sound: sound
+            hour: formData?.hour,
+            minute: formData?.minute,
+            second: formData?.second,
+            title: formData?.title,
+            sound: formData?.sound
         }
-        debugger
         localStorage.setItem('timer', JSON.stringify(setTimer));
-        debugger
-        setStatus(1)
-        debugger
+        setStatus(1);
         closeModal();
+        resetForm();
         const getTimer = JSON.parse(localStorage.getItem('timer'));
         updateHour = getTimer.hour;
         updateMinute = getTimer.minute;
@@ -140,28 +112,13 @@ const Timer = () => {
         setSound(getTimer.sound);
         setTitle(getTimer.title);
         setIsInterVal(setInterval(() => {
-            debugger
             run();
-            if (updateHour === 0 && updateMinute === 0 && updateSecond === 0) {
-                debugger
-                clearInterval(isInaterval);
-                debugger
-                count();
-                debugger
-                // play();
-                // debugger
-                notifyUser(getTimer.title)
-                debugger
-            }
-
         }, 1000));
-        setFlag(!flag);
     }
 
     const stop = () => {
         clearInterval(isInaterval);
         setStatus(2);
-        setFlag(!flag);
     };
 
     const Reset = () => {
@@ -176,18 +133,6 @@ const Timer = () => {
     const resume = () => {
         StoreTimer();
     };
-
-// useEffect(()=>{
-//     const time=JSON.parse(localStorage.getItem('timer'));
-//     if(time?.hour !== null && time?.minute !== null && time?.second !== null){
-//     setTimerHour(time?.hour ? time?.hour :"0");
-//     setTimerMinute(time?.minute ? time?.minute :"0");
-//     setTimerSecond(time?.second ? time?.second :"0");
-// //    if(time !==null){
-// //        count();
-// //    }
-//    }
-// },[flag])
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
@@ -210,8 +155,8 @@ const Timer = () => {
             <SetTimerModal
                 showModal={showModal}
                 closeModal={closeModal}
-                setTimerDetails={setTimerDetails}
                 setTimer={StoreTimer}
+                methods={methods}
             />
         </div>
     );

@@ -66,5 +66,6 @@
     "volume": "Volume",
     "weekdays": "WeekDays",
     "weekends": "WeekEnds",
-    "update": "Update"
+    "update": "Update",
+    "enter_timer_title": "Enter Timer Title"
 }

@@ -5,8 +5,11 @@ import { Button, Form } from 'react-bootstrap';
 import { GrPause, GrPlay } from 'react-icons/gr';
 import { BsThreeDots } from 'react-icons/bs';
 import { audioData } from '../../Data/audioData';
+import { Controller } from 'react-hook-form';
 
-const AudioContainer = ({ setAlarmDetails }) => {
+const AudioContainer = ({ methods }) => {
+
+    const { control } = methods;
 
     const audioRef = useRef();
 
@@ -16,6 +19,8 @@ const AudioContainer = ({ setAlarmDetails }) => {
 
     useEffect(() => {
         setOptions(audioData);
+        methods.setValue('sound', 'selected');
+        // eslint-disable-next-line
     }, []);
 
     const play = () => {
@@ -42,7 +47,7 @@ const AudioContainer = ({ setAlarmDetails }) => {
 
     const handleChange = (event) => {
         setAudioName(event.target.value);
-        setAlarmDetails(event.target.value, 'sound');
+        methods.setValue('sound', event.target.value);
     };
 
     const handleFileChange = (event) => {
@@ -54,8 +59,8 @@ const AudioContainer = ({ setAlarmDetails }) => {
         const array = options;
         array.push(newAudio);
         setOptions(array);
+        methods.setValue('sound', audio);
         setAudioName(audio);
-        setAlarmDetails(audio, 'sound');
     };
 
     return (
@@ -64,23 +69,30 @@ const AudioContainer = ({ setAlarmDetails }) => {
                 <div style={{ padding: "0 10px", width: '100%' }}>
                     <Form.Label>{t('sound')}</Form.Label>
                     <div style={{ display: 'flex' }}>
-                        <select
-                            className="form-select"
-                            id="sound"
-                            aria-label="Floating label select example"
-                            value={audioName}
-                            onChange={handleChange}
-                        >
-                            <option value={'selected'} disabled={true}>--{t('select_sound')}--</option>
-                            {audioData?.map((item, index) => (
-                                <option
-                                    key={index}
-                                    value={item.track}
+                        <Controller
+                            name='sound'
+                            control={control}
+                            render={({ field: { onChange, value } }) => (
+                                <select
+                                    className="form-select"
+                                    id="sound"
+                                    aria-label="Floating label select example"
+                                    value={value}
+                                    onChange={(event) => handleChange(event)}
                                 >
-                                    {item.audioTitle}
-                                </option>
-                            ))}
-                        </select>
+                                    <option value={'selected'} disabled={true}>--{t('select_sound')}--</option>
+                                    {audioData?.map((item, index) => (
+                                        <option
+                                            key={index}
+                                            value={item.track}
+                                        >
+                                            {item.audioTitle}
+                                        </option>
+                                    ))}
+                                </select>
+                            )}
+                        />
+
                         <audio src={audioName} ref={audioRef} />
                         <Button
                             className="btn"
