@@ -36,7 +36,7 @@ const AudioContainer = ({
             setAudioName(selectedAlarm?.alarmTune);
             setVolume(selectedAlarm?.alarmVolume);
         }
-    }, [isEdit]);
+    }, [isEdit, selectedAlarm?.alarmTune, selectedAlarm?.alarmVolume]);
 
     const play = () => {
         audioRef.current.play();

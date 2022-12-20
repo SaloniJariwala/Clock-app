@@ -32,7 +32,7 @@ const RepeatContainer = ({
                 setIsRepeat(true);
             }
         }
-    }, []);
+    }, [isEdit, selectedAlarm?.alarmRepeat]);
 
     const handleSwitch = (value) => {
         if (value) {

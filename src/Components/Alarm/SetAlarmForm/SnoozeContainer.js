@@ -27,7 +27,7 @@ const SnoozeContainer = ({
                 setIsSnooze(true);
             }
         }
-    }, []);
+    }, [isEdit, selectedAlarm?.snoozeTime]);
 
     useEffect(() => {
         if (snoozeFlag) {
