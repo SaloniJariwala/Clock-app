@@ -21,6 +21,7 @@
     "day": "天",
     "delete": "删除",
     "edit": "编辑",
+    "edit_alarm": "编辑警报",
     "enter_alarm_note": "输入报警说明",
     "enter_alarm_title": "输入警报标题",
     "export_csv": "导出 CSV",
@@ -64,5 +65,6 @@
     "todays_reminders": "今天的提醒",
     "scheduled_reminders": "预定提醒",
     "all_reminders": "所有提醒",
-    "completed": "完全的"
+    "completed": "完全的",
+    "update": "更新"
 }

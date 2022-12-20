@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Button, Modal, Form } from "react-bootstrap";
-import { Switch, Radio, Checkbox } from "antd";
+import { Button, Modal } from "react-bootstrap";
+import { Divider } from "antd";
 import moment from "moment";
 import "../../App.css";
 import { AlarmTitleWrapper } from "../style";
@@ -12,9 +12,14 @@ import AudioContainer from "./SetAlarmForm/AudioContainer";
 import defaultAlarmTune from "../../Assets/audios/alarm.mp3";
 import TestModal from "./TestModal";
 import { t } from "i18next";
-import { useForm } from "react-hook-form";
+import AlarmTitleContainer from "./SetAlarmForm/AlarmTitleContainer";
+import AlarmNoteContainer from "./SetAlarmForm/AlarmNoteContainer";
+import SnoozeContainer from "./SetAlarmForm/SnoozeContainer";
+import { FormProvider } from "react-hook-form";
+import RepeatContainer from "./SetAlarmForm/RepeatContainer";
 
 const SetAlarmModal = ({
+  methods,
   showModal,
   closeModal,
   play,
@@ -22,73 +27,16 @@ const SetAlarmModal = ({
   getAlarms,
   callToAlarm,
   storeAlarm,
-  settingAlarmAudio,
+  isEdit,
+  selectedAlarm,
+  resetForm,
+  handleEditAlarm
 }) => {
-  const date = new Date();
 
-  const methods = useForm();
-
-  const [hour, setHour] = useState(date.getHours());
-  const [minute, setMinute] = useState(date.getMinutes());
-  const [second, setSecond] = useState(date.getSeconds());
-  const [country, setCountry] = useState("India");
-  const [alarmTitle, setAlarmTitle] = useState("Test Title");
-  const [alarmNote, setAlarmNote] = useState("Test Note");
-  const [snoozeTime, setSnoozeTime] = useState(300000);
-  const [alarmTune, setAlarmTune] = useState(defaultAlarmTune);
-  const [alarmVolume, setAlarmVolume] = useState(50);
-  const [isSnooze, setIsSnooze] = useState(false);
+  const [snoozeFlag, setSnoozeFlag] = useState(false);
+  const [repeatFlag, setRepeatFlag] = useState(false);
   const [showTestModal, setShowTestModal] = useState(false);
   const [testAlarm, setTestAlarm] = useState();
-  const [alarmRepeatValue, setAlarmRepeatValue] = useState();
-  const [isRepeatAlarm, setIsRepertAlarm] = useState(false);
-
-  const setAlarmDetails = (value, name) => {
-    switch (name) {
-      case "country":
-        setCountry(value);
-        break;
-
-      case "hour":
-        setHour(value);
-        break;
-
-      case "minute":
-        setMinute(value);
-        break;
-
-      case "second":
-        setSecond(value);
-        break;
-
-      case "title":
-        setAlarmTitle(value);
-        break;
-
-      case "note":
-        setAlarmNote(value);
-        break;
-
-      case "snooze":
-        setSnoozeTime(value);
-        break;
-
-      case "tune":
-        setAlarmTune(value);
-        break;
-
-      case "volume":
-        setAlarmVolume(value);
-        break;
-
-      case "repeat":
-        setAlarmRepeatValue(value);
-        break;
-
-      default:
-        console.log("Invalid Name");
-    }
-  };
 
   useEffect(() => {
     callToAlarm();
@@ -100,12 +48,13 @@ const SetAlarmModal = ({
     action,
     diffHours = 0,
     diffMins = 0,
-    test = ""
+    test = "",
+    formData
   ) => {
     const newDate = new Date();
-    newDate.setHours(Number(hour));
-    newDate.setMinutes(Number(minute));
-    newDate.setSeconds(Number(second));
+    newDate.setHours(Number(formData.hour));
+    newDate.setMinutes(Number(formData.minute));
+    newDate.setSeconds(Number(formData.second));
     let fDate;
     if (action === "back") {
       fDate = moment(newDate).add({ hours: diffHours, minutes: diffMins });
@@ -116,24 +65,28 @@ const SetAlarmModal = ({
     }
     const orgDate = fDate.toDate();
     let payload = {
-      country: country,
+      country: formData.country,
       alarmDate: orgDate,
       originalAlarm: orgDate,
-      alarmTitle: alarmTitle,
-      alarmNote: alarmNote,
-      alarmTune: alarmTune,
-      alarmVolume: alarmVolume,
+      alarmTitle: formData.alarmTitle,
+      alarmNote: formData.alarmNote,
+      alarmTune: formData.sound || defaultAlarmTune,
+      alarmVolume: formData.volume,
     };
-    if (isSnooze) {
-      payload = { ...payload, snoozeTime: snoozeTime };
+    if (formData.isSnooze) {
+      payload = { ...payload, snoozeTime: formData.snoozeTime };
     }
-    if (isRepeatAlarm) {
-      payload = { ...payload, alarmRepeat: alarmRepeatValue };
+    if (formData.isRepeat) {
+      payload = { ...payload, alarmRepeat: formData.repeat };
     }
     if (test === "isTest") {
       setTestAlarm(payload);
     } else {
-      storeAlarm(payload);
+      if (isEdit) {
+        handleEditAlarm(payload);
+      } else {
+        storeAlarm(payload);
+      }
       callToAlarm();
     }
   };
@@ -144,50 +97,34 @@ const SetAlarmModal = ({
     play();
   };
 
-  const checkCountry = (test = "") => {
-    if (alarmTune === "selected") {
-      alert("Please fill all data");
-    } else {
-      if (test !== "isTest") {
-        setIsSnooze(false);
-        setIsRepertAlarm(false);
-      }
-      switch (country) {
-        case "India":
-          countryWiseSetAlarm("india", 0, 0, test);
-          break;
+  const checkCountry = (formData, test = "") => {
+    switch (formData.country) {
+      case "India":
+        countryWiseSetAlarm("india", 0, 0, test, formData);
+        break;
 
-        case "USA":
-          countryWiseSetAlarm("back", 10, 30, test);
-          break;
+      case "USA":
+        countryWiseSetAlarm("back", 10, 30, test, formData);
+        break;
 
-        case "Japan":
-          countryWiseSetAlarm("ahead", 3, 30, test);
-          break;
+      case "Japan":
+        countryWiseSetAlarm("ahead", 3, 30, test, formData);
+        break;
 
-        case "Canada":
-          countryWiseSetAlarm("back", 10, 30, test);
-          break;
+      case "Canada":
+        countryWiseSetAlarm("back", 10, 30, test, formData);
+        break;
 
-        case "Australia":
-          countryWiseSetAlarm("ahead", 5, 30, test);
-          break;
+      case "Australia":
+        countryWiseSetAlarm("ahead", 5, 30, test, formData);
+        break;
 
-        case "London":
-          countryWiseSetAlarm("back", 5, 30, test);
-          break;
+      case "London":
+        countryWiseSetAlarm("back", 5, 30, test, formData);
+        break;
 
-        default:
-          console.log("Invalid Choice");
-      }
-    }
-  };
-
-  const handleSwitch = (event) => {
-    if (event) {
-      setIsSnooze(true);
-    } else {
-      setIsSnooze(false);
+      default:
+        console.log("Invalid Choice");
     }
   };
 
@@ -197,157 +134,95 @@ const SetAlarmModal = ({
   };
 
   const onCancel = () => {
-    setIsRepertAlarm(false);
-    setIsSnooze(false);
-    pause();
     closeModal();
+    resetForm();
+    setRepeatFlag(true);
+    setSnoozeFlag(true);
+    pause();
   };
 
-  const onRepertAlarm = (e) => {
-    if (e.target.checked) {
-      setIsRepertAlarm(true);
-    } else {
-      setIsRepertAlarm(false);
-    }
-  };
+  const handleSubmit = (formData) => {
+    closeModal();
+    checkCountry(formData);
+  }
 
   return (
     <>
       <Modal centered show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
-          <span className="alarm-modal-title">{t('set_alarm')}</span>
+          <span className="alarm-modal-title">{isEdit ? t('edit_alarm') : t('set_alarm')}</span>
         </Modal.Header>
         <Modal.Body>
-          <div style={{ padding: "0 10px", marginBottom: "1em" }}>
-            <CountryContainer setAlarmDetails={setAlarmDetails} methods={methods} />
-          </div>
-          <div style={{ display: "flex", width: "100%", marginBottom: "1em" }}>
-            <div style={{ width: "33%", padding: "0 10px" }}>
-              <HourContainer setAlarmDetails={setAlarmDetails} />
-            </div>
-            <div style={{ width: "33%", padding: "0 10px" }}>
-              <MinutesContainer setAlarmDetails={setAlarmDetails} />
-            </div>
-            <div style={{ width: "33%", padding: "0 10px" }}>
-              <SecondsContainer setAlarmDetails={setAlarmDetails} />
-            </div>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              padding: "0 10px",
-              width: "100%",
-              marginBottom: "1em",
-            }}
-          >
-            <AudioContainer
-              settingAlarmAudio={settingAlarmAudio}
-              play={play}
-              pause={pause}
-              setAlarmDetails={setAlarmDetails}
-            />
-          </div>
-          <div style={{ padding: "0 10px", marginBottom: "1em" }}>
-            <label htmlFor="alarm-title">{t('alarm_title')}</label>
-            <input
-              id="alarm-title"
-              className="form-control"
-              placeholder={t('enter_alarm_title')}
-              onChange={(event) => setAlarmDetails(event.target.value, "title")}
-            />
-          </div>
-          <div style={{ padding: "0 10px", marginBottom: "1em" }}>
-            <label htmlFor="alarm-note">{t('alarm_note')}</label>
-            <textarea
-              id="alarm-note"
-              className="form-control"
-              placeholder={t('enter_alarm_note')}
-              onChange={(event) => setAlarmDetails(event.target.value, "note")}
-            ></textarea>
-          </div>
-          <div style={{ padding: "0 10px", marginBottom: "1em" }}>
-            <Form style={{ display: "flex", flexDirection: "column" }}>
-              <label>{t('set_snooze')}</label>
-              <div style={{ display: "flex" }}>
-                <Switch
-                  onChange={handleSwitch}
-                  style={{ width: "10%", marginTop: 3 }}
-                />
-                {isSnooze && (
-                  <>
-                    <Radio.Group
-                      name="radiogroup"
-                      defaultValue={300000}
-                      onChange={(event) =>
-                        setAlarmDetails(event.target.value, "snooze")
-                      }
-                      style={{
-                        marginLeft: 20,
-                        marginTop: 3,
-                      }}
-                    >
-                      <Radio value={300000}>{t('5_minute')}</Radio>
-                      <Radio value={600000}>{t('10_minute')}</Radio>
-                      <Radio value={900000}>{t('15_minute')}</Radio>
-                    </Radio.Group>
-                  </>
-                )}
+          <FormProvider {...methods}>
+            <form onSubmit={methods.handleSubmit(handleSubmit)}>
+              <div style={{ padding: "0 10px", marginBottom: "1em" }}>
+                <CountryContainer methods={methods} isEdit={isEdit} />
               </div>
-            </Form>
-          </div>
-          <div style={{ padding: "0 10px", marginBottom: "1em" }}>
-            <Checkbox onChange={onRepertAlarm}>{t('repeat')}</Checkbox>
-            {isRepeatAlarm && (
-              <>
-                <Radio.Group
-                  name="radiogroup"
-                  defaultValue={"never"}
-                  onChange={(event) =>
-                    setAlarmDetails(event.target.value, "repeat")
-                  }
-                  style={{
-                    marginLeft: 20,
-                    marginTop: 3,
-                  }}
-                >
-                  <Radio value={"never"}>{t('never')}</Radio>
-                  <Radio value={"daily"}>{t('daily')}</Radio>
-                  <Radio value={"weekdays"}>{t('weekdays')}</Radio>
-                  <Radio value={"weekends"}>{t('weekends')}</Radio>
-                </Radio.Group>
-              </>
-            )}
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <AlarmTitleWrapper>
-            <div className="footer-row">
-              <Button
-                variant="outline-secondary"
-                style={{ width: 100 }}
-                onClick={onTest}
+              <div style={{ display: "flex", width: "100%", marginBottom: "1em" }}>
+                <div style={{ width: "33%", padding: "0 10px" }}>
+                  <HourContainer methods={methods} isEdit={isEdit} />
+                </div>
+                <div style={{ width: "33%", padding: "0 10px" }}>
+                  <MinutesContainer methods={methods} isEdit={isEdit} />
+                </div>
+                <div style={{ width: "33%", padding: "0 10px" }}>
+                  <SecondsContainer methods={methods} isEdit={isEdit} />
+                </div>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  padding: "0 10px",
+                  width: "100%",
+                  marginBottom: "1em",
+                }}
               >
-                {t('test')}
-              </Button>
-              <div>
-                <Button
-                  variant="outline-danger"
-                  style={{ width: 100 }}
-                  onClick={onCancel}
-                >
-                  {t('cancel')}
-                </Button>
-                <Button
-                  variant="outline-primary"
-                  onClick={checkCountry}
-                  style={{ marginLeft: 10, width: 100 }}
-                >
-                  {t('start')}
-                </Button>
+                <AudioContainer methods={methods} isEdit={isEdit} selectedAlarm={selectedAlarm} />
               </div>
-            </div>
-          </AlarmTitleWrapper>
-        </Modal.Footer>
+              <div style={{ padding: "0 10px", marginBottom: "1em" }}>
+                <AlarmTitleContainer methods={methods} isEdit={isEdit} />
+              </div>
+              <div style={{ padding: "0 10px", marginBottom: "1em" }}>
+                <AlarmNoteContainer methods={methods} isEdit={isEdit} />
+              </div>
+              <div style={{ padding: "0 10px", marginBottom: "1em" }}>
+                <SnoozeContainer snoozeFlag={snoozeFlag} methods={methods} isEdit={isEdit} selectedAlarm={selectedAlarm} />
+              </div>
+              <div style={{ padding: "0 10px", marginBottom: "1em" }}>
+                <RepeatContainer repeatFlag={repeatFlag} methods={methods} isEdit={isEdit} selectedAlarm={selectedAlarm} />
+              </div>
+              <Divider />
+              <AlarmTitleWrapper>
+                <div className="footer-row">
+                  <Button
+                    variant="outline-secondary"
+                    style={{ width: 100 }}
+                    onClick={onTest}
+                  >
+                    {t('test')}
+                  </Button>
+                  <div>
+                    <Button
+                      variant="outline-danger"
+                      style={{ width: 100 }}
+                      onClick={onCancel}
+                    >
+                      {t('cancel')}
+                    </Button>
+                    <Button
+                      variant="outline-primary"
+                      // onClick={checkCountry}
+                      type="submit"
+                      style={{ marginLeft: 10, width: 100 }}
+                    >
+                      {isEdit ? t('update') : t('start')}
+                    </Button>
+                  </div>
+                </div>
+              </AlarmTitleWrapper>
+            </form>
+          </FormProvider>
+        </Modal.Body>
       </Modal>
       <TestModal
         showTestModal={showTestModal}

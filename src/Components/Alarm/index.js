@@ -18,12 +18,17 @@ import { specificTimeData } from "../../Data/specificTimeData";
 import { useTranslation } from "react-i18next";
 import { CSVLink } from "react-csv";
 import { BiExport } from "react-icons/bi";
+import { useForm } from "react-hook-form";
+import { v4 as uuidv4 } from 'uuid';
 
 const Alarm = () => {
+
+    const methods = useForm();
     const [currentTime, setCurrrentTime] = useState("");
     const [day, setDay] = useState("");
     const [alarmData, setAlarmData] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
     const [pastAlarms, setPastAlarms] = useState([]);
     const [upcomingAlarms, setUpcomingAlarms] = useState([]);
     const [currentAlarm, setCurrentAlarm] = useState();
@@ -32,6 +37,7 @@ const Alarm = () => {
     const [alarmAudio, setAlarmAudio] = useState(defaultAlarm);
     const [volume, setVolume] = useState(50);
     const [showRingModal, setShowRingModal] = useState(false);
+    const [selectedAlarm, setSelectedAlarm] = useState();
     const audioRef = useRef();
     const { t } = useTranslation();
     document.title = t('alarm_clock');
@@ -51,18 +57,9 @@ const Alarm = () => {
         setInterval(updateTime, 1000);
     }, []);
 
-    const settingAlarmAudio = (value, name) => {
-        if (name === "local") {
-            setAlarmAudio(value);
-        } else {
-            const url = URL.createObjectURL(value);
-            setAlarmAudio(url);
-        }
-    };
-
     const play = () => {
         audioRef.current.play();
-        audioRef.current.volume = volume / 100;
+        // audioRef.current.volume = parseFloat(volume / 100);
         audioRef.current.loop = true;
     };
 
@@ -75,12 +72,8 @@ const Alarm = () => {
         setFlag(!flag);
     };
 
-    const settingVolume = (value) => {
-        setVolume(value);
-    };
-
     useEffect(() => {
-        audioRef.current.volume = volume / 100;
+        // audioRef.current.volume = parseFloat(volume / 100);
     }, [volume]);
 
     const closeModal = () => {
@@ -98,30 +91,104 @@ const Alarm = () => {
         setShowRingModal(false);
     };
 
-    const DeleteAlarm = (value) => {
+    const resetForm = () => {
+        methods.setValue('country', 'India');
+        methods.setValue('hour', '0');
+        methods.setValue('minute', '0');
+        methods.setValue('second', '0');
+        methods.setValue('sound', 'selected');
+        methods.setValue('volume', 50);
+        methods.setValue('alarmTitle', '');
+        methods.setValue('alarmNote', '');
+        methods.setValue('isSnooze', false);
+        methods.setValue('snoozeTime', 300000);
+        methods.setValue('repeat', 'never');
+        methods.setValue('isRepeat', false);
+    }
+
+    const handleEdit = (alarmId) => {
+        setIsEdit(true);
+        const allAlarms = JSON.parse(localStorage.getItem("Alarms")) || [];
+        const oldAlarm = allAlarms.filter((item) => item.alarmId === alarmId);
+        setSelectedAlarm(oldAlarm[0]);
+        methods.setValue('country', oldAlarm[0].country);
+        methods.setValue('hour', new Date(oldAlarm[0].orgTimestamp).getHours().toString());
+        methods.setValue('minute', new Date(oldAlarm[0].orgTimestamp).getMinutes().toString());
+        methods.setValue('second', new Date(oldAlarm[0].orgTimestamp).getSeconds().toString());
+        methods.setValue('sound', oldAlarm[0].alarmTune);
+        methods.setValue('volume', oldAlarm[0].alarmVolume);
+        methods.setValue('alarmTitle', oldAlarm[0].title);
+        methods.setValue('alarmNote', oldAlarm[0].note);
+        methods.setValue('repeat', oldAlarm[0].alarmRepeat);
+        if (oldAlarm[0].snoozeTime) {
+            methods.setValue('isSnooze', true);
+            methods.setValue('snoozeTime', oldAlarm[0].snoozeTime);
+        } else {
+            methods.setValue('isSnooze', false);
+        }
+        if (oldAlarm[0].alarmRepeat) {
+            methods.setValue('isRepeat', true);
+            methods.setValue('repeat', oldAlarm[0].alarmRepeat);
+        } else {
+            methods.setValue('isRepeat', false);
+        }
+        setShowModal(true);
+    }
+
+    const DeleteAlarm = (alarmId, timeoutId) => {
         let newList = JSON.parse(localStorage.getItem("Alarms")) || [];
-        let delAlarm = newList.filter(
-            (time) => time.alarmTimestamp !== value.alarmTimestamp
-        );
-        clearTimeout(value.timeoutId);
+        let delAlarm = newList.filter((item) => item.alarmId !== alarmId);
+        clearTimeout(timeoutId);
         setFlag(!flag);
         localStorage.setItem("Alarms", JSON.stringify(delAlarm));
     };
 
-    const storeAlarm = (alarmDetails, type) => {
+    const handleEditAlarm = (alarmDetails) => {
+        const allAlarms = JSON.parse(localStorage.getItem("Alarms")) || [];
+        const newAlarms = allAlarms.filter((item) => item.alarmId !== selectedAlarm?.alarmId);
+        let editedAlarm = {
+            alarmId: selectedAlarm?.alarmId,
+            timeoutId: selectedAlarm?.timeoutId,
+            alarmTimestamp: alarmDetails?.alarmDate?.getTime(),
+            orgTimestamp: alarmDetails?.alarmDate?.getTime(),
+            isAlarmPause: false,
+            alarmRepeat: alarmDetails?.alarmRepeat,
+            title: alarmDetails?.alarmTitle,
+            note: alarmDetails?.alarmNote,
+            country: alarmDetails?.country,
+            alarmTune: alarmDetails?.alarmTune,
+            alarmVolume: alarmDetails?.alarmVolume,
+        }
+        const isSnooze = "snoozeTime" in alarmDetails;
+        if (isSnooze) {
+            editedAlarm = { ...editedAlarm, snoozeTime: alarmDetails?.snoozeTime };
+        }
+        const isRepeatAlarm = "alarmRepeat" in alarmDetails;
+        if (isRepeatAlarm) {
+            editedAlarm = { ...editedAlarm, alarmRepeat: alarmDetails?.alarmRepeat };
+        }
+        newAlarms.push(editedAlarm);
+        localStorage.setItem('Alarms', JSON.stringify(newAlarms));
+        closeModal();
+        setFlag(!flag);
+        setIsEdit(false);
+    }
+
+    const storeAlarm = (alarmDetails, type = '') => {
         let newAlarm;
         const allAlarms = JSON.parse(localStorage.getItem("Alarms")) || [];
         if (type !== 'specific') {
             newAlarm = {
+                alarmId: uuidv4(),
                 timeoutId: "",
                 alarmTimestamp: alarmDetails?.alarmDate?.getTime(),
                 orgTimestamp: alarmDetails?.alarmDate?.getTime(),
                 isAlarmPause: false,
-                alarmRepeat: 'never',
+                alarmRepeat: alarmDetails?.alarmRepeat,
                 title: alarmDetails?.alarmTitle,
                 note: alarmDetails?.alarmNote,
                 country: alarmDetails?.country,
-                alarmTune: alarmAudio,
+                alarmTune: alarmDetails?.alarmTune,
                 alarmVolume: alarmDetails?.alarmVolume,
             };
             const isSnooze = "snoozeTime" in alarmDetails;
@@ -159,15 +226,15 @@ const Alarm = () => {
         } else {
             nearestAlarm = newList[0];
         }
+        setAlarmAudio(nearestAlarm?.alarmTune);
+        setVolume(nearestAlarm?.alarmVolume);
         const currTimestamp = Date.now();
         let diff;
         diff = nearestAlarm?.alarmTimestamp - currTimestamp;
         if (diff >= 0) {
             const id = setTimeout(() => {
-                setAlarmAudio(nearestAlarm?.alarmTune);
-                setVolume(nearestAlarm?.alarmVolume);
-                notifyUser(nearestAlarm.title, nearestAlarm.note);
                 play();
+                notifyUser(nearestAlarm.title, nearestAlarm.note);
                 setFlag(!flag);
                 setCurrentAlarm(nearestAlarm);
                 setShowRingModal(true);
@@ -270,6 +337,11 @@ const Alarm = () => {
         callToAlarm();
     };
 
+    const handleSetAlarm = () => {
+        resetForm();
+        setShowModal(true);
+    }
+
     return (
         <AlarmWrapper>
             {currentTime ? (
@@ -283,7 +355,7 @@ const Alarm = () => {
             <div style={{ display: "flex", justifyContent: "space-evenly" }}>
                 <Button
                     variant="success"
-                    onClick={() => setShowModal(true)}
+                    onClick={handleSetAlarm}
                     style={{ marginRight: 10 }}
                 >
                     {" "}
@@ -310,6 +382,21 @@ const Alarm = () => {
                                     <td>{new Date(item.alarmTimestamp).toLocaleDateString()}</td>
                                     <td>
                                         <OverlayTrigger
+                                            placement={'top'}
+                                            overlay={
+                                                <Tooltip id={`tooltip-${index}`}>{t('edit')}</Tooltip>
+                                            }
+                                        >
+                                            <Button
+                                                className="btn-sm"
+                                                variant="outline-secondary"
+                                                style={{ marginLeft: 10 }}
+                                                onClick={() => handleEdit(item.alarmId)}
+                                            >
+                                                <MdEdit />
+                                            </Button>
+                                        </OverlayTrigger>
+                                        <OverlayTrigger
                                             placement={"top"}
                                             overlay={
                                                 <Tooltip id={`tooltip-${index}`}>{t('delete')}</Tooltip>
@@ -319,7 +406,7 @@ const Alarm = () => {
                                                 className="btn-sm"
                                                 variant="outline-danger"
                                                 style={{ marginLeft: 10 }}
-                                                onClick={() => DeleteAlarm(item)}
+                                                onClick={() => DeleteAlarm(item.alarmId, item.timeoutId)}
                                             >
                                                 <MdOutlineDeleteOutline />
                                             </Button>
@@ -384,7 +471,7 @@ const Alarm = () => {
                                                 className="btn-sm"
                                                 variant="outline-secondary"
                                                 style={{ marginLeft: 10 }}
-                                            // onClick={() => DeleteAlarm(item)}
+                                                onClick={() => handleEdit(item.alarmId)}
                                             >
                                                 <MdEdit />
                                             </Button>
@@ -399,7 +486,7 @@ const Alarm = () => {
                                                 className="btn-sm"
                                                 variant="outline-danger"
                                                 style={{ marginLeft: 10 }}
-                                                onClick={() => DeleteAlarm(item)}
+                                                onClick={() => DeleteAlarm(item.alarmId, item.timeoutId)}
                                             >
                                                 <MdOutlineDeleteOutline />
                                             </Button>
@@ -450,14 +537,16 @@ const Alarm = () => {
             <audio src={alarmAudio} ref={audioRef} />
             <SetAlarmModal
                 showModal={showModal}
+                isEdit={isEdit}
                 closeModal={closeModal}
                 play={play}
                 pause={pause}
                 getAlarms={getAlarms}
                 callToAlarm={callToAlarm}
                 storeAlarm={storeAlarm}
-                settingAlarmAudio={settingAlarmAudio}
-                settingVolume={settingVolume}
+                methods={methods}
+                selectedAlarm={selectedAlarm}
+                handleEditAlarm={handleEditAlarm}
             />
             <RingAlarm
                 closeRingModal={closeRingModal}
