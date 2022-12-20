@@ -61,7 +61,7 @@ const AudioContainer = ({ setAlarmDetails }) => {
     return (
         <>
             <div style={{ display: "flex", width: "100%", marginBottom: "1em" }}>
-                <div style={{ width: "33%", padding: "0 10px", width: '100%' }}>
+                <div style={{ padding: "0 10px", width: '100%' }}>
                     <Form.Label>{t('sound')}</Form.Label>
                     <div style={{ display: 'flex' }}>
                         <select
@@ -71,7 +71,7 @@ const AudioContainer = ({ setAlarmDetails }) => {
                             value={audioName}
                             onChange={handleChange}
                         >
-                            <option value={'selected'}>--{t('select_sound')}--</option>
+                            <option value={'selected'} disabled={true}>--{t('select_sound')}--</option>
                             {audioData?.map((item, index) => (
                                 <option
                                     key={index}

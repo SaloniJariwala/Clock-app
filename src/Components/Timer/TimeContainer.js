@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form } from 'react-bootstrap';
 import { t } from 'i18next';
 
 const TimeContainer = ({ setTimerDetails }) => {
+
     return (
         <>
             <div style={{ display: "flex", width: "100%", marginBottom: "1em" }}>
@@ -10,7 +11,7 @@ const TimeContainer = ({ setTimerDetails }) => {
                     <Form.Label>{t('hour')}</Form.Label>
                     <Form.Control
                         type="number"
-                        defaultValue={10}
+                        defaultValue={0}
                         min={0}
                         max={23}
                         onChange={(event) => setTimerDetails(event.target.value, 'hour')}
@@ -20,7 +21,7 @@ const TimeContainer = ({ setTimerDetails }) => {
                     <Form.Label>{t('minute')}</Form.Label>
                     <Form.Control
                         type="number"
-                        defaultValue={10}
+                        defaultValue={0}
                         min={0}
                         max={59}
                         onChange={(event) => setTimerDetails(event.target.value, 'minute')}
@@ -30,7 +31,7 @@ const TimeContainer = ({ setTimerDetails }) => {
                     <Form.Label>{t('second')}</Form.Label>
                     <Form.Control
                         type="number"
-                        defaultValue={10}
+                        defaultValue={0}
                         min={0}
                         max={59}
                         onChange={(event) => setTimerDetails(event.target.value, 'second')}
@@ -38,7 +39,7 @@ const TimeContainer = ({ setTimerDetails }) => {
                 </div>
             </div>
         </>
-    )
-}
+    );
+};
 
 export default TimeContainer;
