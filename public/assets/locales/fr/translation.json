@@ -23,6 +23,7 @@
     "day": "journée",
     "delete": "Effacer",
     "edit": "Éditer",
+    "edit_alarm": "Modifier l'alarme",
     "enter_alarm_note": "Saisir la note d'alarme",
     "enter_alarm_title": "Entrer le titre de l'alarme",
     "export_csv": "Exporter CSV",
@@ -64,5 +65,6 @@
     "upcoming_alarm": "Alarme à venir",
     "volume": "Le volume",
     "weekdays": "Jours de la semaine",
-    "weekends": "Fins de semaine"
+    "weekends": "Fins de semaine",
+    "update": "Mise à jour"
 }

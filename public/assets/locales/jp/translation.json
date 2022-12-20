@@ -23,6 +23,7 @@
     "day": "日",
     "delete": "消去",
     "edit": "編集",
+    "edit_alarm": "アラームの編集",
     "enter_alarm_note": "アラームメモを入力",
     "enter_alarm_title": "アラームのタイトルを入力",
     "export_csv": "書き出す CSV",
@@ -64,5 +65,6 @@
     "upcoming_alarm": "今後のアラーム",
     "volume": "音量",
     "weekdays": "平日",
-    "weekends": "週末"
+    "weekends": "週末",
+    "update": "アップデート"
 }

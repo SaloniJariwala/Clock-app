@@ -7,14 +7,16 @@ import { audioData } from '../../../Data/audioData';
 import { useRef } from 'react';
 import { Slider } from 'antd';
 import { t } from 'i18next';
+import { Controller } from 'react-hook-form';
 
 const AudioContainer = ({
-    settingAlarmAudio,
-    setAlarmDetails
+    methods,
+    isEdit,
+    selectedAlarm
 }) => {
 
     const audioRef = useRef();
-
+    const { control } = methods;
 
     const [audioPlay, setAudioPlay] = useState(true);
     const [audioName, setAudioName] = useState('selected');
@@ -23,16 +25,33 @@ const AudioContainer = ({
 
     useEffect(() => {
         setOptions(audioData);
+        if (!isEdit) {
+            methods.setValue('volume', 50);
+        }
+        // eslint-disable-next-line
     }, []);
+
+    useEffect(() => {
+        if (isEdit) {
+            setAudioName(selectedAlarm?.alarmTune);
+            setVolume(selectedAlarm?.alarmVolume);
+        }
+    }, [isEdit]);
 
     const play = () => {
         audioRef.current.play();
-        audioRef.current.volume = volume / 100;
+        audioRef.current.volume = parseFloat(volume / 100);
         audioRef.current.loop = true;
     }
 
     const pause = () => {
         audioRef.current.pause();
+    };
+
+    const handleChange = (event) => {
+        setAudioName(event.target.value);
+        methods.setValue('sound', event.target.value);
+        // onChange();
     };
 
     const handleButtonClick = () => {
@@ -48,12 +67,6 @@ const AudioContainer = ({
         }
     };
 
-    const handleChange = (event) => {
-        setAudioName(event.target.value);
-        setAlarmDetails(event.target.value, 'tune');
-        settingAlarmAudio(event.target.value, 'local');
-    };
-
     const handleFileChange = (event) => {
         const audio = URL.createObjectURL(event.target.files[0]);
         const newAudio = {
@@ -63,38 +76,43 @@ const AudioContainer = ({
         const array = options;
         array.push(newAudio);
         setOptions(array);
+        methods.setValue('sound', audio);
         setAudioName(audio);
-        settingAlarmAudio(event.target.files[0], 'browse');
     };
 
-    const handleVolumeChange = (value) => {
-        pause();
-        setVolume(value);
-        play();
-        setAlarmDetails(value, 'volume');
-    }
+    // const handleVolumeChange = (onChange) => {
+    //     onChange();
+    //     const vol = methods.getValues('volume');
+    //     setVolume(vol);
+    // }
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
             <span>{t('sound')}</span>
             <div style={{ display: "flex" }}>
-                <select
-                    className="form-select"
-                    id="sound"
-                    aria-label="Floating label select example"
-                    value={audioName}
-                    onChange={handleChange}
-                >
-                    <option value={'selected'}>--{t('select_sound')}--</option>
-                    {audioData?.map((item, index) => (
-                        <option
-                            key={index}
-                            value={item.track}
+                <Controller
+                    control={control}
+                    name="sound"
+                    render={({ field: { onChange, value } }) => (
+                        <select
+                            className="form-select"
+                            id="sound"
+                            aria-label="Floating label select example"
+                            value={value}
+                            onChange={(event) => handleChange(event)}
                         >
-                            {item.audioTitle}
-                        </option>
-                    ))}
-                </select>
+                            <option value={'selected'}>--{t('select_sound')}--</option>
+                            {audioData?.map((item, index) => (
+                                <option
+                                    key={index}
+                                    value={item.track}
+                                >
+                                    {item.audioTitle}
+                                </option>
+                            ))}
+                        </select>
+                    )}
+                />
                 <audio src={audioName} ref={audioRef} />
                 <Button
                     className="btn"
@@ -135,7 +153,16 @@ const AudioContainer = ({
             </div>
             <div style={{ width: '100%' }}>
                 <span>{t('volume')}</span>
-                <Slider defaultValue={50} onChange={handleVolumeChange} />
+                <Controller
+                    control={control}
+                    name="volume"
+                    render={({ field: { onChange, value } }) => (
+                        <Slider
+                            value={value}
+                            onChange={onChange}
+                        />
+                    )}
+                />
             </div>
         </div>
     )
