@@ -103,7 +103,7 @@ const SetAlarmModal = ({
         countryWiseSetAlarm("india", 0, 0, test, formData);
         break;
 
-      case "USA":
+      case "United States":
         countryWiseSetAlarm("back", 10, 30, test, formData);
         break;
 
@@ -119,7 +119,7 @@ const SetAlarmModal = ({
         countryWiseSetAlarm("ahead", 5, 30, test, formData);
         break;
 
-      case "London":
+      case "Britain (UK)":
         countryWiseSetAlarm("back", 5, 30, test, formData);
         break;
 

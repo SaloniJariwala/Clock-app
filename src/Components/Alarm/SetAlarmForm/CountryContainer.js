@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { countryData } from "../../../Data/countryData";
+import timezoneData from "../../../Data/timezones.json";
 
 const CountryContainer = ({ methods, isEdit }) => {
 
@@ -11,7 +12,9 @@ const CountryContainer = ({ methods, isEdit }) => {
 
     useEffect(() => {
         if (!isEdit) {
-            methods.setValue('country', 'India');
+            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            const country = timezoneData[timezone];
+            methods.setValue('country', country);
         }
         // eslint-disable-next-line
     }, []);
@@ -30,11 +33,11 @@ const CountryContainer = ({ methods, isEdit }) => {
                         value={value}
                         onChange={onChange}
                     >
-                        {/* <option value="default" disabled>--{t('select_country')}--</option> */}
+                        <option value="default">--{t('select_country')}--</option>
                         {countryData?.map((item, index) => (
                             <option
                                 key={index}
-                                value={item.countryName}
+                                value={item.value}
                             >
                                 {item.countryName}
                             </option>

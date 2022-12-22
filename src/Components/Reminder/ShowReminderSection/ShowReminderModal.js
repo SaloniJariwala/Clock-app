@@ -25,7 +25,7 @@ const ShowReminderModal = ({
                                 <h5 style={{ marginBottom: 'unset' }}>{item.title}</h5>
                                 <span>{item.note}</span>
                                 <div style={{ display: 'flex', marginTop: '0.5em' }}>
-                                    <Button variant='outline-secondary' size='sm' style={{ marginRight: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                    <Button variant='outline-warning' size='sm' style={{ marginRight: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                         <EditOutlined />
                                     </Button>
                                     <Button variant='outline-danger' size='sm' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
