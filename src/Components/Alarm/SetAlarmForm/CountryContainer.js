@@ -37,7 +37,7 @@ const CountryContainer = ({ methods, isEdit }) => {
                         {countryData?.map((item, index) => (
                             <option
                                 key={index}
-                                value={item.value}
+                                value={JSON.stringify(item)}
                             >
                                 {item.countryName}
                             </option>
