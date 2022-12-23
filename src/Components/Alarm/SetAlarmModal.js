@@ -17,6 +17,7 @@ import AlarmNoteContainer from "./SetAlarmForm/AlarmNoteContainer";
 import SnoozeContainer from "./SetAlarmForm/SnoozeContainer";
 import { FormProvider } from "react-hook-form";
 import RepeatContainer from "./SetAlarmForm/RepeatContainer";
+import timezoneData from "../../Data/timezones.json";
 
 const SetAlarmModal = ({
   methods,
@@ -29,14 +30,13 @@ const SetAlarmModal = ({
   storeAlarm,
   isEdit,
   selectedAlarm,
-  resetForm,
-  handleEditAlarm
+  handleEditAlarm,
 }) => {
 
+
+  const [showTestModal, setShowTestModal] = useState(false);
   const [snoozeFlag, setSnoozeFlag] = useState(false);
   const [repeatFlag, setRepeatFlag] = useState(false);
-  const [showTestModal, setShowTestModal] = useState(false);
-  const [testAlarm, setTestAlarm] = useState();
 
   useEffect(() => {
     callToAlarm();
@@ -44,88 +44,77 @@ const SetAlarmModal = ({
     // eslint-disable-next-line
   }, []);
 
-  const countryWiseSetAlarm = (
-    action,
-    diffHours = 0,
-    diffMins = 0,
-    test = "",
-    formData
-  ) => {
+  const calculateTime = (offset) => {
+    const date = new Date();
+    const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
+    const result = new Date(utc + (3600000 * offset));
+    return result;
+  }
+
+  const getTimezoneOffsetInUtc = () => {
+    const date = new Date();
+    const dateArr = date.toString().split(' ');
+    const gmt = dateArr[5];
+    let offset;
+    if (gmt.includes('+')) {
+      const charArr = gmt.split('+');
+      offset = `+${charArr[1]}`;
+    } else if (gmt.includes('-')) {
+      const charArr = gmt.split('-');
+      offset = `-${charArr[1]}`;
+    }
+    return offset;
+  }
+
+  const countryWiseSetAlarm = (payload) => {
     const newDate = new Date();
-    newDate.setHours(Number(formData.hour));
-    newDate.setMinutes(Number(formData.minute));
-    newDate.setSeconds(Number(formData.second));
+    newDate.setHours(Number(payload.hour));
+    newDate.setMinutes(Number(payload.minute));
+    newDate.setSeconds(Number(payload.second));
+
+    const localCountry = timezoneData[Intl.DateTimeFormat().resolvedOptions().timeZone];
+    const flag = getTimezoneOffsetInUtc() > (payload.country.timezoneOffset * 100) ? localCountry : payload.country.value;
     let fDate;
-    if (action === "back") {
-      fDate = moment(newDate).add({ hours: diffHours, minutes: diffMins });
-    } else if (action === "ahead") {
-      fDate = moment(newDate).subtract({ hours: diffHours, minutes: diffMins });
-    } else {
+    if (localCountry === payload.country.value) {
       fDate = moment(newDate);
+    } else {
+      if (flag === localCountry) {
+        const diffHours = new Date().getHours() - calculateTime(payload.country.timezoneOffset).getHours();
+        const diffMins = new Date().getMinutes() - calculateTime(payload.country.timezoneOffset).getMinutes();
+        fDate = moment(newDate).add({ hours: diffHours, minutes: diffMins });
+      } else {
+        const diffHours = calculateTime(payload.country.timezoneOffset).getHours() - new Date().getHours();
+        const diffMins = calculateTime(payload.country.timezoneOffset).getMinutes() - new Date().getMinutes();
+        fDate = moment(newDate).subtract({ hours: diffHours, minutes: diffMins });
+      }
     }
     const orgDate = fDate.toDate();
-    let payload = {
-      country: formData.country,
+    let newPayload = {
+      country: payload.country,
       alarmDate: orgDate,
       originalAlarm: orgDate,
-      alarmTitle: formData.alarmTitle,
-      alarmNote: formData.alarmNote,
-      alarmTune: formData.sound || defaultAlarmTune,
-      alarmVolume: formData.volume,
+      alarmTitle: payload.alarmTitle,
+      alarmNote: payload.alarmNote,
+      alarmTune: payload.sound || defaultAlarmTune,
+      alarmVolume: payload.volume,
     };
-    if (formData.isSnooze) {
-      payload = { ...payload, snoozeTime: formData.snoozeTime };
+    if (payload.isSnooze) {
+      newPayload = { ...newPayload, snoozeTime: payload.snoozeTime };
     }
-    if (formData.isRepeat) {
-      payload = { ...payload, alarmRepeat: formData.repeat };
+    if (payload.isRepeat) {
+      newPayload = { ...newPayload, alarmRepeat: payload.repeat };
     }
-    if (test === "isTest") {
-      setTestAlarm(payload);
+    if (isEdit) {
+      handleEditAlarm(newPayload);
     } else {
-      if (isEdit) {
-        handleEditAlarm(payload);
-      } else {
-        storeAlarm(payload);
-      }
-      callToAlarm();
+      storeAlarm(newPayload);
     }
+    callToAlarm();
   };
 
   const onTest = () => {
-    checkCountry("isTest");
     setShowTestModal(true);
     play();
-  };
-
-  const checkCountry = (formData, test = "") => {
-    switch (formData.country) {
-      case "India":
-        countryWiseSetAlarm("india", 0, 0, test, formData);
-        break;
-
-      case "United States":
-        countryWiseSetAlarm("back", 10, 30, test, formData);
-        break;
-
-      case "Japan":
-        countryWiseSetAlarm("ahead", 3, 30, test, formData);
-        break;
-
-      case "Canada":
-        countryWiseSetAlarm("back", 10, 30, test, formData);
-        break;
-
-      case "Australia":
-        countryWiseSetAlarm("ahead", 5, 30, test, formData);
-        break;
-
-      case "Britain (UK)":
-        countryWiseSetAlarm("back", 5, 30, test, formData);
-        break;
-
-      default:
-        console.log("Invalid Choice");
-    }
   };
 
   const closeTestModal = () => {
@@ -135,15 +124,15 @@ const SetAlarmModal = ({
 
   const onCancel = () => {
     closeModal();
-    resetForm();
-    setRepeatFlag(true);
-    setSnoozeFlag(true);
+    setRepeatFlag(false);
+    setSnoozeFlag(false);
     pause();
   };
 
   const handleSubmit = (formData) => {
     closeModal();
-    checkCountry(formData);
+    const payload = { ...formData, country: JSON.parse(formData.country) };
+    countryWiseSetAlarm(payload);
   }
 
   return (
@@ -227,7 +216,7 @@ const SetAlarmModal = ({
       <TestModal
         showTestModal={showTestModal}
         closeTestModal={closeTestModal}
-        alarm={testAlarm}
+        methods={methods}
       />
     </>
   );

@@ -38,6 +38,7 @@ const Alarm = () => {
     const [volume, setVolume] = useState(50);
     const [showRingModal, setShowRingModal] = useState(false);
     const [selectedAlarm, setSelectedAlarm] = useState();
+    
     const audioRef = useRef();
     const { t } = useTranslation();
     document.title = t('alarm_clock');
@@ -78,6 +79,10 @@ const Alarm = () => {
 
     const closeModal = () => {
         setShowModal(false);
+        resetForm();
+        if (isEdit) {
+            setIsEdit(false);
+        }
     };
 
     const closeRingModal = () => {
@@ -111,7 +116,7 @@ const Alarm = () => {
         const allAlarms = JSON.parse(localStorage.getItem("Alarms")) || [];
         const oldAlarm = allAlarms.filter((item) => item.alarmId === alarmId);
         setSelectedAlarm(oldAlarm[0]);
-        methods.setValue('country', oldAlarm[0].country);
+        methods.setValue('country', JSON.stringify(oldAlarm[0].country));
         methods.setValue('hour', new Date(oldAlarm[0].orgTimestamp).getHours().toString());
         methods.setValue('minute', new Date(oldAlarm[0].orgTimestamp).getMinutes().toString());
         methods.setValue('second', new Date(oldAlarm[0].orgTimestamp).getSeconds().toString());
