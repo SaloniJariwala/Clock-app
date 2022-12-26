@@ -1,7 +1,7 @@
 import React from 'react';
 import { Collapse, Empty } from 'antd';
 import { CaretRightOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { ReactComponent as ReminderList } from "../../../Assets/svg/reminderList.svg";
+import { ReactComponent as ReminderIcon } from "../../../Assets/svg/reminderList.svg";
 import { t } from 'i18next';
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -11,7 +11,8 @@ const { Panel } = Collapse;
 
 const ListSection = ({
     activePanel,
-    allReminder
+    allReminder,
+    handleDeleteReminder
 }) => {
 
     const [activeKey, setActiveKey] = useState();
@@ -35,7 +36,7 @@ const ListSection = ({
                 }}
             >
                 <>
-                    <ReminderList />{' '}{t('reminder')} :
+                    <ReminderIcon />{' '}{t('reminder')} :
                 </>
             </div>
             <Collapse
@@ -53,10 +54,28 @@ const ListSection = ({
                                     <h5 style={{ marginBottom: 'unset' }}>{item.title}</h5>
                                     <span>{item.note}</span>
                                     <div style={{ display: 'flex', marginTop: '0.5em' }}>
-                                        <Button variant='outline-warning' size='sm' style={{ marginRight: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Button
+                                            variant='outline-warning'
+                                            size='sm'
+                                            style={{
+                                                marginRight: 10,
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}
+                                        >
                                             <EditOutlined />
                                         </Button>
-                                        <Button variant='outline-danger' size='sm' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Button
+                                            variant='outline-danger'
+                                            size='sm'
+                                            onClick={() => handleDeleteReminder(item.reminderId)}
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}
+                                        >
                                             <DeleteOutlined />
                                         </Button>
                                     </div>
@@ -72,10 +91,28 @@ const ListSection = ({
                                     <h5 style={{ marginBottom: 'unset' }}>{item.title}</h5>
                                     <span>{item.note}</span>
                                     <div style={{ display: 'flex', marginTop: '0.5em' }}>
-                                        <Button variant='outline-warning' size='sm' style={{ marginRight: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Button
+                                            variant='outline-warning'
+                                            size='sm'
+                                            style={{
+                                                marginRight: 10,
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}
+                                        >
                                             <EditOutlined />
                                         </Button>
-                                        <Button variant='outline-danger' size='sm' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Button
+                                            variant='outline-danger'
+                                            size='sm'
+                                            onClick={() => handleDeleteReminder(item.reminderId)}
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}
+                                        >
                                             <DeleteOutlined />
                                         </Button>
                                     </div>
@@ -91,10 +128,28 @@ const ListSection = ({
                                     <h5 style={{ marginBottom: 'unset' }}>{item.title}</h5>
                                     <span>{item.note}</span>
                                     <div style={{ display: 'flex', marginTop: '0.5em' }}>
-                                        <Button variant='outline-warning' size='sm' style={{ marginRight: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Button
+                                            variant='outline-warning'
+                                            size='sm'
+                                            style={{
+                                                marginRight: 10,
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}
+                                        >
                                             <EditOutlined />
                                         </Button>
-                                        <Button variant='outline-danger' size='sm' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Button
+                                            variant='outline-danger'
+                                            size='sm'
+                                            onClick={() => handleDeleteReminder(item.reminderId)}
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}
+                                        >
                                             <DeleteOutlined />
                                         </Button>
                                     </div>
@@ -110,10 +165,28 @@ const ListSection = ({
                                     <h5 style={{ marginBottom: 'unset' }}>{item.title}</h5>
                                     <span>{item.note}</span>
                                     <div style={{ display: 'flex', marginTop: '0.5em' }}>
-                                        <Button variant='outline-warning' size='sm' style={{ marginRight: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Button
+                                            variant='outline-warning'
+                                            size='sm'
+                                            style={{
+                                                marginRight: 10,
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}
+                                        >
                                             <EditOutlined />
                                         </Button>
-                                        <Button variant='outline-danger' size='sm' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Button
+                                            variant='outline-danger'
+                                            size='sm'
+                                            onClick={() => handleDeleteReminder(item.reminderId)}
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}
+                                        >
                                             <DeleteOutlined />
                                         </Button>
                                     </div>
@@ -129,10 +202,28 @@ const ListSection = ({
                                     <h5 style={{ marginBottom: 'unset' }}>{item.title}</h5>
                                     <span>{item.note}</span>
                                     <div style={{ display: 'flex', marginTop: '0.5em' }}>
-                                        <Button variant='outline-warning' size='sm' style={{ marginRight: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Button
+                                            variant='outline-warning'
+                                            size='sm'
+                                            style={{
+                                                marginRight: 10,
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}
+                                        >
                                             <EditOutlined />
                                         </Button>
-                                        <Button variant='outline-danger' size='sm' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Button
+                                            variant='outline-danger'
+                                            size='sm'
+                                            onClick={() => handleDeleteReminder(item.reminderId)}
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}
+                                        >
                                             <DeleteOutlined />
                                         </Button>
                                     </div>

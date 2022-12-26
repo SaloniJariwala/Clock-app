@@ -66,6 +66,16 @@ const Reminder = () => {
         audioRef.current.pause();
     };
 
+    const handleDeleteReminder = (id) => {
+        const allReminders = JSON.parse(localStorage.getItem('Reminders')) || [];
+        const reminderToBeDeleted = allReminders.find((item) => item.reminderId === id);
+        clearTimeout(reminderToBeDeleted.timeoutId);
+        const remainingReminders = allReminders.filter((item) => item.reminderId !== id);
+        localStorage.setItem('Reminders', JSON.stringify(remainingReminders));
+        setStored(!stored);
+        fetchReminders();
+    }
+
     const storeReminder = (payload) => {
         const allReminders = JSON.parse(localStorage.getItem('Reminders')) || [];
         let newReminder;
@@ -122,7 +132,10 @@ const Reminder = () => {
 
     return (
         <div>
-            <ShowReminderSection stored={stored} />
+            <ShowReminderSection
+                stored={stored}
+                handleDeleteReminder={handleDeleteReminder}
+            />
             <div
                 style={{
                     display: 'flex',
@@ -143,7 +156,11 @@ const Reminder = () => {
                     <PlusOutlined style={{ marginRight: 5 }} /><span>Add New Reminder</span>
                 </Button>
             </div>
-            <ListSection allReminder={categoryWiseData} activePanel={activePanel} />
+            <ListSection
+                allReminder={categoryWiseData}
+                activePanel={activePanel}
+                handleDeleteReminder={handleDeleteReminder}
+            />
             <audio id="reminderAudio" src={reminderAudio} ref={audioRef} />
             <SetReminderModal
                 showSetReminder={showSetReminder}
