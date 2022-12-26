@@ -6,7 +6,8 @@ import { Button } from 'react-bootstrap';
 const ShowReminderModal = ({
     showReminder,
     closeReminderModal,
-    reminderData
+    reminderData,
+    handleDeleteReminder
 }) => {
 
     return (
@@ -25,10 +26,29 @@ const ShowReminderModal = ({
                                 <h5 style={{ marginBottom: 'unset' }}>{item.title}</h5>
                                 <span>{item.note}</span>
                                 <div style={{ display: 'flex', marginTop: '0.5em' }}>
-                                    <Button variant='outline-warning' size='sm' style={{ marginRight: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                    <Button
+                                        variant='outline-warning'
+                                        size='sm'
+
+                                        style={{
+                                            marginRight: 10,
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}
+                                    >
                                         <EditOutlined />
                                     </Button>
-                                    <Button variant='outline-danger' size='sm' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                    <Button
+                                        variant='outline-danger'
+                                        size='sm'
+                                        onClick={() => handleDeleteReminder(item.reminderId)}
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}
+                                    >
                                         <DeleteOutlined />
                                     </Button>
                                 </div>

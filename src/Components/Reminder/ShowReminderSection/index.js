@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { DisplayButton } from '../style';
 import ShowReminderModal from './ShowReminderModal';
 
-const ShowReminderSection = ({ stored }) => {
+const ShowReminderSection = ({ stored, handleDeleteReminder }) => {
 
     const [showReminer, setShowReminder] = useState(false);
     const [reminderData, setReminderData] = useState([]);
@@ -96,6 +96,7 @@ const ShowReminderSection = ({ stored }) => {
                 showReminder={showReminer}
                 closeReminderModal={closeReminderModal}
                 reminderData={reminderData}
+                handleDeleteReminder={handleDeleteReminder}
             />
         </div>
     )
