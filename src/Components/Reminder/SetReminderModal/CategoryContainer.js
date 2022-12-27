@@ -31,7 +31,7 @@ const CategoryContainer = ({ methods, isEdit }) => {
               --Select Category--
             </option>
             {categoriesData?.map((item, index) => (
-              <option key={index} value={item.id}>
+              <option key={index} value={item.id.toString()}>
                 {item.name}
               </option>
             ))}

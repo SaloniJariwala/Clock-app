@@ -10,7 +10,6 @@ const ShowReminderModal = ({
   handleDeleteReminder,
   title,
   handleEdit,
-  editReminder,
 }) => {
 
   return (

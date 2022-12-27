@@ -10,6 +10,7 @@ const ShowReminderSection = ({
   handleEdit,
   isEdit,
   editReminder,
+  allReminder
 }) => {
   const [showReminer, setShowReminder] = useState(false);
   const [reminderData, setReminderData] = useState([]);
@@ -30,24 +31,24 @@ const ShowReminderSection = ({
   };
 
   const getAndSetReminders = () => {
-    const allReminder = JSON.parse(localStorage.getItem("Reminders")) || [];
     setTodayReminders(
-      allReminder.filter(
+      allReminder?.filter(
         (item) => new Date(item.timestamp).getDate() === new Date().getDate()
       )
     );
     setScheduledReminders(
-      allReminder.filter((item) => item.timestamp > Date.now())
+      allReminder?.filter((item) => item.timestamp > Date.now())
     );
     setAllReminders(allReminder);
     setCompletedReminders(
-      allReminder.filter((item) => item.timestamp < Date.now())
+      allReminder?.filter((item) => item.timestamp < Date.now())
     );
   };
 
   useEffect(() => {
     getAndSetReminders();
-  }, [stored]);
+    // eslint-disable-next-line
+  }, [allReminder]);
 
   const handleClick = (name) => {
     getAndSetReminders();
