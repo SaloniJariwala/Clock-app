@@ -18,6 +18,7 @@ function App() {
       <Route path='/alarm' element={<Layout Component={Alarm} />} />
       <Route path='/stopwatch' element={<Layout Component={Index} />} />
       <Route path='/timer' element={<Layout Component={Timer} />} />
+      <Route path='/timer/:name/:days' element={<Layout Component={Timer} />} />
       <Route path='/holidays' element={<Layout Component={Holiday} />} />
       <Route path='/reminder' element={<Layout Component={Reminder} />} />
     </Routes>

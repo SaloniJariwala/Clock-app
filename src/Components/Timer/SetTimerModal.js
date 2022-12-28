@@ -1,57 +1,38 @@
 import React from 'react';
-import { Divider, Modal, Button } from 'antd';
+import { Divider, Modal, Tabs } from 'antd';
+import CountdownTimer from './CountdownTimer';
+import DateTimeTimer from './DateTimeTimer';
 import { t } from 'i18next';
-import AudioContainer from './AudioContainer';
-import TimeContainer from './TimeContainer';
-import { Controller, FormProvider } from "react-hook-form";
 
 const SetTimerModal = ({
     showModal,
     closeModal,
     setTimer,
-    methods
+    setDateTime,
+    isEdit
 }) => {
-
-
-    const { control } = methods;
 
     return (
         <Modal
-            title={<div className='alarm-modal-title'>Set Timer</div>}
+            title={<div className='alarm-modal-title'>{isEdit ? t('update') : 'set Timer'}</div>}
             open={showModal}
             footer={null}
         >
+            <Tabs>
+                <Tabs.TabPane tab="Countdown" key="item-1">
+                    <CountdownTimer
+                        closeModal={closeModal}
+                        setTimer={setTimer}
+                    />
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="Count till (from) date and time" key="item-2">
+                    <DateTimeTimer
+                        closeModal={closeModal}
+                        setDateTime={setDateTime} />
+                </Tabs.TabPane>
+            </Tabs>
             <Divider />
-            <FormProvider {...methods}>
-                <form onSubmit={methods.handleSubmit(setTimer)}>
-                    <TimeContainer methods={methods} />
-                    <AudioContainer methods={methods} />
-                    <div style={{ padding: "0 10px", marginBottom: "1em" }}>
-                        <label htmlFor="title">Title</label>
-                        <Controller
-                            name='title'
-                            control={control}
-                            render={({ field: { onChange, value } }) => (
-                                <input
-                                    id="title"
-                                    className="form-control"
-                                    placeholder={t('enter_timer_title')}
-                                    onChange={onChange}
-                                    value={value ?? ''}
-                                />
-                            )}
-                        />
-                    </div>
-                    <Divider />
-                    <Button type='default' onClick={closeModal}>Cancel</Button>
-                    <Button
-                        type='primary'
-                        htmlType={'submit'}
-                    >
-                        {t('start')}
-                    </Button>
-                </form>
-            </FormProvider>
+
         </Modal>
     );
 }
