@@ -116,7 +116,7 @@ export const AlarmWrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 80%;
+    width: 100%;
     .title {
       color: #555;
       font-size: 32px;

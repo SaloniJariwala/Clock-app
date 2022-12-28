@@ -144,7 +144,7 @@ const Alarm = () => {
         let newList = JSON.parse(localStorage.getItem("Alarms")) || [];
         let delAlarm = newList.filter((item) => item.alarmId !== alarmId);
         clearTimeout(timeoutId);
-            setFlag(!flag);
+        setFlag(!flag);
         localStorage.setItem("Alarms", JSON.stringify(delAlarm));
     };
 
@@ -186,6 +186,7 @@ const Alarm = () => {
             newAlarm = {
                 alarmId: uuidv4(),
                 timeoutId: "",
+                countryTimestamp: alarmDetails?.countryTime.getTime(),
                 alarmTimestamp: alarmDetails?.alarmDate?.getTime(),
                 orgTimestamp: alarmDetails?.alarmDate?.getTime(),
                 isAlarmPause: false,
@@ -367,14 +368,15 @@ const Alarm = () => {
                     {t("set_alarm")}
                 </Button>
             </div>
-            <div className="container-fluid d-flex justify-content-evenly">
+            <div className="w-100 container-fluid d-flex justify-content-evenly">
                 <div className="w-50 m-5 text-center">
                     <h3 className="text-decoration-underline"> {t("past_alarm")}</h3>
                     <Table striped bordered hover className="mt-4">
                         <thead>
                             <tr>
                                 <th>{t('title')}</th>
-                                <th>{t('alarm_time')}</th>
+                                <th>{t('country_time')}</th>
+                                <th>{t('local_time')}</th>
                                 <th>{t('date')}</th>
                                 <th>{t('actions')}</th>
                             </tr>
@@ -383,6 +385,7 @@ const Alarm = () => {
                             {pastAlarms?.map((item, index) => (
                                 <tr key={index}>
                                     <td>{item.title}</td>
+                                    <td>{item.countryTimestamp ? getTime(item.countryTimestamp) : getTime(item.alarmTimestamp)}</td>
                                     <td>{item.orgTimestamp ? getTime(item.orgTimestamp) : getTime(item.alarmTimestamp)}</td>
                                     <td>{new Date(item.alarmTimestamp).toLocaleDateString()}</td>
                                     <td>
@@ -428,7 +431,8 @@ const Alarm = () => {
                         <thead>
                             <tr>
                                 <th>{t('title')}</th>
-                                <th>{t('alarm_time')}</th>
+                                <th>{t('country_time')}</th>
+                                <th>{t('local_time')}</th>
                                 <th>{t('date')}</th>
                                 <th>{t('remaining_time')}</th>
                                 <th>{t('actions')}</th>
@@ -438,6 +442,7 @@ const Alarm = () => {
                             {upcomingAlarms?.map((item, index) => (
                                 <tr key={index}>
                                     <td>{item.title}</td>
+                                    <td>{item.countryTimestamp ? getTime(item.countryTimestamp) : getTime(item.alarmTimestamp)}</td>
                                     <td>
                                         <span>{item.orgTimestamp ? getTime(item.orgTimestamp) : getTime(item.alarmTimestamp)}</span>
                                         <span style={{ marginLeft: "10px" }}>

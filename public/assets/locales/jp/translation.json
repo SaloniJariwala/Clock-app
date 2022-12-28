@@ -66,5 +66,7 @@
     "volume": "音量",
     "weekdays": "平日",
     "weekends": "週末",
-    "update": "アップデート"
+    "update": "アップデート",
+    "local_time": "現地時間",
+    "country_time": "国の時間"
 }

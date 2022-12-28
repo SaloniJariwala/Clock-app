@@ -66,5 +66,7 @@
     "scheduled_reminders": "预定提醒",
     "all_reminders": "所有提醒",
     "completed": "完全的",
-    "update": "更新"
+    "update": "更新",
+    "local_time": "当地时间",
+    "country_time": "国家时间"
 }

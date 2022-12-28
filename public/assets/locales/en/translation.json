@@ -66,5 +66,7 @@
     "volume": "Volume",
     "weekdays": "WeekDays",
     "weekends": "WeekEnds",
-    "update": "Update"
+    "update": "Update",
+    "local_time": "Local Time",
+    "country_time": "Country Time"
 }

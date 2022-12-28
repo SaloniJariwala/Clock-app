@@ -66,5 +66,7 @@
     "volume": "Volumen",
     "weekdays": "Días de la semana",
     "weekends": "fines de semana",
-    "update": "Actualizar"
+    "update": "Actualizar",
+    "local_time": "Hora local",
+    "country_time": "Hora del país"
 }

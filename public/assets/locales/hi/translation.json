@@ -66,5 +66,7 @@
     "volume": "ध्वनि आवाज़",
     "weekdays": "काम करने के दिन",
     "weekends": "सप्ताहांत",
-    "update": "अपडेट"
+    "update": "अपडेट",
+    "local_time": "स्थानीय समय",
+    "country_time": "देश का समय"
 }

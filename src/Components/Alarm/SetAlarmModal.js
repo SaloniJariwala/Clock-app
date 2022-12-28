@@ -71,6 +71,7 @@ const SetAlarmModal = ({
     newDate.setHours(Number(payload.hour));
     newDate.setMinutes(Number(payload.minute));
     newDate.setSeconds(Number(payload.second));
+    const countryTime = newDate;
     const localCountry = timezoneData[Intl.DateTimeFormat().resolvedOptions().timeZone];
     const flag = getTimezoneOffsetInUtc() > (payload.country.timezoneOffset * 100) ? localCountry : payload.country.value;
     let fDate;
@@ -95,11 +96,12 @@ const SetAlarmModal = ({
         fDate = new Date(fDate);
       }
     }
-    const orgDate = fDate;
+    // const orgDate = fDate;
     let newPayload = {
+      countryTime: countryTime,
       country: payload.country,
-      alarmDate: orgDate,
-      originalAlarm: orgDate,
+      alarmDate: fDate,
+      originalAlarm: fDate,
       alarmTitle: payload.alarmTitle,
       alarmNote: payload.alarmNote,
       alarmTune: payload.sound || defaultAlarmTune,
