@@ -152,7 +152,7 @@ export const London = [
         year: 2023,
         date: "2023-02-22",
         day: "Wednesday",
-        name: "Carnival / Ash Wednesday",
+        name: "Carnival",
         type: "CHRISTIAN",
     },
 ];
