@@ -51,7 +51,6 @@ const AudioContainer = ({
     const handleChange = (event) => {
         setAudioName(event.target.value);
         methods.setValue('sound', event.target.value);
-        // onChange();
     };
 
     const handleButtonClick = () => {
@@ -79,12 +78,6 @@ const AudioContainer = ({
         methods.setValue('sound', audio);
         setAudioName(audio);
     };
-
-    // const handleVolumeChange = (onChange) => {
-    //     onChange();
-    //     const vol = methods.getValues('volume');
-    //     setVolume(vol);
-    // }
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>

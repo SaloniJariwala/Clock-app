@@ -38,7 +38,7 @@ const Alarm = () => {
     const [volume, setVolume] = useState(50);
     const [showRingModal, setShowRingModal] = useState(false);
     const [selectedAlarm, setSelectedAlarm] = useState();
-    
+
     const audioRef = useRef();
     const { t } = useTranslation();
     document.title = t('alarm_clock');
@@ -144,7 +144,7 @@ const Alarm = () => {
         let newList = JSON.parse(localStorage.getItem("Alarms")) || [];
         let delAlarm = newList.filter((item) => item.alarmId !== alarmId);
         clearTimeout(timeoutId);
-        setFlag(!flag);
+            setFlag(!flag);
         localStorage.setItem("Alarms", JSON.stringify(delAlarm));
     };
 

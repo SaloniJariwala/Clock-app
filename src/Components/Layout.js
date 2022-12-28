@@ -33,25 +33,21 @@ const Layout = ({ Component }) => {
         {
             label: t("clock"),
             icon: <Clock />,
-            // img: "/images/clock.png",
             key: "1",
         },
         {
             label: t("alarm_clock"),
             icon: <Alarm />,
-            // img: "/images/alarm.png",
             key: "2",
         },
         {
             label: t("stopwatch"),
             icon: <Stopwatch />,
-            // img: "/images/stopwatch.png",
             key: "3",
         },
         {
             label: t("timer"),
             icon: <Timer />,
-            // img: "/images/timer.png",
             key: "4",
         },
         {
@@ -62,7 +58,6 @@ const Layout = ({ Component }) => {
         {
             label: t("holidays"),
             icon: <Holiday />,
-            // img: "/images/timer.png",
             key: "6",
         },
     ];

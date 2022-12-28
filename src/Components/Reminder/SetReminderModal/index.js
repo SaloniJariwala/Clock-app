@@ -53,7 +53,7 @@ const SetReminderModal = ({
                     type={"datetime-local"}
                     id="datetime"
                     onChange={onChange}
-                    value={value ?? new Date()}
+                    value={value}
                   />
                 )}
               />

@@ -14,7 +14,11 @@ const CountryContainer = ({ methods, isEdit }) => {
         if (!isEdit) {
             const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             const country = timezoneData[timezone];
-            methods.setValue('country', country);
+            countryData.forEach((item) => {
+                if (item.countryName === country) {
+                    methods.setValue('country', JSON.stringify(item));
+                }
+            })
         }
         // eslint-disable-next-line
     }, []);
@@ -39,7 +43,7 @@ const CountryContainer = ({ methods, isEdit }) => {
                                 key={index}
                                 value={JSON.stringify(item)}
                             >
-                                {item.countryName}
+                                {`${item.countryName} (GMT${item.timezoneOffset})`}
                             </option>
                         ))}
                     </select>

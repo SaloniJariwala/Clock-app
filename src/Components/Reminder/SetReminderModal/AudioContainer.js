@@ -11,7 +11,6 @@ import { Controller } from "react-hook-form";
 const AudioContainer = ({
   methods,
   isEdit = false,
-  // selectedAlarm = {}
 }) => {
   const innerAudioRef = useRef();
   const { control } = methods;
@@ -40,7 +39,6 @@ const AudioContainer = ({
   const handleChange = (event) => {
     setAudioName(event.target.value);
     methods.setValue("sound", event.target.value);
-    // onChange();
   };
 
   const handleButtonClick = () => {

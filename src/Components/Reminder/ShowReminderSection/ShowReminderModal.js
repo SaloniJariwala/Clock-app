@@ -17,7 +17,6 @@ const ShowReminderModal = ({
       <Modal
         title={`${title} Reminders`}
         open={showReminder}
-        // onOk={handleOk}
         onCancel={closeReminderModal}
       >
         <Divider />

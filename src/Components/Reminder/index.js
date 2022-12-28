@@ -144,7 +144,7 @@ const Reminder = () => {
         const allReminders = JSON.parse(localStorage.getItem("Reminders")) || [];
         const oldReminders = allReminders.filter((item) => item.reminderId === id);
         setSelectedReminders(oldReminders[0]);
-        methods.setValue("dateTime", new Date(oldReminders[0].timestamp));
+        methods.reset({ dateTime: new Date(oldReminders[0].timestamp).toISOString() });
         methods.setValue("sound", oldReminders[0].sound);
         methods.setValue("title", oldReminders[0].title);
         methods.setValue("note", oldReminders[0].note);

@@ -47,7 +47,7 @@ const SetAlarmModal = ({
   const calculateTime = (offset) => {
     const date = new Date();
     const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
-    const result = new Date(utc + (3600000 * offset));
+    let result = new Date(utc + (3600000 * offset));
     return result;
   }
 
@@ -71,7 +71,6 @@ const SetAlarmModal = ({
     newDate.setHours(Number(payload.hour));
     newDate.setMinutes(Number(payload.minute));
     newDate.setSeconds(Number(payload.second));
-
     const localCountry = timezoneData[Intl.DateTimeFormat().resolvedOptions().timeZone];
     const flag = getTimezoneOffsetInUtc() > (payload.country.timezoneOffset * 100) ? localCountry : payload.country.value;
     let fDate;
@@ -79,16 +78,24 @@ const SetAlarmModal = ({
       fDate = moment(newDate);
     } else {
       if (flag === localCountry) {
-        const diffHours = new Date().getHours() - calculateTime(payload.country.timezoneOffset).getHours();
-        const diffMins = new Date().getMinutes() - calculateTime(payload.country.timezoneOffset).getMinutes();
-        fDate = moment(newDate).add({ hours: diffHours, minutes: diffMins });
+        const payloadCountryDate = calculateTime(payload.country.timezoneOffset);
+        const diffTime = Date.now() - payloadCountryDate.getTime();
+        fDate = newDate.getTime() + diffTime;
+        if (Number.isInteger(Number(payload.country.timezoneOffset)) === false) {
+          fDate = fDate - 720000;
+        }
+        fDate = new Date(fDate);
       } else {
-        const diffHours = calculateTime(payload.country.timezoneOffset).getHours() - new Date().getHours();
-        const diffMins = calculateTime(payload.country.timezoneOffset).getMinutes() - new Date().getMinutes();
-        fDate = moment(newDate).subtract({ hours: diffHours, minutes: diffMins });
+        const payloadCountryDate = calculateTime(payload.country.timezoneOffset);
+        const diffTime = payloadCountryDate.getTime() - Date.now();
+        fDate = newDate.getTime() - diffTime;
+        if (Number.isInteger(Number(payload.country.timezoneOffset)) === false) {
+          fDate = fDate - 720000;
+        }
+        fDate = new Date(fDate);
       }
     }
-    const orgDate = fDate.toDate();
+    const orgDate = fDate;
     let newPayload = {
       country: payload.country,
       alarmDate: orgDate,
@@ -148,10 +155,10 @@ const SetAlarmModal = ({
                 <CountryContainer methods={methods} isEdit={isEdit} />
               </div>
               <div style={{ display: "flex", width: "100%", marginBottom: "1em" }}>
-                <div style={{ width: "33%", padding: "0 10px" }}>
+                <div style={{ width: "50%", padding: "0 10px" }}>
                   <HourContainer methods={methods} isEdit={isEdit} />
                 </div>
-                <div style={{ width: "33%", padding: "0 10px" }}>
+                <div style={{ width: "50%", padding: "0 10px" }}>
                   <MinutesContainer methods={methods} isEdit={isEdit} />
                 </div>
                 <div style={{ width: "33%", padding: "0 10px" }}>
@@ -200,7 +207,6 @@ const SetAlarmModal = ({
                     </Button>
                     <Button
                       variant="outline-primary"
-                      // onClick={checkCountry}
                       type="submit"
                       style={{ marginLeft: 10, width: 100 }}
                     >
