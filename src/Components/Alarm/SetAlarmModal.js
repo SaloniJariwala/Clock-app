@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { Divider } from "antd";
-import moment from "moment";
 import "../../App.css";
 import { AlarmTitleWrapper } from "../style";
 import HourContainer from "./SetAlarmForm/HourContainer";
@@ -72,11 +71,12 @@ const SetAlarmModal = ({
     newDate.setMinutes(Number(payload.minute));
     newDate.setSeconds(Number(payload.second));
     const countryTime = newDate;
+    debugger
     const localCountry = timezoneData[Intl.DateTimeFormat().resolvedOptions().timeZone];
     const flag = getTimezoneOffsetInUtc() > (payload.country.timezoneOffset * 100) ? localCountry : payload.country.value;
     let fDate;
     if (localCountry === payload.country.value) {
-      fDate = moment(newDate);
+      fDate = newDate;
     } else {
       if (flag === localCountry) {
         const payloadCountryDate = calculateTime(payload.country.timezoneOffset);
@@ -107,6 +107,7 @@ const SetAlarmModal = ({
       alarmTune: payload.sound || defaultAlarmTune,
       alarmVolume: payload.volume,
     };
+    debugger
     if (payload.isSnooze) {
       newPayload = { ...newPayload, snoozeTime: payload.snoozeTime };
     }

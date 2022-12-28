@@ -66,9 +66,8 @@
     "volume": "Volume",
     "weekdays": "WeekDays",
     "weekends": "WeekEnds",
-
-    "local_time": "Local Time",
-    "country_time": "Country Time"
     "update": "Update",
+    "local_time": "Local Time",
+    "country_time": "Country Time",
     "enter_timer_title": "Enter Timer Title"
 }
