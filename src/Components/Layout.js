@@ -1,6 +1,6 @@
+import React, { useState, useEffect } from "react";
 import { NavbarWrapper, SidebarWrapper, SideBox } from "./style";
 import { ReactComponent as ClockLogo } from "../Assets/svg/clock-logo.svg";
-import React, { useState, useEffect } from "react";
 import { ReactComponent as Clock } from "../Assets/svg/clock.svg";
 import { ReactComponent as Alarm } from "../Assets/svg/alarm.svg";
 import { ReactComponent as Stopwatch } from "../Assets/svg/stopwatch.svg";
@@ -18,16 +18,14 @@ import { TfiWorld } from "react-icons/tfi";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { Switch } from "antd";
-import { FormatState } from "../Context/FormatProvider";
 import classNames from "classnames";
 
 const Layout = ({ Component }) => {
 
-    const { format, setFormat } = FormatState();
-
     const navigate = useNavigate();
-    const [currentSide, setCurrentSide] = useState("");
     const { t } = useTranslation();
+    const [currentSide, setCurrentSide] = useState("");
+    const [format, setFormat] = useState('24');
 
     const items = [
         {
@@ -138,13 +136,12 @@ const Layout = ({ Component }) => {
     };
 
     const handleSwitchChange = (value) => {
-        // console.log(value);
         if (value) {
             localStorage.setItem('format', '12');
-            // setFormat(12);
+            setFormat('12');
         } else {
             localStorage.setItem('format', '24');
-            // setFormat(24);
+            setFormat('24');
         }
     }
 
@@ -209,31 +206,6 @@ const Layout = ({ Component }) => {
                         </ul>
                     </div>
                 </div>
-                {/* <div className="menu">
-                    <a href="" className="menu-links">Holidays</a>
-                    <div className="tools-menu">
-                        <a href="" className="menu-links" onClick={handleToolsClick}>
-                            Tools {toolsClicked ? <BsChevronUp /> : <BsChevronDown />}
-                        </a>
-                        {toolsClicked && (
-                            <div className="dropdown">
-                                {items.map((item) => (
-                                    <Link
-                                        key={item.key}
-                                        className={currentTool === item.label ? 'is-active' : ''}
-                                        onMouseOver={(event) => handleToolsMouseOver(event, item.label)}
-                                        onMouseOut={handleToolsMouseOut}
-                                        onClick={(event) => openTool(event, item.label)}
-                                    >
-                                        {item.label}
-                                    </Link>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                    <a href="" className="menu-links"><VscColorMode /></a>
-                    <a href="" className="menu-links"><FiSettings /></a>
-                </div> */}
             </NavbarWrapper>
             <div style={{ display: "flex", height: "100%" }}>
                 <SidebarWrapper>
@@ -245,7 +217,6 @@ const Layout = ({ Component }) => {
                             onMouseOut={handleSideMouseOut}
                             onClick={(event) => openTool(event, item.label)}
                         >
-                            {/*<img src={item.img} alt={'logo'} />*/}
                             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                                 {item.icon}
                                 <span style={{ textAlign: 'center' }}>{item.label}</span>
@@ -259,10 +230,14 @@ const Layout = ({ Component }) => {
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
-                        height: 'auto'
+                        height: '100%'
                     }}
                 >
-                    <Component />
+                    {Component === 'AlarmPage' ? (
+                        <Component format={format}/>
+                    ) : (
+                        <Component />
+                    )}
                 </div>
             </div>
         </>

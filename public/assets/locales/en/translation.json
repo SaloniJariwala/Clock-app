@@ -69,5 +69,6 @@
     "update": "Update",
     "local_time": "Local Time",
     "country_time": "Country Time",
-    "enter_timer_title": "Enter Timer Title"
+    "enter_timer_title": "Enter Timer Title",
+    "ampm": "AM/PM"
 }

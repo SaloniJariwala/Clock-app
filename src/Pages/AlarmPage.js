@@ -1,9 +1,9 @@
 import React from 'react'
 import AlarmCom from "../Components/Alarm/index";
 
-const AlarmPage = () => {
+const AlarmPage = ({ format }) => {
     return (
-        <AlarmCom />
+        <AlarmCom format={format} />
     )
 }
 

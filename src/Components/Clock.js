@@ -6,7 +6,6 @@ import { FormatState } from "../Context/FormatProvider";
 
 const Clock = () => {
 
-    const { format } = FormatState();
     const [currentTime, setCurrrentTime] = useState();
     const [day, setDay] = useState();
     const { t } = useTranslation();
@@ -14,7 +13,8 @@ const Clock = () => {
 
     const updateTime = () => {
         const time = new Date();
-        if (format === 12) {
+        const format = localStorage.getItem('format');
+        if (format === '12') {
             setCurrrentTime(time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true }));
         } else {
             setCurrrentTime(time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false }));
