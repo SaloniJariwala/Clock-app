@@ -101,11 +101,17 @@ const Alarm = () => {
         setIsEdit(true);
         const allAlarms = JSON.parse(localStorage.getItem("Alarms")) || [];
         const oldAlarm = allAlarms.filter((item) => item.alarmId === alarmId);
+        const format = localStorage.getItem('format');
         setSelectedAlarm(oldAlarm[0]);
         methods.setValue('country', JSON.stringify(oldAlarm[0].country));
-        methods.setValue('hour', new Date(oldAlarm[0].orgTimestamp).getHours().toString());
+        if (format === '12') {
+            methods.setValue('hour', new Date(oldAlarm[0].orgTimestamp).getHours().toString() - 12);
+        } else {
+            methods.setValue('hour', new Date(oldAlarm[0].orgTimestamp).getHours().toString());
+        }
         methods.setValue('minute', new Date(oldAlarm[0].orgTimestamp).getMinutes().toString());
         methods.setValue('second', new Date(oldAlarm[0].orgTimestamp).getSeconds().toString());
+        methods.setValue('ampm', new Date(oldAlarm[0].orgTimestamp).getHours() > 12 ? 'PM' : 'AM');
         methods.setValue('sound', oldAlarm[0].alarmTune);
         methods.setValue('volume', oldAlarm[0].alarmVolume);
         methods.setValue('alarmTitle', oldAlarm[0].title);
@@ -256,7 +262,7 @@ const Alarm = () => {
     const getTime = (timestamp) => {
         const date = new Date(timestamp);
         const format = localStorage.getItem('format');
-        if(format === '24'){
+        if (format === '24') {
             return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
         } else {
             return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true });
