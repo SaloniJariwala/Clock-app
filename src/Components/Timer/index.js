@@ -8,7 +8,7 @@ import { notifyUser } from "../../Utils/Notification";
 import { useForm } from "react-hook-form";
 import TimerModal from "./TimerModal";
 import { useParams } from "react-router-dom";
-import HolidayTimerDisplay from "./HolidayTimerDisplay";
+import HolidayTimerDisplay from "../Timer/HolidayTimerDisplay"
 
 const Timer = () => {
     const getTimer = JSON.parse(localStorage.getItem("timer"));
@@ -44,7 +44,7 @@ const Timer = () => {
     let updateHolidaySecond = holidaytimerSecond;
 
     const resetForm = () => {
-        methods.setValue("dateTime", new Date());
+        methods.setValue('dateTime', new Date());
         methods.setValue("hour", 0);
         methods.setValue("minute", 0);
         methods.setValue("second", 0);
@@ -98,6 +98,7 @@ const Timer = () => {
         setTimerMinute(updateMinute);
         setTimerHour(updateHour);
         const getTimer = JSON.parse(localStorage.getItem("timer"));
+        debugger;
         const obj = {
             hour: updateHour,
             minute: updateMinute,
@@ -106,7 +107,9 @@ const Timer = () => {
             title: getTimer?.title,
             state: 1,
         };
+        debugger;
         localStorage.setItem("timer", JSON.stringify(obj));
+        debugger;
         count();
     };
 
@@ -128,6 +131,7 @@ const Timer = () => {
             updateMinute > 0 &&
             updateSecond > 0
         ) {
+            debugger;
             if (updateSecond === 0) {
                 updateMinute -= 1;
                 updateSecond = 60;
@@ -137,6 +141,7 @@ const Timer = () => {
 
     // /Countdown
     const StoreTimer = (formData) => {
+        debugger;
         const setTimer = {
             hour: formData?.hour,
             minute: formData?.minute,
@@ -157,6 +162,7 @@ const Timer = () => {
         updateSecond = getTimer?.second;
         setSound(getTimer?.sound);
         setTitle(getTimer?.title);
+        debugger;
         setStatus(1);
         setIsInterVal(
             setInterval(() => {

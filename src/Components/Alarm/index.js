@@ -20,12 +20,13 @@ import { CSVLink } from "react-csv";
 import { BiExport } from "react-icons/bi";
 import { useForm } from "react-hook-form";
 import { v4 as uuidv4 } from 'uuid';
+import timezoneData from "../../Data/timezones.json";
+import { countryData } from "../../Data/countryData";
+import Clock from "../Clock";
 
 const Alarm = () => {
 
     const methods = useForm();
-    const [currentTime, setCurrrentTime] = useState("");
-    const [day, setDay] = useState("");
     const [alarmData, setAlarmData] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
@@ -43,23 +44,8 @@ const Alarm = () => {
     const { t } = useTranslation();
     document.title = t('alarm_clock');
 
-    const updateTime = () => {
-        const date = new Date();
-        const time = date.toLocaleTimeString();
-        const dayStr = `${days[date.getDay()].toUpperCase()} - ${monthNames[
-            date.getMonth()
-        ].toUpperCase()} ${date.getDate()}. ${date.getFullYear()}`;
-        setCurrrentTime(time);
-        setDay(dayStr);
-    };
-
-    useEffect(() => {
-        updateTime();
-        setInterval(updateTime, 1000);
-    }, []);
-
     const play = () => {
-        audioRef.current.play();
+        audioRef.current?.play();
         // audioRef.current.volume = parseFloat(volume / 100);
         audioRef.current.loop = true;
     };
@@ -69,7 +55,7 @@ const Alarm = () => {
     };
 
     const pause = () => {
-        audioRef.current.pause();
+        audioRef.current?.pause();
         setFlag(!flag);
     };
 
@@ -269,7 +255,12 @@ const Alarm = () => {
 
     const getTime = (timestamp) => {
         const date = new Date(timestamp);
-        return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+        const format = localStorage.getItem('format');
+        if(format === '24'){
+            return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
+        } else {
+            return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true });
+        }
     };
 
     const setPauseAlarm = (value) => {
@@ -326,6 +317,18 @@ const Alarm = () => {
         return str;
     };
 
+    const getLocalCountry = () => {
+        let result;
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const country = timezoneData[timezone];
+        countryData.forEach((item) => {
+            if (item.countryName === country) {
+                result = item;
+            }
+        })
+        return result;
+    }
+
     const handleSpecificTime = (time) => {
         if (time < Date.now()) {
             time = time + 86400000;
@@ -333,6 +336,7 @@ const Alarm = () => {
         const alarmTime = new Date(time);
         const payload = {
             timeoutId: "",
+            country: getLocalCountry(),
             alarmTimestamp: time,
             isAlarmPause: false,
             title: `${alarmTime.getHours()}:${alarmTime.getMinutes()}`,
@@ -350,14 +354,9 @@ const Alarm = () => {
 
     return (
         <AlarmWrapper>
-            {currentTime ? (
-                <>
-                    <h1 className="display">{currentTime}</h1>
-                    <p className="day">{day}</p>
-                </>
-            ) : (
-                <h1 className="display">00:00:00</h1>
-            )}
+            <div style={{ width: '100%' }}>
+                <Clock />
+            </div>
             <div style={{ display: "flex", justifyContent: "space-evenly" }}>
                 <Button
                     variant="success"
@@ -375,6 +374,7 @@ const Alarm = () => {
                         <thead>
                             <tr>
                                 <th>{t('title')}</th>
+                                <th>{t('country')}</th>
                                 <th>{t('country_time')}</th>
                                 <th>{t('local_time')}</th>
                                 <th>{t('date')}</th>
@@ -385,9 +385,10 @@ const Alarm = () => {
                             {pastAlarms?.map((item, index) => (
                                 <tr key={index}>
                                     <td>{item.title}</td>
+                                    <td>{item.country?.value}</td>
                                     <td>{item.countryTimestamp ? getTime(item.countryTimestamp) : getTime(item.alarmTimestamp)}</td>
                                     <td>{item.orgTimestamp ? getTime(item.orgTimestamp) : getTime(item.alarmTimestamp)}</td>
-                                    <td>{new Date(item.alarmTimestamp).toLocaleDateString()}</td>
+                                    <td>{new Date(item.alarmTimestamp).toLocaleString('en-US', { dateStyle: 'medium' })}</td>
                                     <td>
                                         <OverlayTrigger
                                             placement={'top'}
@@ -431,6 +432,7 @@ const Alarm = () => {
                         <thead>
                             <tr>
                                 <th>{t('title')}</th>
+                                <th>{t('country')}</th>
                                 <th>{t('country_time')}</th>
                                 <th>{t('local_time')}</th>
                                 <th>{t('date')}</th>
@@ -442,6 +444,7 @@ const Alarm = () => {
                             {upcomingAlarms?.map((item, index) => (
                                 <tr key={index}>
                                     <td>{item.title}</td>
+                                    <td>{item.country?.value}</td>
                                     <td>{item.countryTimestamp ? getTime(item.countryTimestamp) : getTime(item.alarmTimestamp)}</td>
                                     <td>
                                         <span>{item.orgTimestamp ? getTime(item.orgTimestamp) : getTime(item.alarmTimestamp)}</span>
@@ -451,7 +454,7 @@ const Alarm = () => {
                                             )}
                                         </span>
                                     </td>
-                                    <td>{new Date(item.alarmTimestamp).toLocaleDateString()}</td>
+                                    <td>{new Date(item.alarmTimestamp).toLocaleString('en-US', { dateStyle: 'medium' })}</td>
                                     <td>{countRemaining(item.alarmTimestamp)}</td>
                                     <td>
                                         <OverlayTrigger

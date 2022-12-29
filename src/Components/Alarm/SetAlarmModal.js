@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { Divider } from "antd";
-import moment from "moment";
 import "../../App.css";
 import { AlarmTitleWrapper } from "../style";
 import HourContainer from "./SetAlarmForm/HourContainer";
 import MinutesContainer from "./SetAlarmForm/MinutesContainer";
 import SecondsContainer from "./SetAlarmForm/SecondsContainer";
+import ZoneContainer from "./SetAlarmForm/ZoneContainer";
 import CountryContainer from "./SetAlarmForm/CountryContainer";
 import AudioContainer from "./SetAlarmForm/AudioContainer";
 import defaultAlarmTune from "../../Assets/audios/alarm.mp3";
@@ -33,7 +33,7 @@ const SetAlarmModal = ({
   handleEditAlarm,
 }) => {
 
-
+  const format = localStorage.getItem('format');
   const [showTestModal, setShowTestModal] = useState(false);
   const [snoozeFlag, setSnoozeFlag] = useState(false);
   const [repeatFlag, setRepeatFlag] = useState(false);
@@ -76,7 +76,7 @@ const SetAlarmModal = ({
     const flag = getTimezoneOffsetInUtc() > (payload.country.timezoneOffset * 100) ? localCountry : payload.country.value;
     let fDate;
     if (localCountry === payload.country.value) {
-      fDate = moment(newDate);
+      fDate = newDate;
     } else {
       if (flag === localCountry) {
         const payloadCountryDate = calculateTime(payload.country.timezoneOffset);
@@ -140,7 +140,11 @@ const SetAlarmModal = ({
 
   const handleSubmit = (formData) => {
     closeModal();
-    const payload = { ...formData, country: JSON.parse(formData.country) };
+    let payload = { ...formData, country: JSON.parse(formData.country) };
+    const ampm = methods.getValues('ampm');
+    if(ampm === 'PM') {
+          payload= { ...payload, hour: Number(payload.hour) + 12 };
+    }
     countryWiseSetAlarm(payload);
   }
 
@@ -157,15 +161,20 @@ const SetAlarmModal = ({
                 <CountryContainer methods={methods} isEdit={isEdit} />
               </div>
               <div style={{ display: "flex", width: "100%", marginBottom: "1em" }}>
-                <div style={{ width: "50%", padding: "0 10px" }}>
+                <div style={{ width: "33%", padding: "0 10px" }}>
                   <HourContainer methods={methods} isEdit={isEdit} />
                 </div>
-                <div style={{ width: "50%", padding: "0 10px" }}>
+                <div style={{ width: "33%", padding: "0 10px" }}>
                   <MinutesContainer methods={methods} isEdit={isEdit} />
-                </div>
+                  </div>
                 <div style={{ width: "33%", padding: "0 10px" }}>
                   <SecondsContainer methods={methods} isEdit={isEdit} />
                 </div>
+                {format === '12' && (
+                    <div style={{ width: "33%", padding: "0 10px" }}>
+                      <ZoneContainer methods={methods} isEdit={isEdit} />
+                    </div>
+                )}
               </div>
               <div
                 style={{

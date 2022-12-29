@@ -11,8 +11,11 @@ const HourContainer = ({ methods, isEdit }) => {
 
     useEffect(() => {
         const getHours = () => {
+            const format = localStorage.getItem('format');
             let arr = [];
-            for (let i = 0; i <= 23; i++) {
+            const startPoint = format === '24' ? 0 : 1;
+            const endPoint = format === '12' ? 12 : 23;
+            for (let i = startPoint; i <= endPoint; i++) {
                 if (i < 10) {
                     arr = [...arr, { display: `0${i.toString()}`, value: i.toString() }];
                 } else {
