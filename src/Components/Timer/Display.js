@@ -8,6 +8,7 @@ const DisplayTimer = ({
     timerMinute,
     timerSecond,
     title,
+    getTimer,
 }) => {
     return (
         <ClockWrapper>
@@ -22,7 +23,9 @@ const DisplayTimer = ({
                             alignItems: "center",
                         }}
                     >
-                        <small style={{ fontFamily: "serif", fontSize: 40 }}>{title}</small>
+                        <small style={{ fontFamily: "serif", fontSize: 40 }}>
+                            {getTimer?.title ? getTimer?.title : title}
+                        </small>
                         <div style={{ display: "flex" }}>
                             <div
                                 style={{
@@ -85,7 +88,9 @@ const DisplayTimer = ({
                             alignItems: "center",
                         }}
                     >
-                        <small style={{ fontFamily: "serif", fontSize: 40 }}>{title}</small>
+                        <small style={{ fontFamily: "serif", fontSize: 40 }}>
+                            {getTimer?.title ? getTimer?.title : title}
+                        </small>
                         <div style={{ display: "flex" }}>
                             <div
                                 style={{

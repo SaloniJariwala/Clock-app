@@ -8,8 +8,10 @@ import { notifyUser } from "../../Utils/Notification";
 import { useForm } from "react-hook-form";
 import TimerModal from "./TimerModal";
 import { useParams } from "react-router-dom";
+import HolidayTimerDisplay from "./HolidayTimerDisplay";
 
 const Timer = () => {
+    const getTimer = JSON.parse(localStorage.getItem("timer"));
     const { name, days } = useParams();
     const methods = useForm();
     document.title = t("timer");
@@ -24,17 +26,25 @@ const Timer = () => {
     const [timerDay, setTimerDays] = useState(0);
     const [isInaterval, setIsInterVal] = useState();
     const [isHolidayInterval, setIsHolidayInterval] = useState();
-    const [isTimeout, setIsTimeOut] = useState();
     const [showTimerModal, setTimerModal] = useState(false);
     const [isFlag, setIsFlag] = useState(false);
-    const [isTimer, setIsTimer] = useState(false)
+    const [isTimer, setIsTimer] = useState(false);
+    const [holidayTimerHour, setHolidayTimerHour] = useState(0);
+    const [holidayTimerMinute, setHolidayTimerMinute] = useState(0);
+    const [holidaytimerSecond, setTHolidayTimerSecond] = useState(0);
+    const [holidayTimerDay, setHolidayTimerDays] = useState(0);
     let updateDateTime = timerDay;
     let updateSecond = timerSecond;
     let updateMinute = timerMinute;
     let updateHour = timerHour;
 
+    let updateHolidayTimeDay = holidayTimerDay;
+    let updateHolidayHour = holidayTimerHour;
+    let updateHolidayMinute = holidayTimerMinute;
+    let updateHolidaySecond = holidaytimerSecond;
+
     const resetForm = () => {
-        methods.setValue('dateTime', new Date());
+        methods.setValue("dateTime", new Date());
         methods.setValue("hour", 0);
         methods.setValue("minute", 0);
         methods.setValue("second", 0);
@@ -88,17 +98,15 @@ const Timer = () => {
         setTimerMinute(updateMinute);
         setTimerHour(updateHour);
         const getTimer = JSON.parse(localStorage.getItem("timer"));
-        debugger;
         const obj = {
             hour: updateHour,
             minute: updateMinute,
             second: updateSecond,
             sound: getTimer?.sound,
             title: getTimer?.title,
+            state: 1,
         };
-        debugger;
         localStorage.setItem("timer", JSON.stringify(obj));
-        debugger;
         count();
     };
 
@@ -120,7 +128,6 @@ const Timer = () => {
             updateMinute > 0 &&
             updateSecond > 0
         ) {
-            debugger;
             if (updateSecond === 0) {
                 updateMinute -= 1;
                 updateSecond = 60;
@@ -130,13 +137,13 @@ const Timer = () => {
 
     // /Countdown
     const StoreTimer = (formData) => {
-        debugger;
         const setTimer = {
             hour: formData?.hour,
             minute: formData?.minute,
             second: formData?.second,
             sound: formData?.sound,
             title: formData?.title,
+            state: status,
         };
         localStorage.setItem("timer", JSON.stringify(setTimer));
         closeModal();
@@ -150,7 +157,6 @@ const Timer = () => {
         updateSecond = getTimer?.second;
         setSound(getTimer?.sound);
         setTitle(getTimer?.title);
-        debugger;
         setStatus(1);
         setIsInterVal(
             setInterval(() => {
@@ -161,17 +167,29 @@ const Timer = () => {
 
     const stop = () => {
         clearInterval(isInaterval);
+        const obj = {
+            dateTime: getTimer.dateTime,
+            day: getTimer.day,
+            hour: getTimer.hour,
+            minute: getTimer.minute,
+            second: getTimer.second,
+            sound: getTimer.sound,
+            title: getTimer.title,
+            state: 2,
+        };
         setStatus(2);
+        localStorage.setItem("timer", JSON.stringify(obj));
     };
 
     const Reset = () => {
         clearInterval(isInaterval);
-        clearTimeout(isTimeout);
         setStatus(0);
         setTimerDays(new Date());
         setTimerHour(0);
         setTimerMinute(0);
         setTimerSecond(0);
+        setTitle("");
+        localStorage.removeItem("timer");
     };
 
     const resume = () => {
@@ -252,7 +270,6 @@ const Timer = () => {
             title: getTime?.title,
         };
         localStorage.setItem("timer", JSON.stringify(obj));
-
         setTimeout(() => {
             setDateTimer(fromData);
         }, 1000);
@@ -269,9 +286,10 @@ const Timer = () => {
         } else {
             if (localStorage.getItem("timer") === null) {
                 setStatus(0);
-            } else {
+            } else if (status === 1) {
                 getTimers();
-                setStatus(1);
+            } else {
+                stop();
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -297,58 +315,44 @@ const Timer = () => {
                 let seconds = current_sec - old_sec;
                 let days = Math.floor(seconds / (24 * 60 * 60));
                 seconds -= days * 24 * 60 * 60;
-                updateDateTime = Math.abs(days);
+                updateHolidayTimeDay = Math.abs(days);
                 let hours = Math.floor(seconds / (60 * 60));
                 seconds -= hours * 60 * 60;
-                updateHour = Math.abs(hours);
+                updateHolidayHour = Math.abs(hours);
                 let minutes = Math.floor(seconds / 60);
                 seconds -= minutes * 60;
-                updateMinute = Math.abs(minutes);
-                updateSecond = Math.floor(Math.abs(seconds));
-                setTimerDays(updateDateTime);
-                setTimerHour(updateHour);
-                setTimerMinute(updateMinute);
-                setTimerSecond(updateSecond);
+                updateHolidayMinute = Math.abs(minutes);
+                updateHolidaySecond = Math.floor(Math.abs(seconds));
+                setHolidayTimerDays(updateHolidayTimeDay);
+                setHolidayTimerHour(updateHolidayHour);
+                setHolidayTimerMinute(updateHolidayMinute);
+                setTHolidayTimerSecond(updateHolidaySecond);
             }
         }
-    }
+    };
 
     const setHolidayData = () => {
-        setTitle(name)
-        setIsHolidayInterval(setInterval(() => {
-            holidayDay();
-        }, 1000));
-    }
+        setTitle(name);
+        setIsHolidayInterval(
+            setInterval(() => {
+                holidayDay();
+            }, 1000)
+        );
+    };
 
     useEffect(() => {
-        setHolidayData();
-        clearInterval(isHolidayInterval)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-
-    const clearData = () => {
-        setTitle("");
-        setTimerDays(0);
-        setTimerHour(0);
-        setTimerMinute(0);
-        setTimerSecond(0);
-        clearInterval(isHolidayInterval);
-        setStatus(0);
-        setIsTimer(false);
-    }
-    useEffect(() => {
-        debugger
         if (!name || !days) {
-            debugger
-            clearData();
-            debugger
+            clearInterval(isHolidayInterval);
+            setIsTimer(false);
+            setTitle("");
         } else if (name || days) {
-            debugger
             setIsTimer(true);
+            setHolidayData();
         }
 
-    }, [days, name, isHolidayInterval, timerDay, timerHour, timerMinute, timerSecond])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [name, days]);
+
     return (
         <div
             style={{
@@ -358,22 +362,38 @@ const Timer = () => {
                 alignItems: "center",
             }}
         >
-            <DisplayTimer
-                timerDay={updateDateTime ? updateDateTime : "0"}
-                timerHour={updateHour ? updateHour : "0"}
-                timerMinute={updateMinute ? updateMinute : "0"}
-                timerSecond={updateSecond ? updateSecond : "0"}
-                title={title}
-                isFlag={isFlag}
-            />
-            {!isTimer && (<BtnTimer
-                setShowModal={setShowModal}
-                stop={stop}
-                status={status}
-                Reset={Reset}
-                resume={resume}
-                pause={pause}
-            />)}
+            {name || days ? (
+                <HolidayTimerDisplay
+                    holidayTimerDay={updateHolidayTimeDay ? updateHolidayTimeDay : "0"}
+                    holidayTimerHour={updateHolidayHour ? updateHolidayHour : "0"}
+                    holidayTimerMinute={updateHolidayMinute ? updateHolidayMinute : "0"}
+                    holidaytimerSecond={updateHolidaySecond ? updateHolidaySecond : "0"}
+                    title={title}
+                    isFlag={isFlag}
+                />
+            ) : (
+                <DisplayTimer
+                    timerDay={updateDateTime ? updateDateTime : "0"}
+                    timerHour={updateHour ? updateHour : "0"}
+                    timerMinute={updateMinute ? updateMinute : "0"}
+                    timerSecond={updateSecond ? updateSecond : "0"}
+                    title={title}
+                    isFlag={isFlag}
+                    getTimer={getTimer}
+                />
+            )}
+
+            {!isTimer && (
+                <BtnTimer
+                    setShowModal={setShowModal}
+                    stop={stop}
+                    status={status}
+                    Reset={Reset}
+                    resume={resume}
+                    pause={pause}
+                    getTimer={getTimer}
+                />
+            )}
 
             <audio src={sound} ref={audioRef} />
             <SetTimerModal

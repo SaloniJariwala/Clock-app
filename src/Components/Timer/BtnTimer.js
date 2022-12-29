@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Button } from "react-bootstrap";
 import { t } from "i18next";
 import { StopWatchWrapper } from "../style";
@@ -7,13 +7,21 @@ const BtnTimer = (props) => {
     return (
         <StopWatchWrapper>
             <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-                {props.status === 0 && (
+                {props.status === 0 ? (
                     <Button
                         variant="outline-success"
                         onClick={() => props.setShowModal(true)}
                         style={{ margin: "40px 0" }}
                     >
                         set Timer
+                    </Button>
+                ) : (
+                    <Button
+                        variant="primary"
+                        style={{ marginLeft: 10 }}
+                        onClick={props.Reset}
+                    >
+                        {t("reset")}
                     </Button>
                 )}
 
@@ -25,14 +33,6 @@ const BtnTimer = (props) => {
                             onClick={props.stop}
                         >
                             stop
-                        </Button>
-
-                        <Button
-                            variant="primary"
-                            style={{ marginLeft: 10 }}
-                            onClick={props.Reset}
-                        >
-                            {t("reset")}
                         </Button>
                     </>
                 )}
@@ -46,33 +46,7 @@ const BtnTimer = (props) => {
                         >
                             {t("resume")}
                         </Button>
-                        <Button
-                            variant="primary"
-                            style={{ marginLeft: 10 }}
-                            onClick={props.Reset}
-                        >
-                            {t("reset")}
-                        </Button>
                     </div>
-                )}
-
-                {props.status === 3 && (
-                    <div>
-                    <Button
-                        variant="danger"
-                        style={{ marginLeft: 10 }}
-                        onClick={props.resume}
-                    >
-                       Edit
-                    </Button>
-                    <Button
-                        variant="primary"
-                        style={{ marginLeft: 10 }}
-                        onClick={props.Reset}
-                    >
-                        {t("reset")}
-                    </Button>
-                </div>
                 )}
             </div>
         </StopWatchWrapper>
