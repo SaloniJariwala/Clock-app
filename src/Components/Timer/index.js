@@ -88,7 +88,6 @@ const Timer = () => {
         setTimerMinute(updateMinute);
         setTimerHour(updateHour);
         const getTimer = JSON.parse(localStorage.getItem("timer"));
-        debugger;
         const obj = {
             hour: updateHour,
             minute: updateMinute,
@@ -96,9 +95,7 @@ const Timer = () => {
             sound: getTimer?.sound,
             title: getTimer?.title,
         };
-        debugger;
         localStorage.setItem("timer", JSON.stringify(obj));
-        debugger;
         count();
     };
 
@@ -120,7 +117,6 @@ const Timer = () => {
             updateMinute > 0 &&
             updateSecond > 0
         ) {
-            debugger;
             if (updateSecond === 0) {
                 updateMinute -= 1;
                 updateSecond = 60;
@@ -130,7 +126,6 @@ const Timer = () => {
 
     // /Countdown
     const StoreTimer = (formData) => {
-        debugger;
         const setTimer = {
             hour: formData?.hour,
             minute: formData?.minute,
@@ -150,7 +145,6 @@ const Timer = () => {
         updateSecond = getTimer?.second;
         setSound(getTimer?.sound);
         setTitle(getTimer?.title);
-        debugger;
         setStatus(1);
         setIsInterVal(
             setInterval(() => {
@@ -338,13 +332,9 @@ const Timer = () => {
         setIsTimer(false);
     }
     useEffect(() => {
-        debugger
         if (!name || !days) {
-            debugger
             clearData();
-            debugger
         } else if (name || days) {
-            debugger
             setIsTimer(true);
         }
 
