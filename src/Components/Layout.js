@@ -105,6 +105,10 @@ const Layout = ({ Component }) => {
     const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
 
     useEffect(() => {
+        localStorage.setItem('format', '24');
+    }, []);
+
+    useEffect(() => {
         document.body.dir = currentLanguage.dir || "ltr";
         // document.title = t("app_title");
     }, [currentLanguage, t]);
@@ -133,11 +137,14 @@ const Layout = ({ Component }) => {
         }
     };
 
-    const handleSwitchChange = () => {
-        if (format === 24) {
-            setFormat(12);
+    const handleSwitchChange = (value) => {
+        // console.log(value);
+        if (value) {
+            localStorage.setItem('format', '12');
+            // setFormat(12);
         } else {
-            setFormat(24);
+            localStorage.setItem('format', '24');
+            // setFormat(24);
         }
     }
 
