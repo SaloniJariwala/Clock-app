@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { ClockWrapper } from "./style";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { FormatState } from "../Context/FormatProvider";
 
 const Clock = () => {
 

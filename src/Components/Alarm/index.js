@@ -40,6 +40,8 @@ const Alarm = () => {
     const [selectedAlarm, setSelectedAlarm] = useState();
     const [csvData, setCsvData] = useState([]);
 
+    const [currentTime, setCurrrentTime] = useState();
+    const [isInterval, setIsInterval] = useState(false);
     const audioRef = useRef();
     const { t } = useTranslation();
     document.title = t('alarm_clock');
@@ -155,7 +157,7 @@ const Alarm = () => {
             country: alarmDetails?.country,
             alarmTune: alarmDetails?.alarmTune,
             alarmVolume: alarmDetails?.alarmVolume,
-        }
+        };
         const isSnooze = "snoozeTime" in alarmDetails;
         if (isSnooze) {
             editedAlarm = { ...editedAlarm, snoozeTime: alarmDetails?.snoozeTime };
@@ -323,12 +325,11 @@ const Alarm = () => {
 
     const countRemaining = (alarmTime) => {
         const current = Date.now();
+        clearInterval(isInterval);
         const remaining = alarmTime - current;
-
         let seconds = Math.floor(remaining / 1000);
         let minutes = Math.floor(seconds / 60);
         let hours = Math.floor(minutes / 60);
-
         seconds = seconds % 60;
         minutes = minutes % 60;
         hours = hours % 24;
@@ -340,6 +341,35 @@ const Alarm = () => {
             `${seconds > 0 ? (seconds < 10 ? `0${seconds}` : `${seconds}`) : "00"}`;
         return str;
     };
+
+    const updateTime = () => {
+        const time = new Date();
+        const format = localStorage.getItem("format");
+        if (format === "12") {
+            setCurrrentTime(
+                time.toLocaleString("en-US", {
+                    hour: "numeric",
+                    minute: "numeric",
+                    second: "numeric",
+                    hour12: true,
+                })
+            );
+        } else {
+            setCurrrentTime(
+                time.toLocaleString("en-US", {
+                    hour: "numeric",
+                    minute: "numeric",
+                    second: "numeric",
+                    hour12: false,
+                })
+            );
+        }
+    };
+
+    useEffect(() => {
+        updateTime();
+        setIsInterval(setInterval(updateTime, 1000));
+    }, [currentTime]);
 
     const getLocalCountry = () => {
         let result;
@@ -410,9 +440,21 @@ const Alarm = () => {
                                 <tr key={index}>
                                     <td>{item.title}</td>
                                     <td>{item.country?.value}</td>
-                                    <td>{item.countryTimestamp ? getTime(item.countryTimestamp) : getTime(item.alarmTimestamp)}</td>
-                                    <td>{item.orgTimestamp ? getTime(item.orgTimestamp) : getTime(item.alarmTimestamp)}</td>
-                                    <td>{new Date(item.alarmTimestamp).toLocaleString('en-US', { dateStyle: 'medium' })}</td>
+                                    <td>
+                                        {item.countryTimestamp
+                                            ? getTime(item.countryTimestamp)
+                                            : getTime(item.alarmTimestamp)}
+                                    </td>
+                                    <td>
+                                        {item.orgTimestamp
+                                            ? getTime(item.orgTimestamp)
+                                            : getTime(item.alarmTimestamp)}
+                                    </td>
+                                    <td>
+                                        {new Date(item.alarmTimestamp).toLocaleString("en-US", {
+                                            dateStyle: "medium",
+                                        })}
+                                    </td>
                                     <td>
                                         <OverlayTrigger
                                             placement={'top'}
@@ -471,17 +513,27 @@ const Alarm = () => {
                                     <td>{item.country?.value}</td>
                                     <td>{item.countryTimestamp ? getTime(item.countryTimestamp) : getTime(item.alarmTimestamp)}</td>
                                     <td>
-                                        <span>{item.orgTimestamp ? getTime(item.orgTimestamp) : getTime(item.alarmTimestamp)}</span>
+                                        {item.countryTimestamp
+                                            ? getTime(item.countryTimestamp)
+                                            : getTime(item.alarmTimestamp)}
+                                    </td>
+                                    <td>
+                                        <span>
+                                            {item.orgTimestamp
+                                                ? getTime(item.orgTimestamp)
+                                                : getTime(item.alarmTimestamp)}
+                                        </span>
                                         <span style={{ marginLeft: "10px" }}>
-                                            {item.orgTimestamp !== item.alarmTimestamp && !item.isSpecificTime && (
-                                                <MdSnooze fill="red" />
-                                            )}
+                                            {item.orgTimestamp !== item.alarmTimestamp &&
+                                                !item.isSpecificTime && <MdSnooze fill="red" />}
                                         </span>
                                     </td>
-                                    <td>{new Date(item.alarmTimestamp).toLocaleString('en-US', { dateStyle: 'medium' })}</td>
                                     <td>
-                                        {countRemaining(item.alarmTimestamp)}
+                                        {new Date(item.alarmTimestamp).toLocaleString("en-US", {
+                                            dateStyle: "medium",
+                                        })}
                                     </td>
+                                    <td>{countRemaining(item.alarmTimestamp)}</td>
                                     <td>
                                         <OverlayTrigger
                                             placement={"top"}
