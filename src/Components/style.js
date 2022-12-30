@@ -62,7 +62,6 @@ export const Link = styled.div`
 
 export const SidebarWrapper = styled.div`
   background-color: #3d3c3c;
-  /* position: fixed; */
   width: 150px;
   height: 100vh;
   display: flex;

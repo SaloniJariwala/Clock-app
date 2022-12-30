@@ -3,8 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { Table } from "react-bootstrap";
 import { Australia } from "../../Data/Holidays/Australia";
 import { HolidayWrapper } from "../style";
+
 const AustraliaHoliday = () => {
+
   const navigate = useNavigate();
+
   const countDate = (timestamp) => {
     const newTimeStamp = new Date(timestamp).getTime();
     const currentDate = Date.now();
@@ -15,6 +18,7 @@ const AustraliaHoliday = () => {
     const days = `${day > 0 ? (day < 10 ? `0${day}` : `${day}`) : "00"}`;
     return days;
   };
+
   return (
     <HolidayWrapper>
       <div
@@ -50,7 +54,7 @@ const AustraliaHoliday = () => {
             <tbody>
               {Australia.map((item, index) => (
                 <tr
-                  style={{ display: "flex", marginLeft: "15%",cursor:"pointer" }}
+                  style={{ display: "flex", marginLeft: "15%", cursor: "pointer" }}
                   key={index}
                   onClick={() => navigate(`/timer/${item.name}/${item.date}`)}
                 >

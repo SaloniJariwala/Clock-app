@@ -11,7 +11,6 @@ import 'bootstrap/dist/js/bootstrap.js'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'flag-icons/css/flag-icons.min.css';
 import './index.css';
-import FormatProvider from './Context/FormatProvider';
 
 i18n
   .use(initReactI18next)
@@ -32,11 +31,9 @@ i18n
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <FormatProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </FormatProvider>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>
 );
 reportWebVitals();

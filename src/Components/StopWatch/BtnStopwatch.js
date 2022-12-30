@@ -1,7 +1,7 @@
 import React from "react";
-import { StopWatchWrapper } from "../style";
 import { Button } from "react-bootstrap";
 import {t} from "i18next"
+import { StopWatchWrapper } from "../style";
 
 const Stopwatch = (props) => {
     return (

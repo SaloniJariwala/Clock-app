@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import AlarmCom from "../Components/Alarm/index";
 
 const AlarmPage = ({ format }) => {

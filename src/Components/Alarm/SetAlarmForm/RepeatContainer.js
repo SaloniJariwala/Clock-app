@@ -1,6 +1,6 @@
+import React, { useEffect, useState } from 'react';
 import { Radio, Switch } from 'antd';
 import { t } from 'i18next';
-import React, { useEffect, useState } from 'react'
 import { Controller } from 'react-hook-form';
 
 const RepeatContainer = ({

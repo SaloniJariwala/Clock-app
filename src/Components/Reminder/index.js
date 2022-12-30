@@ -1,17 +1,17 @@
+import React, { useState, useRef, useEffect } from "react";
 import { PlusOutlined } from "@ant-design/icons/lib/icons";
-import React, { useState, useRef } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import ListSection from "./ListSection";
 import SetReminderModal from "./SetReminderModal/index";
 import ShowReminderSection from "./ShowReminderSection";
-import { v4 as uuidv4 } from "uuid";
 import { notifyUser } from "../../Utils/Notification";
 import DisplayReminder from "./DisplayReminder";
 import defaultSound from "../../Assets/audios/alarm.mp3";
-import { useEffect } from "react";
 
 const Reminder = () => {
+
     const audioRef = useRef();
     const methods = useForm();
 

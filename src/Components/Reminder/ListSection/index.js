@@ -1,15 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Collapse, Empty } from "antd";
 import {
   CaretRightOutlined,
   DeleteOutlined,
   EditOutlined,
 } from "@ant-design/icons";
-import { ReactComponent as ReminderIcon } from "../../../Assets/svg/reminderList.svg";
-import { t } from "i18next";
-import { useState } from "react";
-import { useEffect } from "react";
 import { Button } from "react-bootstrap";
+import { t } from "i18next";
+import { ReactComponent as ReminderIcon } from "../../../Assets/svg/reminderList.svg";
 
 const { Panel } = Collapse;
 
@@ -19,6 +17,7 @@ const ListSection = ({
   handleDeleteReminder,
   handleEdit,
 }) => {
+
   const [activeKey, setActiveKey] = useState();
 
   useEffect(() => {

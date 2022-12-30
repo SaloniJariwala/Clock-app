@@ -1,9 +1,9 @@
-import React from 'react'
-import { HolidayWrapper } from '../style'
-import AustraliaHoliday from './AustraliaHoliday'
-import IndiaHoliday from './IndiaHoliday'
-import LondonHolidays from './LondonHoliday'
-import UsaHolidays from './UsaHolidays'
+import React from 'react';
+import { HolidayWrapper } from '../style';
+import AustraliaHoliday from './AustraliaHoliday';
+import IndiaHoliday from './IndiaHoliday';
+import LondonHolidays from './LondonHoliday';
+import UsaHolidays from './UsaHolidays';
 
 function Holiday() {
   return (

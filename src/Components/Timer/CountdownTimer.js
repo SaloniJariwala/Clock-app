@@ -1,9 +1,9 @@
+import React from 'react';
 import { Divider, Button } from 'antd';
-import React from 'react'
 import { FormProvider, Controller, useForm } from "react-hook-form";
+import { t } from "i18next";
 import AudioContainer from './AudioContainer';
 import TimeContainer from './TimeContainer';
-import { t } from "i18next"
 
 function CountdownTimer({ closeModal,
     setTimer }) {

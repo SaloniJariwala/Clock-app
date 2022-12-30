@@ -1,5 +1,5 @@
+import React from 'react';
 import { t } from 'i18next';
-import React from 'react'
 import { Controller } from 'react-hook-form';
 
 const AlarmNoteContainer = ({ methods }) => {

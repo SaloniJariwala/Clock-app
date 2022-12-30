@@ -1,13 +1,11 @@
-import React from 'react'
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { t } from 'i18next';
 import { Button } from 'react-bootstrap';
+import { Slider } from 'antd';
+import { Controller } from 'react-hook-form';
 import { GrPlay, GrPause } from "react-icons/gr";
 import { BsThreeDots } from "react-icons/bs";
 import { audioData } from '../../../Data/audioData';
-import { useRef } from 'react';
-import { Slider } from 'antd';
-import { t } from 'i18next';
-import { Controller } from 'react-hook-form';
 
 const AudioContainer = ({
     methods,

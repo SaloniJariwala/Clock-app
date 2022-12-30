@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
-import { t } from "i18next"
+import { t } from "i18next";
 
 const TestModal = ({ showTestModal, closeTestModal, methods }) => {
   return (

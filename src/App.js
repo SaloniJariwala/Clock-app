@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Routes } from 'react-router-dom';
-import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
 import Layout from './Components/Layout';
 import Clock from "./Components/Clock";
 import Alarm from './Pages/AlarmPage';

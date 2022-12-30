@@ -1,17 +1,16 @@
+import React, { useState, useEffect } from "react";
 import { t } from "i18next";
-import React, { useState } from "react";
-import { useEffect } from "react";
 import { DisplayButton } from "../style";
 import ShowReminderModal from "./ShowReminderModal";
 
 const ShowReminderSection = ({
-  stored,
   handleDeleteReminder,
   handleEdit,
   isEdit,
   editReminder,
   allReminder
 }) => {
+
   const [showReminer, setShowReminder] = useState(false);
   const [reminderData, setReminderData] = useState([]);
   const [todayReminders, setTodayReminders] = useState([]);

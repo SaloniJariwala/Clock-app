@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, OverlayTrigger, Table, Tooltip } from "react-bootstrap";
+import { v4 as uuidv4 } from 'uuid';
 import { Button as AntButton } from "antd";
-import { AlarmWrapper } from "../style";
-import SetAlarmModal from "./SetAlarmModal";
-import defaultAlarm from "../../Assets/audios/alarm.mp3";
+import { useTranslation } from "react-i18next";
+import { CSVLink } from "react-csv";
+import { BiExport } from "react-icons/bi";
+import { useForm } from "react-hook-form";
 import {
     MdEdit,
     MdOutlineDeleteOutline,
@@ -11,14 +13,12 @@ import {
     MdPlayCircleOutline,
     MdSnooze,
 } from "react-icons/md";
+import { AlarmWrapper } from "../style";
+import SetAlarmModal from "./SetAlarmModal";
+import defaultAlarm from "../../Assets/audios/alarm.mp3";
 import { notifyUser } from "../../Utils/Notification";
 import RingAlarm from "./RingAlarm";
 import { specificTimeData } from "../../Data/specificTimeData";
-import { useTranslation } from "react-i18next";
-import { CSVLink } from "react-csv";
-import { BiExport } from "react-icons/bi";
-import { useForm } from "react-hook-form";
-import { v4 as uuidv4 } from 'uuid';
 import timezoneData from "../../Data/timezones.json";
 import { countryData } from "../../Data/countryData";
 import Clock from "../Clock";
@@ -26,7 +26,6 @@ import Clock from "../Clock";
 const Alarm = () => {
 
     const methods = useForm();
-    const [alarmData, setAlarmData] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [pastAlarms, setPastAlarms] = useState([]);
@@ -252,7 +251,6 @@ const Alarm = () => {
 
     useEffect(() => {
         const allAlarms = JSON.parse(localStorage.getItem('Alarms')) || [];
-        setAlarmData(allAlarms);
         const upcomingAlarm = allAlarms.filter((item) => item.alarmTimestamp > Date.now());
         setUpcomingAlarms(upcomingAlarm);
         const pastAlarm = allAlarms.filter(

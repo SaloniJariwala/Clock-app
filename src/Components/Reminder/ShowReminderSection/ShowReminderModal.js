@@ -1,6 +1,6 @@
+import React from "react";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Divider, Empty, Modal } from "antd";
-import React from "react";
 import { Button } from "react-bootstrap";
 
 const ShowReminderModal = ({

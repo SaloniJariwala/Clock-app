@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Table } from "react-bootstrap";
+import { t } from "i18next"
 import BtnStopWatch from "../StopWatch/BtnStopwatch";
 import { StopWatchWrapper } from "../style";
-import {t} from "i18next"
 import DisplayStopWatch from "./DisplayStopWatch";
 
 function Index() {
@@ -11,7 +11,7 @@ function Index() {
     const [isRunning, setIsRunning] = useState(false);
     const getStopWatch = JSON.parse(localStorage.getItem("stopWatchLap"));
     const [time, setTime] = useState({
-        lastId:0,
+        lastId: 0,
         milisecond: 0,
         second: 0,
         minute: 0,
@@ -21,10 +21,10 @@ function Index() {
     let updateSecond = time.second;
     let updateMinute = time.minute;
     let updateHour = time.hour;
-    let lastId=1;
-    document.title = t('stop_watch') + updateSecond ;
-    
-    
+    let lastId = 1;
+    document.title = t('stop_watch') + updateSecond;
+
+
     const run = () => {
         if (updateMinute === 60) {
             updateHour++;
@@ -65,7 +65,7 @@ function Index() {
     const reset = () => {
         clearInterval(isInaterval);
         setStatus(0);
-        setTime({milisecond: 0, second: 0, minute: 0, hour: 0 });
+        setTime({ milisecond: 0, second: 0, minute: 0, hour: 0 });
     };
 
     const resume = () => {
@@ -105,7 +105,7 @@ function Index() {
                     <Table striped bordered hover className="mt-4">
                         <thead>
                             <tr>
-                            <th>#</th>
+                                <th>#</th>
                                 <th>Hour</th>
                                 <th>Minutes</th>
                                 <th>MiliSecond</th>

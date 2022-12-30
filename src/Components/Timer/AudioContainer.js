@@ -1,11 +1,10 @@
+import React, { useEffect, useState, useRef } from 'react';
 import { t } from 'i18next';
-import React, { useEffect, useState } from 'react';
-import { useRef } from 'react';
 import { Button, Form } from 'react-bootstrap';
+import { Controller } from 'react-hook-form';
 import { GrPause, GrPlay } from 'react-icons/gr';
 import { BsThreeDots } from 'react-icons/bs';
 import { audioData } from '../../Data/audioData';
-import { Controller } from 'react-hook-form';
 
 const AudioContainer = ({ methods }) => {
 

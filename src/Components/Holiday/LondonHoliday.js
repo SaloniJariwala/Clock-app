@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
+import { Table } from "react-bootstrap";
 import { London } from "../../Data/Holidays/London";
 import { HolidayWrapper } from "../style";
-import { Table } from "react-bootstrap";
 
 const LondonHolidays = () => {
+
     const navigate = useNavigate();
+
     const countDate = (timestamp) => {
         const newTimeStamp = new Date(timestamp).getTime();
         const currentDate = Date.now();
@@ -15,6 +17,7 @@ const LondonHolidays = () => {
         const days = `${day > 0 ? (day < 10 ? `0${day}` : `${day}`) : "00"}`;
         return days;
     };
+
     return (
         <HolidayWrapper>
             <div
@@ -71,4 +74,5 @@ const LondonHolidays = () => {
         </HolidayWrapper>
     );
 };
+
 export default LondonHolidays;

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Divider, Modal, Tabs } from 'antd';
+import { t } from 'i18next';
 import CountdownTimer from './CountdownTimer';
 import DateTimeTimer from './DateTimeTimer';
-import { t } from 'i18next';
 
 const SetTimerModal = ({
     showModal,

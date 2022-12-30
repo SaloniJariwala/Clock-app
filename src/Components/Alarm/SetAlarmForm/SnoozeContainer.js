@@ -1,7 +1,6 @@
+import React, { useState, useEffect } from 'react';
 import { Radio, Switch } from 'antd';
 import { t } from 'i18next';
-import React, { useState } from 'react'
-import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
 const SnoozeContainer = ({

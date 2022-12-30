@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { ClockWrapper } from "./style";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { ClockWrapper } from "./style";
 
 const Clock = () => {
 

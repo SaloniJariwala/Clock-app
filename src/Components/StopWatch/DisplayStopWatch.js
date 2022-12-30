@@ -1,5 +1,5 @@
-import React from 'react'
-import { StopWatchWrapper } from '../style'
+import React from 'react';
+import { StopWatchWrapper } from '../style';
 
 const DisplayStopWatch = (props) => {
    

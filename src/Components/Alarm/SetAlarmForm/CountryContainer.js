@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { countryData } from "../../../Data/countryData";

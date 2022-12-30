@@ -1,5 +1,5 @@
-import { t } from "i18next";
 import { useEffect, useState } from "react";
+import { t } from "i18next";
 import { Controller } from "react-hook-form";
 
 const SecondsContainer = ({ methods, isEdit }) => {

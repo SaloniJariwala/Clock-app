@@ -2,7 +2,6 @@ import React from "react";
 import { ClockWrapper } from "../style";
 
 const HolidayTimerDisplay = ({
-    isFlag,
     holidayTimerDay,
     holidayTimerHour,
     holidayTimerMinute,
@@ -10,6 +9,7 @@ const HolidayTimerDisplay = ({
     title,
     getTimer,
 }) => {
+    
     return (
         <ClockWrapper>
             <>

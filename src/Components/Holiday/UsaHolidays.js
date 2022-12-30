@@ -5,7 +5,9 @@ import { USA } from "../../Data/Holidays/Usa";
 import { HolidayWrapper } from "../style";
 
 const UsaHolidays = () => {
+
     const navigate = useNavigate();
+
     const countDate = (timestamp) => {
         const newTimeStamp = new Date(timestamp).getTime();
         const currentDate = Date.now();

@@ -1,4 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Switch } from "antd";
+import i18next from "i18next";
+import { useTranslation } from 'react-i18next';
+import classNames from "classnames";
+import { TfiWorld } from "react-icons/tfi";
 import { NavbarWrapper, SidebarWrapper, SideBox } from "./style";
 import { ReactComponent as ClockLogo } from "../Assets/svg/clock-logo.svg";
 import { ReactComponent as Clock } from "../Assets/svg/clock.svg";
@@ -6,19 +12,13 @@ import { ReactComponent as Alarm } from "../Assets/svg/alarm.svg";
 import { ReactComponent as Stopwatch } from "../Assets/svg/stopwatch.svg";
 import { ReactComponent as Timer } from "../Assets/svg/timer.svg";
 import { ReactComponent as Reminder } from "../Assets/svg/reminder.svg";
+import { ReactComponent as Holiday } from "../Assets/svg/holiday.svg";
 import Frenchflag from "../Assets/svg/france.png";
 import EnglandFlag from "../Assets/svg/england.png";
 import ChinaFlag from "../Assets/svg/china.png";
 import SpainFlag from "../Assets/svg/spain.png";
-import { ReactComponent as Holiday } from "../Assets/svg/holiday.svg";
-import Indiaflag from "../Assets/svg/india.png"
-import Japanflag from "../Assets/svg/japan.png"
-import { Link, useNavigate } from "react-router-dom";
-import { TfiWorld } from "react-icons/tfi";
-import i18next from "i18next";
-import { useTranslation } from "react-i18next";
-import { Switch } from "antd";
-import classNames from "classnames";
+import Indiaflag from "../Assets/svg/india.png";
+import Japanflag from "../Assets/svg/japan.png";
 
 const Layout = ({ Component }) => {
 
@@ -234,7 +234,7 @@ const Layout = ({ Component }) => {
                     }}
                 >
                     {Component === 'AlarmPage' ? (
-                        <Component format={format}/>
+                        <Component format={format} />
                     ) : (
                         <Component />
                     )}

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { Divider } from "antd";
+import { t } from "i18next";
+import { FormProvider } from "react-hook-form";
 import "../../App.css";
 import { AlarmTitleWrapper } from "../style";
 import HourContainer from "./SetAlarmForm/HourContainer";
@@ -11,11 +13,9 @@ import CountryContainer from "./SetAlarmForm/CountryContainer";
 import AudioContainer from "./SetAlarmForm/AudioContainer";
 import defaultAlarmTune from "../../Assets/audios/alarm.mp3";
 import TestModal from "./TestModal";
-import { t } from "i18next";
 import AlarmTitleContainer from "./SetAlarmForm/AlarmTitleContainer";
 import AlarmNoteContainer from "./SetAlarmForm/AlarmNoteContainer";
 import SnoozeContainer from "./SetAlarmForm/SnoozeContainer";
-import { FormProvider } from "react-hook-form";
 import RepeatContainer from "./SetAlarmForm/RepeatContainer";
 import timezoneData from "../../Data/timezones.json";
 

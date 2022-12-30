@@ -1,10 +1,9 @@
-import { Divider, Button } from "antd";
 import React from "react";
-import { FormProvider, Controller } from "react-hook-form";
-import AudioContainer from "./AudioContainer";
+import { Divider, Button } from "antd";
 import { t } from "i18next";
+import { FormProvider, Controller, useForm } from "react-hook-form";
+import AudioContainer from "./AudioContainer";
 import DateTimeContainer from "./DateTimeContainer";
-import { useForm } from "react-hook-form";
 
 function DateTimeTimer({ closeModal, setDateTime }) {
     const methods = useForm();

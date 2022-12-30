@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from "react";
+import { t } from "i18next";
+import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 import DisplayTimer from "./Display";
 import SetTimerModal from "./SetTimerModal";
 import BtnTimer from "./BtnTimer";
-import defaultTimerSound from "../../Assets/audios/alarm.mp3";
-import { t } from "i18next";
 import { notifyUser } from "../../Utils/Notification";
-import { useForm } from "react-hook-form";
+import defaultTimerSound from "../../Assets/audios/alarm.mp3";
 import TimerModal from "./TimerModal";
-import { useParams } from "react-router-dom";
 import HolidayTimerDisplay from "../Timer/HolidayTimerDisplay"
 
 const Timer = () => {
