@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { Button, OverlayTrigger, Table, Tooltip } from "react-bootstrap";
 import { Button as AntButton } from "antd";
 import { AlarmWrapper } from "../style";
-import { days, monthNames } from "../../Constant";
 import SetAlarmModal from "./SetAlarmModal";
 import defaultAlarm from "../../Assets/audios/alarm.mp3";
 import {
@@ -23,6 +22,7 @@ import { v4 as uuidv4 } from 'uuid';
 import timezoneData from "../../Data/timezones.json";
 import { countryData } from "../../Data/countryData";
 import Clock from "../Clock";
+import CountDownTimer from "./CountDownTimer";
 
 const Alarm = () => {
 
@@ -39,6 +39,7 @@ const Alarm = () => {
     const [volume, setVolume] = useState(50);
     const [showRingModal, setShowRingModal] = useState(false);
     const [selectedAlarm, setSelectedAlarm] = useState();
+    const [csvData, setCsvData] = useState([]);
 
     const audioRef = useRef();
     const { t } = useTranslation();
@@ -257,6 +258,24 @@ const Alarm = () => {
             (item) => item.alarmTimestamp < Date.now()
         );
         setPastAlarms(pastAlarm);
+        let array = [];
+        allAlarms.forEach((item) => {
+            const obj = {
+                alarmId: item.alarmId,
+                timeoutId: item.timeoutId,
+                countryTime: getTime(item.countryTimestamp),
+                alarmTime: getTime(item.alarmTimestamp),
+                originalTime: getTime(item.orgTimestamp),
+                isAlarmPause: item.isAlarmPause,
+                title: item.title,
+                note: item.note,
+                country: item.country.value,
+                alarmTune: item.alarmTune,
+                alarmVolume: item.alarmVolume
+            };
+            array.push(obj);
+        })
+        setCsvData(array);
     }, [flag]);
 
     const getTime = (timestamp) => {
@@ -461,7 +480,9 @@ const Alarm = () => {
                                         </span>
                                     </td>
                                     <td>{new Date(item.alarmTimestamp).toLocaleString('en-US', { dateStyle: 'medium' })}</td>
-                                    <td>{countRemaining(item.alarmTimestamp)}</td>
+                                    <td>
+                                        {countRemaining(item.alarmTimestamp)}
+                                    </td>
                                     <td>
                                         <OverlayTrigger
                                             placement={"top"}
@@ -518,7 +539,7 @@ const Alarm = () => {
                 </div>
             </div>
             <div style={{ margin: '0 0 30px 0', width: '130px' }}>
-                <CSVLink data={alarmData} style={{ width: '100%', textDecoration: 'none' }}>
+                <CSVLink data={csvData} style={{ width: '100%', textDecoration: 'none' }}>
                     <Button variant="outline-secondary" className="d-flex align-items-center justify-content-around w-100">
                         <BiExport />
                         {t(`export_csv`)}
