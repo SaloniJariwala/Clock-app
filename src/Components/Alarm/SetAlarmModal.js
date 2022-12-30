@@ -71,6 +71,9 @@ const SetAlarmModal = ({
     newDate.setHours(Number(payload.hour));
     newDate.setMinutes(Number(payload.minute));
     newDate.setSeconds(Number(payload.second));
+    if (newDate < new Date()) {
+      newDate.setHours(Number(payload.hour) + 24);
+    }
     const countryTime = newDate;
     const localCountry = timezoneData[Intl.DateTimeFormat().resolvedOptions().timeZone];
     const flag = getTimezoneOffsetInUtc() > (payload.country.timezoneOffset * 100) ? localCountry : payload.country.value;
@@ -142,8 +145,8 @@ const SetAlarmModal = ({
     closeModal();
     let payload = { ...formData, country: JSON.parse(formData.country) };
     const ampm = methods.getValues('ampm');
-    if(ampm === 'PM') {
-          payload= { ...payload, hour: Number(payload.hour) + 12 };
+    if (ampm === 'PM') {
+      payload = { ...payload, hour: Number(payload.hour) + 12 };
     }
     countryWiseSetAlarm(payload);
   }
@@ -166,14 +169,14 @@ const SetAlarmModal = ({
                 </div>
                 <div style={{ width: "33%", padding: "0 10px" }}>
                   <MinutesContainer methods={methods} isEdit={isEdit} />
-                  </div>
+                </div>
                 <div style={{ width: "33%", padding: "0 10px" }}>
                   <SecondsContainer methods={methods} isEdit={isEdit} />
                 </div>
                 {format === '12' && (
-                    <div style={{ width: "33%", padding: "0 10px" }}>
-                      <ZoneContainer methods={methods} isEdit={isEdit} />
-                    </div>
+                  <div style={{ width: "33%", padding: "0 10px" }}>
+                    <ZoneContainer methods={methods} isEdit={isEdit} />
+                  </div>
                 )}
               </div>
               <div
