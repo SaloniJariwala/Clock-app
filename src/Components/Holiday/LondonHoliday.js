@@ -49,15 +49,19 @@ const LondonHolidays = () => {
                     <Table className="mt-4">
                         <tbody>
                             {London.map((item, index) => (
-                                <tr style={{ display: "flex", marginLeft: "15%" }} key={index}>
+                                <tr
+                                    style={{
+                                        display: "flex",
+                                        marginLeft: "15%",
+                                        cursor: "pointer",
+                                    }}
+                                    key={index}
+                                    onClick={() => navigate(`/timer/${item.name}/${item.date}`)}
+                                >
                                     <td>{item.date}</td>
                                     <td>{item.day}</td>
                                     <td>{item.name}</td>
-                                    <td
-                                        onClick={() => navigate(`/timer/${item.name}/${item.date}`)}
-                                    >
-                                        {countDate(item.date)} Days
-                                    </td>
+                                    <td>{countDate(item.date)} Days</td>
                                 </tr>
                             ))}
                         </tbody>
