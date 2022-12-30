@@ -55,25 +55,7 @@ const BtnTimer = (props) => {
                     </Button>
                 </div>
             )}
-
-            {props.status === 3 && (
-                <div>
-                <Button
-                    variant="danger"
-                    style={{ marginLeft: 10 }}
-                    onClick={props.resume}
-                >
-                   Edit
-                </Button>
-                <Button
-                    variant="primary"
-                    style={{ marginLeft: 10 }}
-                    onClick={props.Reset}
-                >
-                    {t("reset")}
-                </Button>
-            </div>
-            )}
+          
         </div>
     </StopWatchWrapper>
     );

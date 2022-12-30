@@ -267,7 +267,6 @@ const Timer = () => {
             minute: getTime?.minute,
             second: getTime?.second,
             sound: getTime?.sound,
-            title: getTime?.title,
         };
         localStorage.setItem("timer", JSON.stringify(obj));
         setTimeout(() => {
@@ -276,7 +275,7 @@ const Timer = () => {
     };
 
     useEffect(() => {
-        const getTimer = JSON.parse(localStorage.getItem("timer"));
+        const getTimer = JSON.parse(localStorage.getItem("timer")) || [];
         if (getTimer?.day) {
             if (localStorage.getItem("timer") === null) {
                 setStatus(0);
@@ -348,6 +347,7 @@ const Timer = () => {
         } else if (name || days) {
             setIsTimer(true);
             setHolidayData();
+            localStorage.removeItem('timer');
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
