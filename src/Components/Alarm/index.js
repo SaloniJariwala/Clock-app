@@ -447,202 +447,223 @@ const Alarm = () => {
                     {t("set_alarm")}
                 </Button>
             </div>
-            <div className="w-100 container-fluid d-flex justify-content-evenly">
-                <div className="w-50 m-5 text-center">
-                    <h3 className="text-decoration-underline"> {t("past_alarm")}</h3>
-                    <Table striped bordered hover className="mt-4">
-                        <thead>
-                            <tr>
-                                <th>{t("title")}</th>
-                                <th>{t("country")}</th>
-                                <th>{t("country_time")}</th>
-                                <th>{t("local_time")}</th>
-                                <th>{t("date")}</th>
-                                <th>{t("actions")}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {pastAlarms?.map((item, index) => (
-                                <tr key={index}>
-                                    <td>{item.title}</td>
-                                    <td>{item.country?.value}</td>
-                                    <td>
-                                        {item.countryTimestamp
-                                            ? getTime(item.countryTimestamp)
-                                            : getTime(item.alarmTimestamp)}
-                                    </td>
-                                    <td>
-                                        {item.orgTimestamp
-                                            ? getTime(item.orgTimestamp)
-                                            : getTime(item.alarmTimestamp)}
-                                    </td>
-                                    <td>
-                                        {new Date(item.alarmTimestamp).toLocaleString("en-US", {
-                                            dateStyle: "medium",
-                                        })}
-                                    </td>
-                                    <td>
-                                        <OverlayTrigger
-                                            placement={"top"}
-                                            overlay={
-                                                <Tooltip id={`tooltip-${index}`}>{t("edit")}</Tooltip>
-                                            }
-                                        >
-                                            <Button
-                                                className="btn-sm"
-                                                variant="outline-secondary"
-                                                style={{ marginLeft: 10 }}
-                                                onClick={() => handleEdit(item.alarmId)}
-                                            >
-                                                <MdEdit />
-                                            </Button>
-                                        </OverlayTrigger>
-                                        <OverlayTrigger
-                                            placement={"top"}
-                                            overlay={
-                                                <Tooltip id={`tooltip-${index}`}>{t("delete")}</Tooltip>
-                                            }
-                                        >
-                                            <Button
-                                                className="btn-sm"
-                                                variant="outline-danger"
-                                                style={{ marginLeft: 10 }}
-                                                onClick={() =>
-                                                    DeleteAlarm(item.alarmId, item.timeoutId)
-                                                }
-                                            >
-                                                <MdOutlineDeleteOutline />
-                                            </Button>
-                                        </OverlayTrigger>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                </div>
-                <div className="w-50 m-5 text-center">
-                    <h3 className="text-decoration-underline">{t("upcoming_alarm")}</h3>
-                    <Table striped bordered hover className="mt-4">
-                        <thead>
-                            <tr>
-                                <th>{t("title")}</th>
-                                <th>{t("country")}</th>
-                                <th>{t("country_time")}</th>
-                                <th>{t("local_time")}</th>
-                                <th>{t("date")}</th>
-                                <th>{t("remaining_time")}</th>
-                                <th>{t("actions")}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {upcomingAlarms?.map((item, index) => (
-                                <tr key={index}>
-                                    <td>{item.title}</td>
-                                    <td>{item.country?.value}</td>
-                                    <td>
-                                        {item.countryTimestamp
-                                            ? getTime(item.countryTimestamp)
-                                            : getTime(item.alarmTimestamp)}
-                                    </td>
-                                    <td>
-                                        {item.countryTimestamp
-                                            ? getTime(item.countryTimestamp)
-                                            : getTime(item.alarmTimestamp)}
-                                    </td>
-                                    <td>
-                                        <span>
-                                            {item.orgTimestamp
-                                                ? getTime(item.orgTimestamp)
-                                                : getTime(item.alarmTimestamp)}
-                                        </span>
-                                        <span style={{ marginLeft: "10px" }}>
-                                            {item.orgTimestamp !== item.alarmTimestamp &&
-                                                !item.isSpecificTime && <MdSnooze fill="red" />}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        {new Date(item.alarmTimestamp).toLocaleString("en-US", {
-                                            dateStyle: "medium",
-                                        })}
-                                    </td>
-                                    <td>{countRemaining(item.alarmTimestamp)}</td>
-                                    <td>
-                                        <OverlayTrigger
-                                            placement={"top"}
-                                            overlay={
-                                                <Tooltip id={`tooltip-${index}`}>
-                                                    {!item.isAlarmPause ? t("pause") : t("play")}
-                                                </Tooltip>
-                                            }
-                                        >
-                                            <Button
-                                                className="btn-sm"
-                                                variant="outline-primary"
-                                                style={{ marginLeft: 10 }}
-                                                onClick={() => setPauseAlarm(item)}
-                                            >
-                                                {!item.isAlarmPause ? (
-                                                    <MdPauseCircleOutline />
-                                                ) : (
-                                                    <MdPlayCircleOutline />
-                                                )}
-                                            </Button>
-                                        </OverlayTrigger>
-                                        <OverlayTrigger
-                                            placement={"top"}
-                                            overlay={
-                                                <Tooltip id={`tooltip-${index}`}>{t("edit")}</Tooltip>
-                                            }
-                                        >
-                                            <Button
-                                                className="btn-sm"
-                                                variant="outline-secondary"
-                                                style={{ marginLeft: 10 }}
-                                                onClick={() => handleEdit(item.alarmId)}
-                                            >
-                                                <MdEdit />
-                                            </Button>
-                                        </OverlayTrigger>
-                                        <OverlayTrigger
-                                            placement={"top"}
-                                            overlay={
-                                                <Tooltip id={`tooltip-${index}`}>{t("delete")}</Tooltip>
-                                            }
-                                        >
-                                            <Button
-                                                className="btn-sm"
-                                                variant="outline-danger"
-                                                style={{ marginLeft: 10 }}
-                                                onClick={() =>
-                                                    DeleteAlarm(item.alarmId, item.timeoutId)
-                                                }
-                                            >
-                                                <MdOutlineDeleteOutline />
-                                            </Button>
-                                        </OverlayTrigger>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                </div>
-            </div>
-            <div style={{ margin: "0 0 30px 0", width: "130px" }}>
-                <CSVLink
-                    data={csvData}
-                    style={{ width: "100%", textDecoration: "none" }}
-                >
-                    {allAlarms.length > 0 && (
-                        <Button
-                            variant="outline-secondary"
-                            className="d-flex align-items-center justify-content-around w-100"
+            {allAlarms.length > 0 && (
+                <>
+                    <div className="w-100 container-fluid d-flex justify-content-evenly">
+                        {pastAlarms.length > 0 && (
+                            <div className="w-50 m-5 text-center">
+                                <h3 className="text-decoration-underline">
+                                    {" "}
+                                    {t("past_alarm")}
+                                </h3>
+                                <Table striped bordered hover className="mt-4">
+                                    <thead>
+                                        <tr>
+                                            <th>{t("title")}</th>
+                                            <th>{t("country")}</th>
+                                            <th>{t("country_time")}</th>
+                                            <th>{t("local_time")}</th>
+                                            <th>{t("date")}</th>
+                                            <th>{t("actions")}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {pastAlarms?.map((item, index) => (
+                                            <tr key={index}>
+                                                <td>{item.title}</td>
+                                                <td>{item.country?.value}</td>
+                                                <td>
+                                                    {item.countryTimestamp
+                                                        ? getTime(item.countryTimestamp)
+                                                        : getTime(item.alarmTimestamp)}
+                                                </td>
+                                                <td>
+                                                    {item.orgTimestamp
+                                                        ? getTime(item.orgTimestamp)
+                                                        : getTime(item.alarmTimestamp)}
+                                                </td>
+                                                <td>
+                                                    {new Date(item.alarmTimestamp).toLocaleString(
+                                                        "en-US",
+                                                        {
+                                                            dateStyle: "medium",
+                                                        }
+                                                    )}
+                                                </td>
+                                                <td>
+                                                    <OverlayTrigger
+                                                        placement={"top"}
+                                                        overlay={
+                                                            <Tooltip id={`tooltip-${index}`}>
+                                                                {t("edit")}
+                                                            </Tooltip>
+                                                        }
+                                                    >
+                                                        <Button
+                                                            className="btn-sm"
+                                                            variant="outline-secondary"
+                                                            style={{ marginLeft: 10 }}
+                                                            onClick={() => handleEdit(item.alarmId)}
+                                                        >
+                                                            <MdEdit />
+                                                        </Button>
+                                                    </OverlayTrigger>
+                                                    <OverlayTrigger
+                                                        placement={"top"}
+                                                        overlay={
+                                                            <Tooltip id={`tooltip-${index}`}>
+                                                                {t("delete")}
+                                                            </Tooltip>
+                                                        }
+                                                    >
+                                                        <Button
+                                                            className="btn-sm"
+                                                            variant="outline-danger"
+                                                            style={{ marginLeft: 10 }}
+                                                            onClick={() =>
+                                                                DeleteAlarm(item.alarmId, item.timeoutId)
+                                                            }
+                                                        >
+                                                            <MdOutlineDeleteOutline />
+                                                        </Button>
+                                                    </OverlayTrigger>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </Table>
+                            </div>
+                        )}
+
+                        <div className="w-50 m-5 text-center">
+                            <h3 className="text-decoration-underline">
+                                {t("upcoming_alarm")}
+                            </h3>
+                            <Table striped bordered hover className="mt-4">
+                                <thead>
+                                    <tr>
+                                        <th>{t("title")}</th>
+                                        <th>{t("country")}</th>
+                                        <th>{t("country_time")}</th>
+                                        <th>{t("local_time")}</th>
+                                        <th>{t("date")}</th>
+                                        <th>{t("remaining_time")}</th>
+                                        <th>{t("actions")}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {upcomingAlarms?.map((item, index) => (
+                                        <tr key={index}>
+                                            <td>{item.title}</td>
+                                            <td>{item.country?.value}</td>
+                                            <td>
+                                                {item.countryTimestamp
+                                                    ? getTime(item.countryTimestamp)
+                                                    : getTime(item.alarmTimestamp)}
+                                            </td>
+                                            <td>
+                                                {item.countryTimestamp
+                                                    ? getTime(item.countryTimestamp)
+                                                    : getTime(item.alarmTimestamp)}
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {item.orgTimestamp
+                                                        ? getTime(item.orgTimestamp)
+                                                        : getTime(item.alarmTimestamp)}
+                                                </span>
+                                                <span style={{ marginLeft: "10px" }}>
+                                                    {item.orgTimestamp !== item.alarmTimestamp &&
+                                                        !item.isSpecificTime && <MdSnooze fill="red" />}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                {new Date(item.alarmTimestamp).toLocaleString("en-US", {
+                                                    dateStyle: "medium",
+                                                })}
+                                            </td>
+                                            <td>{countRemaining(item.alarmTimestamp)}</td>
+                                            <td>
+                                                <OverlayTrigger
+                                                    placement={"top"}
+                                                    overlay={
+                                                        <Tooltip id={`tooltip-${index}`}>
+                                                            {!item.isAlarmPause ? t("pause") : t("play")}
+                                                        </Tooltip>
+                                                    }
+                                                >
+                                                    <Button
+                                                        className="btn-sm"
+                                                        variant="outline-primary"
+                                                        style={{ marginLeft: 10 }}
+                                                        onClick={() => setPauseAlarm(item)}
+                                                    >
+                                                        {!item.isAlarmPause ? (
+                                                            <MdPauseCircleOutline />
+                                                        ) : (
+                                                            <MdPlayCircleOutline />
+                                                        )}
+                                                    </Button>
+                                                </OverlayTrigger>
+                                                <OverlayTrigger
+                                                    placement={"top"}
+                                                    overlay={
+                                                        <Tooltip id={`tooltip-${index}`}>
+                                                            {t("edit")}
+                                                        </Tooltip>
+                                                    }
+                                                >
+                                                    <Button
+                                                        className="btn-sm"
+                                                        variant="outline-secondary"
+                                                        style={{ marginLeft: 10 }}
+                                                        onClick={() => handleEdit(item.alarmId)}
+                                                    >
+                                                        <MdEdit />
+                                                    </Button>
+                                                </OverlayTrigger>
+                                                <OverlayTrigger
+                                                    placement={"top"}
+                                                    overlay={
+                                                        <Tooltip id={`tooltip-${index}`}>
+                                                            {t("delete")}
+                                                        </Tooltip>
+                                                    }
+                                                >
+                                                    <Button
+                                                        className="btn-sm"
+                                                        variant="outline-danger"
+                                                        style={{ marginLeft: 10 }}
+                                                        onClick={() =>
+                                                            DeleteAlarm(item.alarmId, item.timeoutId)
+                                                        }
+                                                    >
+                                                        <MdOutlineDeleteOutline />
+                                                    </Button>
+                                                </OverlayTrigger>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table>
+                        </div>
+                    </div>
+                    <div style={{ margin: "0 0 30px 0", width: "130px" }}>
+                        <CSVLink
+                            data={csvData}
+                            style={{ width: "100%", textDecoration: "none" }}
                         >
-                            <BiExport />
-                            {t(`export_csv`)}
-                        </Button>
-                    )}
-                </CSVLink>
-            </div>
+                            <Button
+                                variant="outline-secondary"
+                                className="d-flex align-items-center justify-content-around w-100"
+                            >
+                                <BiExport />
+                                {t(`export_csv`)}
+                            </Button>
+                        </CSVLink>
+                    </div>
+                </>
+            )}
             <div
                 style={{
                     display: "flex",

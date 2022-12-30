@@ -202,7 +202,11 @@ const Timer = () => {
         const startDate = new Date();
         var endDate = new Date(value?.dateTime);
         const timeRemaining = endDate.getTime() - startDate.getTime();
-        if (timeRemaining > 0) {
+        if(endDate < startDate){
+            alert('please select proper date');
+            setIsTimer(false);
+        }
+       else if (timeRemaining > 0) {
             const start_date = new Date(startDate);
             const end_date = new Date(endDate);
             const start_millis = start_date?.getTime();
