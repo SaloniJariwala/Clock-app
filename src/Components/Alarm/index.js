@@ -22,7 +22,6 @@ import { v4 as uuidv4 } from 'uuid';
 import timezoneData from "../../Data/timezones.json";
 import { countryData } from "../../Data/countryData";
 import Clock from "../Clock";
-import CountDownTimer from "./CountDownTimer";
 
 const Alarm = () => {
 
