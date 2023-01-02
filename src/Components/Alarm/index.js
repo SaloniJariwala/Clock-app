@@ -563,11 +563,6 @@ const Alarm = () => {
                                                         : getTime(item.alarmTimestamp)}
                                                 </td>
                                                 <td>
-                                                    {item.countryTimestamp
-                                                        ? getTime(item.countryTimestamp)
-                                                        : getTime(item.alarmTimestamp)}
-                                                </td>
-                                                <td>
                                                     <span>
                                                         {item.orgTimestamp
                                                             ? getTime(item.orgTimestamp)
