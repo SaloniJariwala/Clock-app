@@ -351,6 +351,7 @@ const Timer = () => {
         } else if (name || days) {
             setIsTimer(true);
             setHolidayData();
+            holidayDay();
             localStorage.removeItem('timer');
         }
 
